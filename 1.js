@@ -4,7 +4,7 @@
 // @version      0.2
 // @description  快写作业
 // @author       shiquda
-// @match        *://*
+// @match        *://*/*
 // @grant        none
 // @license      MIT
 // ==/UserScript==
