@@ -7,7 +7,6 @@
 // @match        https://www.steamtools.net/
 // @run-at       document-start
 // ==/UserScript==
- 
 (function() {
     "use strict";
     if (window.location.href.indexOf("zn.html") == -1) {
