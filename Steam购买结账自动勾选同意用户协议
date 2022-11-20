@@ -1,0 +1,13 @@
+// ==UserScript==
+// @name         Steam购买结账自动勾选同意用户协议
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Steam购买结账自动勾选同意用户协议复选框
+// @author       shiquda
+// @include      https://store.steampowered.com/checkout/*
+// @license      MIT
+// ==/UserScript==
+(function() {
+    'use strict';
+    $('accept_ssa').defaultChecked = true
+})()
