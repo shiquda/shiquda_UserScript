@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam购买结账自动勾选同意用户协议
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.2.1
 // @description  Steam购买结账自动勾选同意用户协议复选框
 // @author       shiquda
 // @include      https://store.steampowered.com/*
@@ -10,5 +10,15 @@
 // ==/UserScript==
 (function() {
     'use strict';
-    $('accept_ssa').defaultChecked = true
+    //读取网址
+    var $href = window.location.href
+    if ($href.indexOf('checkout') != -1){
+        console.log('checkout')
+        $('accept_ssa').Checked = true
+    }
+    else if ($href.indexOf('inventory') != -1){
+        console.log('inventory')
+        var marketsell = document.getElementById('market_sell_dialog_accept_ssa')
+        marketsell.checked = true
+    }
 })()
