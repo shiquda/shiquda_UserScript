@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Steam购买结账自动勾选同意用户协议
+// @name         Steam自动勾选同意用户协议
 // @namespace    http://tampermonkey.net/
 // @version      0.2.2
-// @description  Steam购买结账自动勾选同意用户协议复选框
+// @description  Steam自动勾选同意用户协议复选框
 // @author       shiquda
 // @include      https://store.steampowered.com/*
 // @include      https://steamcommunity.com/*
