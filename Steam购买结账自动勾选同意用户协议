@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam自动勾选同意用户协议
 // @namespace    http://tampermonkey.net/
-// @version      0.2.2
+// @version      0.2.3
 // @description  Steam自动勾选同意用户协议复选框
 // @author       shiquda
 // @include      https://store.steampowered.com/*
@@ -18,7 +18,9 @@
     }
     else if ($href.indexOf('inventory') != -1){
         console.log('inventory')
+        window.onload = function(){
         var marketsell = document.getElementById('market_sell_dialog_accept_ssa')
         marketsell.checked = true
+        }
     }
 })()
