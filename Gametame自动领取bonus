@@ -13,7 +13,7 @@
 
     // Your code here...
     const url = window.location.href
-    if (url == 'https://gametame.com/earn-cn/'){
+    if (url.indexOf('https://gametame.com/earn') !==-1){
         window.open('https://gametame.com/bonus-zone/','bonus-zone','height=100,width=200,resize=yes,scrollbars=yes')
         var fromMain = true
         }
