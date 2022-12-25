@@ -6,3 +6,5 @@ just for testing
 2.steam购买结账自动勾选同意用户协议 https://greasyfork.org/zh-CN/scripts/455146-steam购买结账自动勾选同意用户协议
 
 3.Gametame自动领取bonus https://greasyfork.org/zh-CN/scripts/456752-gametame自动领取bonus
+
+4.https://greasyfork.org/zh-CN/scripts/457109-add-steamdb-sale-item-into-steam-chart魔改
