@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.2
+// @version      1.5.4
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -52,7 +52,7 @@
         });
     }
 
-    function addChart(subId, subType, appId) {
+    function addChart(subId, subType, appId, parentElement) {
         if (subType !== 'game'){
             popUp('暂不支持添加Bundle类型的游戏！');
             return;
@@ -70,10 +70,10 @@
                 console.log("Add Chart请求成功");
                 // console.log(response.responseText);
                 if (response.responseText.search(appId) !== -1) {
-                    popUp(`appId: ${appId} 添加购物车成功！`)
+                    popUp(`appId: ${appId} 添加购物车成功！`);
+                    parentElement.style.background = 'rgba(0,156,0,0.5)';
                     document.querySelector('#app-2').style.opacity = 0;
                     document.querySelector('#app-2').style.display = 'none';
-                    tick(appId)
 
                 } else {
                     popUp(`添加购物车失败！`)
@@ -154,7 +154,7 @@
                     }
                     const game_subs = subs.filter(e => e.subType === 'game');
                     if(game_subs.length === 1){
-                        addChart(game_subs[0].sub, game_subs[0].subType, dataId);
+                        addChart(game_subs[0].sub, game_subs[0].subType, dataId, element);
                         return;
                     }else if(game_subs.length === 0){
                         popUp('未找到该游戏的Sub，请前往商店查看是否存在购买选项！');
@@ -174,7 +174,7 @@
                             <th>${game.sub}</th>
                             <th><button class="btn">Add</div></th>`
                         _tr.querySelector('.btn').addEventListener('click', ()=>{
-                            addChart(game.sub, game.subType, dataId);
+                            addChart(game.sub, game.subType, dataId, element);
                         })
                         document.querySelector('#app-2 tbody').append(_tr);
                     }
@@ -186,7 +186,7 @@
     function initPane(){
         const div = document.createElement('div');
         div.innerHTML =
-            `<div id="app-2" class="header-sales-filters" style="display:none;opacity: 0;transition: 0.5s;width: 60%;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);background: #eee;z-index: 9999;">
+            `<div id="app-2" class="header-sales-filters" style="display:none;opacity: 0;transition: 0.5s;width: 60%;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);background: #eee;z-index: 9999;color: black;padding: 10px;">
                 <table style="width: 100%;height: 100%;">
                     <thead>
                     <tr>
@@ -203,12 +203,12 @@
                 </table>
             </div>`
         document.body.append(div);
-
     }
 
     // Your code here...
     const layerCss = GM_getResourceText('layerCss');
     GM_addStyle(layerCss);
+
     async function start(){
         initPane();
         seleceAllBtn()
@@ -227,7 +227,7 @@
             console.log('wait for jquery.jgrowl')
         }
     }, 200)
-    function seleceAllBtn(){
+        function seleceAllBtn(){
         var allBtn = document.createElement('button')
         allBtn.textContent = '购物车多选'
         allBtn.addEventListener('click',()=>{
@@ -290,10 +290,6 @@
             }
         }
     }
-/*
-    addChart(subId, subType, appId)document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(6) > td.card_income > a").textContent.slice(5)
 
-
-*/
 })();
 
