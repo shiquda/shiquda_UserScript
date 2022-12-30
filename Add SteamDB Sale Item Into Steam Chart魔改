@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4
+// @version      1.5.4.1
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -16,16 +16,16 @@
 // @resource     layerCss https://cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.4.8/jquery.jgrowl.min.css
 // @license      MIT
 // ==/UserScript==
-
+ 
 (function () {
     'use strict';
     const steamStore = 'https://store.steampowered.com';
     const steamCart = 'https://store.steampowered.com/cart/';
     const steamInfo = 'https://store.steampowered.com/app/'
-
-
+ 
+ 
     let sessionId = '';
-
+ 
     function getSessionId() {
         return new Promise(resolve => {
             GM_xmlhttpRequest({
@@ -51,7 +51,7 @@
             });
         });
     }
-
+ 
     function addChart(subId, subType, appId, parentElement) {
         if (subType !== 'game'){
             popUp('暂不支持添加Bundle类型的游戏！');
@@ -74,7 +74,7 @@
                     parentElement.style.background = 'rgba(0,156,0,0.5)';
                     document.querySelector('#app-2').style.opacity = 0;
                     document.querySelector('#app-2').style.display = 'none';
-
+ 
                 } else {
                     popUp(`添加购物车失败！`)
                 }
@@ -84,11 +84,11 @@
             }
         });
     }
-
+ 
     function popUp(msg) {
         $.jGrowl(msg)
     }
-
+ 
     function getGameSubs(appId){
         return new Promise(resolve =>{
             GM_xmlhttpRequest({
@@ -134,7 +134,7 @@
             });
         })
     }
-
+ 
     function bindElement(){
         console.log('start bind steam icon')
         const appimgs = document.querySelectorAll('.app');
@@ -182,12 +182,12 @@
             }
         }
     }
-
+ 
     function initPane(){
         const div = document.createElement('div');
         div.innerHTML =
             `<div id="app-2" class="header-sales-filters" style="display:none;opacity: 0;transition: 0.5s;width: 60%;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);background: #eee;z-index: 9999;color: black;padding: 10px;">
-                <table style="width: 100%;height: 100%;">
+                <table style="width: 80%;height: 80%;">
                     <thead>
                     <tr>
                         <th>游戏</th>
@@ -204,11 +204,11 @@
             </div>`
         document.body.append(div);
     }
-
+ 
     // Your code here...
     const layerCss = GM_getResourceText('layerCss');
     GM_addStyle(layerCss);
-
+ 
     async function start(){
         initPane();
         seleceAllBtn()
@@ -217,7 +217,7 @@
         console.log(`Receive Session: ${rs}`);
         $("#DataTables_Table_0 > tbody").bind('DOMNodeInserted', bindElement);
     }
-
+ 
     const timer = setInterval(()=>{
         if(typeof $.jGrowl === 'function'){
             document.styleSheets[0].addRule('#jGrowl', 'top: 48px');
@@ -238,12 +238,8 @@
         tab1.appendChild(allBtn)
     }
     function showBox(){
-        let gameList = document.querySelectorAll('.app')
-        var confBtn = document.createElement('button')
-        confBtn.textContent = '确认'
-        confBtn.addEventListener('click',multiAdd)
         var tab1 = document.querySelector('#card_filter_container')
-        tab1.appendChild(confBtn)
+        appendElement('btn','确认',multiAdd,tab1)
         //表头
         var table =document.querySelector(".text-left")
         var mult = document.createElement('a')
@@ -251,45 +247,45 @@
         mult.addEventListener('click',showBox)
         table.appendChild(mult)
         //筛选
-        var filt = document.createElement('button')
-        filt.textContent = "筛选"
-        filt.addEventListener('click',filter)
-        tab1.appendChild(filt)
+        appendElement('btn','筛选',filter,tab1)
         function createBox (num){
-            let gameList = document.querySelectorAll('.app')
             var box = document.createElement("input")
             box.setAttribute("type","checkbox")
             box.classname = box
             box.id ='box' + (num)
-            box.textContent = '购物车多选'
+            box.textContent = '多选'
             var tab =document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+num+")")
             tab.appendChild(box)
         }
-        for(var i =0;i < gameList.length;i++){
+        for(var i =0;i < document.querySelectorAll('.app').length;i++){
         createBox(i+1)
         }
     }
     function multiAdd(){
-        let gameList = document.querySelectorAll('.app')
-        for(var i = 0;i < gameList.length;i++){
+        function btnClick(m){
+            document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (m) + ") > td:nth-child(1) > a").click()
+        }
+        for(var i = 0;i < document.querySelectorAll('.app').length;i++){
             let box = document.querySelector("#box"+ (i + 1)).checked
             if (box){
-                document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i+1) + ") > td:nth-child(1) > a").click()
+                setTimeout(btnClick(i+1),2000)
             }
-    }
-    }
-    function tick(appId){
-
+        }
     }
     function filter(){
-        let gameList = document.querySelectorAll('.app')
-        for (var i = 0;i < gameList.length;i++){
+        for (var i = 0;i < document.querySelectorAll('.app').length;i++){
             var income = Number(document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i+1) + ") > td.card_income > a").textContent.slice(5))
             if (income>0){
                 document.querySelector("#box"+(i+1)).checked = true
             }
         }
     }
-
+function appendElement(type,text,func,appendTo){
+    if (type === 'btn'){
+        var a = document.createElement('button')
+        a.textContent = text
+        a.addEventListener("click",func)
+        appendTo.appendChild(a)
+    }
+}
 })();
-
