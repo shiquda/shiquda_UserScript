@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.2
+// @version      1.5.4.3
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -22,6 +22,7 @@
     const steamStore = 'https://store.steampowered.com';
     const steamCart = 'https://store.steampowered.com/cart/';
     const steamInfo = 'https://store.steampowered.com/app/'
+    const skipMultiSubs = false //（魔改）是否隐藏多sub显示，选择true后将自动选择第一个sub（一般是价格最低的），可能会造成添加失败，请自行核对，后果自负。
 
 
     let sessionId = '';
@@ -160,6 +161,9 @@
                         popUp('未找到该游戏的Sub，请前往商店查看是否存在购买选项！');
                         window.open(steamInfo + dataId,"_blank", '');
                         return;
+                    }else if(game_subs.length >0 && skipMultiSubs){
+                        addChart(game_subs[0].sub, game_subs[0].subType, dataId, element)
+                        return
                     }
                     document.querySelector('#app-2').style.opacity = 1;
                     document.querySelector('#app-2').style.display = 'block';
@@ -240,6 +244,7 @@
     function showBox(){
         var tab1 = document.querySelector('#card_filter_container')
         appendElement('btn','确认',multiAdd,tab1)
+
         //表头
         var table =document.querySelector(".text-left")
         var mult = document.createElement('a')
@@ -251,6 +256,7 @@
         var low = document.createElement("input")
         low.id = "lowest"
         low.placeholder = "输入最低的CardIncome"
+        low.style.width = '70%'
         tab1.appendChild(low)
         //取消选择
         appendElement('btn','取消选择',cancelAll,tab1)
@@ -270,10 +276,11 @@
         function btnClick(m){
             document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (m) + ") > td:nth-child(1) > a").click()
         }
+        var postNum = 0
         for(var i = 0;i < document.querySelectorAll('.app').length;i++){
             let box = document.querySelector("#box"+ (i + 1)).checked
             if (box){
-                setTimeout(btnClick(i+1),2000)
+                btnClick(i + 1)
             }
         }
     }
@@ -311,7 +318,7 @@
         var count = 0
         var sumPay = 0
         var sumEarn = 0
-        var localCurrency = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td.card_income > a").textContent.slice(0,5)
+        var localCurrency = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(5)").textContent.slice(0,5)
         for (var i = 0;i < boxlist.length;i++){
             if (boxlist[i].checked){
                 count++
@@ -320,7 +327,7 @@
                 sumEarn += getPriceNum(document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td.card_income > a"))
             }
         }
-        popUp('一共勾选了'+ count +'游戏，总价格是' + localCurrency + sumPay.toFixed(2) + '预计赚' + localCurrency + sumEarn.toFixed(2) + "。")
+        popUp('一共勾选了'+ count +'款游戏，总价格是' + localCurrency + sumPay.toFixed(2) + ',预计赚' + localCurrency + sumEarn.toFixed(2) + "。")
     }
     function getPriceNum(a){
         return Number(a.textContent.slice(5))
