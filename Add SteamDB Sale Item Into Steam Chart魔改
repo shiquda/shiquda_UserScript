@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.3
+// @version      1.5.4.4
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -276,18 +276,22 @@
         function btnClick(m){
             document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (m) + ") > td:nth-child(1) > a").click()
         }
-        var postNum = 0
+        var firstAdd = true
         for(var i = 0;i < document.querySelectorAll('.app').length;i++){
             let box = document.querySelector("#box"+ (i + 1)).checked
-            if (box){
+            if (firstAdd && box){
+                firstAdd = false
                 btnClick(i + 1)
+            }
+            else if (box){
+                setTimeout(function(i){btnClick(i + 1)},3000,i)
             }
         }
     }
     function filter(){
         let min = Number(document.querySelector("#lowest").value)
         if (isNaN(min)){
-            popUp("请检查最小值输入！")
+            popUp("请检查CardIncome筛选的最小值输入!")
             return
         }
         for (var i = 0;i < document.querySelectorAll('.app').length;i++){
