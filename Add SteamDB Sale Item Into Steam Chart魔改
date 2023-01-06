@@ -40,9 +40,9 @@
                     if (pattern.test(str)) {
                         // console.log(pattern.exec(str)[1])
                         sessionId = pattern.exec(str)[1];
-                        popUp(`SessionId 獲取成功！${sessionId}`);
+                        popUp(`SessionId 获取成功！${sessionId}`);
                     } else {
-                        popUp(`SessionId 獲取失敗!`);
+                        popUp(`SessionId 获取失败！`);
                     }
                     resolve(sessionId);
                 },
@@ -315,9 +315,7 @@
     }
     function showPrices(){
         var boxlist = document.querySelectorAll(".box")
-        var count = 0
-        var sumPay = 0
-        var sumEarn = 0
+        var count = 0,sumPay = 0,sumEarn = 0
         var localCurrency = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(5)").textContent.slice(0,5)
         for (var i = 0;i < boxlist.length;i++){
             if (boxlist[i].checked){
