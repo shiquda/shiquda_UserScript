@@ -9,3 +9,8 @@ function appendElement(type,text,func,appendTo){
             break
     }
 }
+
+function randomInt(min,max){
+    var num = Math.floor(Math.random() * (max - min + 1) ) + min;
+    return num
+}
