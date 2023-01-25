@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.6
+// @version      1.5.4.5
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -363,7 +363,7 @@
                 sumGet += Number(document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td.card_income").dataset.sort)
             }
         }
-        var earn = sumPay - sumGet
+        var earn = sumGet - sumPay
         popUp('一共勾选了'+ count +'款游戏，总价格是' + localCurrency + sumPay.toFixed(2) + ',预计赚' + localCurrency + earn.toFixed(2) + "。")
     }
     function getPriceNum(a){
