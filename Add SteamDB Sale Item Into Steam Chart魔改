@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.5
+// @version      1.5.4.6
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -22,7 +22,7 @@
     const steamStore = 'https://store.steampowered.com';
     const steamCart = 'https://store.steampowered.com/cart/';
     const steamInfo = 'https://store.steampowered.com/app/'
-    const skipMultiSubs = false //（魔改）是否隐藏多sub显示，选择true后将自动选择第一个sub（一般是价格最低的），可能会造成添加失败，请自行核对，后果自负。
+    const skipMultiSubs = true //（魔改）是否隐藏多sub显示，选择true后将自动选择第一个sub（一般是价格最低的），可能会造成添加失败，请自行核对，后果自负。
 
 
     let sessionId = '';
@@ -349,21 +349,22 @@
         var boxlist = document.querySelectorAll(".box")
         for (var i = 0;i < boxlist.length;i++){
             boxlist[i].checked = !boxlist[i].checked
-        }    
+        }
     }
     function showPrices(){
         var boxlist = document.querySelectorAll(".box")
-        var count = 0,sumPay = 0,sumEarn = 0
+        var count = 0,sumPay = 0,sumGet = 0
         var localCurrency = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(5)").textContent.slice(0,5)
         for (var i = 0;i < boxlist.length;i++){
             if (boxlist[i].checked){
                 count++
                 var pay = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td:nth-child(5)").dataset.sort
                 sumPay += Number(pay)/100
-                sumEarn += Number(document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td.card_income").dataset.sort)
+                sumGet += Number(document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td.card_income").dataset.sort)
             }
         }
-        popUp('一共勾选了'+ count +'款游戏，总价格是' + localCurrency + sumPay.toFixed(2) + ',预计赚' + localCurrency + sumEarn.toFixed(2) + "。")
+        var earn = sumPay - sumGet
+        popUp('一共勾选了'+ count +'款游戏，总价格是' + localCurrency + sumPay.toFixed(2) + ',预计赚' + localCurrency + earn.toFixed(2) + "。")
     }
     function getPriceNum(a){
         return Number(a.textContent.slice(5))
