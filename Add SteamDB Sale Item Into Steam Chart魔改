@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.4
+// @version      1.5.4.5
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -232,46 +232,65 @@
         }
     }, 200)
         function seleceAllBtn(){
-        var allBtn = document.createElement('button')
-        allBtn.textContent = '购物车多选'
-        allBtn.addEventListener('click',()=>{
-            showBox()
+            function enable(){
+                allBtn.disabled = false
+                allBtn.textContent = "开启购物车多选功能"
+            }
+            document.querySelector("#start_card_query").addEventListener("click",enable)
+            var allBtn = document.createElement('button')
+            allBtn.textContent = '先点击👆开启购物车多选功能'
+            allBtn.className = "btn card-filter-btn"
             allBtn.disabled = true
-        })
-        var tab1 = document.querySelector('#card_filter_container')
-        tab1.appendChild(allBtn)
+            allBtn.addEventListener('click',()=>{
+                createUI()
+                allBtn.style.display = "none"
+            })
+            var tab1 = document.querySelector('#card_filter_container')
+            tab1.appendChild(allBtn)
     }
-    function showBox(){
-        var tab1 = document.querySelector('#card_filter_container')
-        appendElement('btn','确认',multiAdd,tab1)
-
-        //表头
-        var table =document.querySelector(".text-left")
-        var mult = document.createElement('a')
-        mult.textContent = "购物车多选"
-        mult.addEventListener('click',showBox)
-        table.appendChild(mult)
-        //筛选
-        appendElement('btn','筛选',filter,tab1)
-        var low = document.createElement("input")
-        low.id = "lowest"
-        low.placeholder = "输入最低的CardIncome"
-        low.style.width = '70%'
-        tab1.appendChild(low)
-        //取消选择
-        appendElement('btn','取消选择',cancelAll,tab1)
+    function createUI(){
         //复选框
         function createBox (num){
             var box = document.createElement("input")
             box.setAttribute("type","checkbox")
             box.className = 'box'
             box.id ='box' + (num)
-            box.textContent = '多选'
+            box.style = "width: 100%;height: 30px;"
             var tab =document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+num+")")
             tab.appendChild(box)
         }
         for(var i = 0;i < document.querySelectorAll('.app').length;i++){createBox(i+1)}
-    }
+        //表头
+        var table = document.querySelector(".text-left")
+        var mult = document.createElement('th')
+        mult.textContent = "购物车多选"
+        mult.id = "boxes"
+        mult.className = "sorting"
+        table.appendChild(mult)
+        //
+
+        var tab1 = document.querySelector('#card_filter_container')
+        appendElement('btn','确认',"btn card-filter-btn",multiAdd,tab1)
+        //筛选
+        appendElement('btn','点击筛选👇可选条件',"btn card-filter-btn",filter,tab1)
+        
+        var low = document.createElement("input")
+        low.id = "lowestIncome"
+        low.placeholder = "输入最低的CardIncome"
+        low.style = "background-color: white;color: black;"
+        tab1.appendChild(low)
+
+        var max = document.createElement("input")
+        max.id = "highestPrice"
+        max.placeholder = "输入最高的游戏价格"
+        max.style = "background-color: white;color: black;"
+        tab1.appendChild(max)
+
+        appendElement('btn','全选',"btn card-filter-btn",tickAll,tab1)
+        appendElement('btn','反选',"btn card-filter-btn",cancelAll,tab1)
+        appendElement('btn','取消选择',"btn card-filter-btn",overturnAll,tab1)
+        appendElement('btn','统计信息',"btn card-filter-btn",showPrices,tab1)
+        }
     function multiAdd(){
         function btnClick(m){
             document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (m) + ") > td:nth-child(1) > a").click()
@@ -289,24 +308,27 @@
         }
     }
     function filter(){
-        let min = Number(document.querySelector("#lowest").value)
-        if (isNaN(min)){
-            popUp("请检查CardIncome筛选的最小值输入!")
+        cancelAll()
+        let min = Number(document.querySelector("#lowestIncome").value)
+        let max = Number(document.querySelector("#highestPrice").value)
+        if (max == 0){max = Infinity}
+        if (isNaN(min)||isNaN(max)||max < 0){
+            popUp("请检查筛选范围的输入!")
             return
         }
         for (var i = 0;i < document.querySelectorAll('.app').length;i++){
             var inc = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i+1) + ") > td.card_income > a").textContent.slice(5)
+            var prc = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i+1) + ") > td:nth-child(5)").dataset.sort
             if (inc === ''){continue}
-            else if (Number(inc) > min){
-            document.querySelector("#box"+(i+1)).checked = true
-            }
+            else if (Number(inc) > min && Number(prc)/100 <= max){document.querySelector("#box"+(i+1)).checked = true}
         }
         showPrices()
     }
-    function appendElement(type,text,func,appendTo){
+    function appendElement(type,text,class_name,func,appendTo){
         if (type === 'btn'){
         var a = document.createElement('button')
         a.textContent = text
+        a.className = class_name
         a.addEventListener("click",func)
         appendTo.appendChild(a)
         }
@@ -317,6 +339,18 @@
             boxlist[i].checked = false
         }
     }
+    function tickAll(){
+        var boxlist = document.querySelectorAll(".box")
+        for (var i = 0;i < boxlist.length;i++){
+            boxlist[i].checked = true
+        }
+    }
+    function overturnAll(){
+        var boxlist = document.querySelectorAll(".box")
+        for (var i = 0;i < boxlist.length;i++){
+            boxlist[i].checked = !boxlist[i].checked
+        }    
+    }
     function showPrices(){
         var boxlist = document.querySelectorAll(".box")
         var count = 0,sumPay = 0,sumEarn = 0
@@ -324,9 +358,9 @@
         for (var i = 0;i < boxlist.length;i++){
             if (boxlist[i].checked){
                 count++
-                var pay = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td:nth-child(5)").textContent.slice(5)
-                sumPay += Number(pay.replace(',','.'))
-                sumEarn += getPriceNum(document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td.card_income > a"))
+                var pay = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td:nth-child(5)").dataset.sort
+                sumPay += Number(pay)/100
+                sumEarn += Number(document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td.card_income").dataset.sort)
             }
         }
         popUp('一共勾选了'+ count +'款游戏，总价格是' + localCurrency + sumPay.toFixed(2) + ',预计赚' + localCurrency + sumEarn.toFixed(2) + "。")
