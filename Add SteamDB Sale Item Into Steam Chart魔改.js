@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.6
+// @version      1.5.4.7
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -249,6 +249,12 @@
             tab1.appendChild(allBtn)
     }
     function createUI(){
+        function addListener(){
+                document.querySelector("#DataTables_Table_0_paginate").addEventListener("click",boxesCreate)
+                document.querySelector("#DataTables_Table_0_length > label > select").addEventListener("change",boxesCreate)
+                document.querySelector("#DataTables_Table_0 > thead").addEventListener("click",boxesCreate)
+            }
+        addListener()
         //复选框
         function createBox (num){
             var box = document.createElement("input")
@@ -256,10 +262,17 @@
             box.className = 'box'
             box.id ='box' + (num)
             box.style = "width: 100%;height: 30px;"
-            var tab =document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+num+")")
+            box.title = "购物车多选"
+            var tab = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+ num +")")
             tab.appendChild(box)
         }
-        for(var i = 0;i < document.querySelectorAll('.app').length;i++){createBox(i+1)}
+        function boxesCreate(){
+            for(var i = 0;i < document.querySelectorAll('.app').length;i++){
+                if (document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i + 1) + ") > input") !== null)continue
+                createBox(i+1)}
+            }
+            //document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td.price-discount")
+        boxesCreate()
         //表头
         var table = document.querySelector(".text-left")
         var mult = document.createElement('th')
@@ -267,13 +280,12 @@
         mult.id = "boxes"
         mult.className = "sorting"
         table.appendChild(mult)
-        //
 
         var tab1 = document.querySelector('#card_filter_container')
         appendElement('btn','确认',"btn card-filter-btn",multiAdd,tab1)
         //筛选
         appendElement('btn','点击筛选👇可选条件',"btn card-filter-btn",filter,tab1)
-        
+
         var low = document.createElement("input")
         low.id = "lowestIncome"
         low.placeholder = "输入最低的CardIncome"
@@ -292,18 +304,19 @@
         appendElement('btn','统计信息',"btn card-filter-btn",showPrices,tab1)
         }
     function multiAdd(){
+        let ckBox = document.querySelectorAll(".box")
         function btnClick(m){
-            document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (m) + ") > td:nth-child(1) > a").click()
+            ckBox[m].parentElement.cells[0].click()
         }
         var firstAdd = true
-        for(var i = 0;i < document.querySelectorAll('.app').length;i++){
-            let box = document.querySelector("#box"+ (i + 1)).checked
+        for(var i = 0;i < ckBox.length;i++){
+            let box = ckBox[i].checked
             if (firstAdd && box){
                 firstAdd = false
-                btnClick(i + 1)
+                btnClick(i)
             }
             else if (box){
-                setTimeout(function(i){btnClick(i + 1)},3000,i)
+                setTimeout(function(i){btnClick(i)},3000,i)
             }
         }
     }
@@ -316,11 +329,12 @@
             popUp("请检查筛选范围的输入!")
             return
         }
+        var boxlist = document.querySelectorAll(".box")
         for (var i = 0;i < document.querySelectorAll('.app').length;i++){
             var inc = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i+1) + ") > td.card_income > a").textContent.slice(5)
             var prc = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i+1) + ") > td:nth-child(5)").dataset.sort
             if (inc === ''){continue}
-            else if (Number(inc) > min && Number(prc)/100 <= max){document.querySelector("#box"+(i+1)).checked = true}
+            else if (Number(inc) > min && Number(prc)/100 <= max){boxlist[i].checked = true}
         }
         showPrices()
     }
@@ -365,8 +379,5 @@
         }
         var earn = sumGet - sumPay
         popUp('一共勾选了'+ count +'款游戏，总价格是' + localCurrency + sumPay.toFixed(2) + ',预计赚' + localCurrency + earn.toFixed(2) + "。")
-    }
-    function getPriceNum(a){
-        return Number(a.textContent.slice(5))
     }
 })();
