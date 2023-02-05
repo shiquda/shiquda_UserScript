@@ -7,6 +7,7 @@
 // @match        https://chat.openai.com/chat/*
 // @match        https://chat.openai.com/chat
 // @grant        none
+// @license      MIT
 // ==/UserScript==
 
 // Add export button to the page
