@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.7
+// @version      1.5.4.8
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -240,7 +240,6 @@
             var allBtn = document.createElement('button')
             allBtn.textContent = '先点击👆开启购物车多选功能'
             allBtn.className = "btn card-filter-btn"
-            allBtn.disabled = true
             allBtn.addEventListener('click',()=>{
                 createUI()
                 allBtn.style.display = "none"
@@ -299,9 +298,10 @@
         tab1.appendChild(max)
 
         appendElement('btn','全选',"btn card-filter-btn",tickAll,tab1)
-        appendElement('btn','反选',"btn card-filter-btn",cancelAll,tab1)
-        appendElement('btn','取消选择',"btn card-filter-btn",overturnAll,tab1)
+        appendElement('btn','反选',"btn card-filter-btn",overturnAll,tab1)
+        appendElement('btn','取消选择',"btn card-filter-btn",cancelAll,tab1)
         appendElement('btn','统计信息',"btn card-filter-btn",showPrices,tab1)
+        appendElement('btn','点击前往Steam购物车',"btn card-filter-btn",goToCart,tab1)
         }
     function multiAdd(){
         let ckBox = document.querySelectorAll(".box")
@@ -368,7 +368,7 @@
     function showPrices(){
         var boxlist = document.querySelectorAll(".box")
         var count = 0,sumPay = 0,sumGet = 0
-        var localCurrency = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(5)").textContent.slice(0,5)
+        var localCurrency = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(5)").textContent.match(/([A-Z]{3})?./)[0]
         for (var i = 0;i < boxlist.length;i++){
             if (boxlist[i].checked){
                 count++
@@ -379,5 +379,8 @@
         }
         var earn = sumGet - sumPay
         popUp('一共勾选了'+ count +'款游戏，总价格是' + localCurrency + sumPay.toFixed(2) + ',预计赚' + localCurrency + earn.toFixed(2) + "。")
+    }
+    function goToCart(){
+        window.open("https://store.steampowered.com/cart/");
     }
 })();
