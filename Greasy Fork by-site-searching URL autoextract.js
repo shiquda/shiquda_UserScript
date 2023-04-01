@@ -6,6 +6,7 @@
 // @author       shiquda
 // @match        https://greasyfork.org/*/scripts/by-site
 // @grant        none
+// @license      MIT
 // ==/UserScript==
 
 (function() {
