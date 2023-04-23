@@ -1,11 +1,15 @@
-## just for testing and learning
+# just for testing and learning
 
-* 1.keylol 板块自动按最新发布排序  https://greasyfork.org/zh-CN/scripts/453565-keylol-板块自动按最新发布排序
+## ~~真的很乱呢，有空再整整~~
 
-* 2.steam购买结账自动勾选同意用户协议 https://greasyfork.org/zh-CN/scripts/455146-steam购买结账自动勾选同意用户协议
+* 1.[keylol 板块自动按最新发布排序](https://greasyfork.org/zh-CN/scripts/453565-keylol-板块自动按最新发布排序)
 
-* 3.Gametame自动领取bonus https://greasyfork.org/zh-CN/scripts/456752-gametame自动领取bonus
+* 2.[steam购买结账自动勾选同意用户协议](https://greasyfork.org/zh-CN/scripts/455146-steam购买结账自动勾选同意用户协议)
 
-* 4.SteamDB加购物车魔改 https://greasyfork.org/zh-CN/scripts/457109-add-steamdb-sale-item-into-steam-chart魔改
+* 3.[Gametame自动领取bonus](https://greasyfork.org/zh-CN/scripts/456752-gametame自动领取bonus)
 
-* 5. ChatGPT 提取markdown https://greasyfork.org/zh-CN/scripts/459473-enhance-chatgpt-user-experience
+* 4.[SteamDB加购物车魔改](https://greasyfork.org/zh-CN/scripts/457109-add-steamdb-sale-item-into-steam-chart魔改)
+
+* 5.[ChatGPT 提取markdown](https://greasyfork.org/zh-CN/scripts/459473-enhance-chatgpt-user-experience)
+
+* 6.[Greasy Fork by-site-searching URL autoextract](https://greasyfork.org/zh-CN/scripts/463040-greasy-fork-by-site-searching-url-autoextract)
