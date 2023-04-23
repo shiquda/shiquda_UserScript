@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.8
+// @version      1.5.4.9
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -23,7 +23,7 @@
     const steamCart = 'https://store.steampowered.com/cart/';
     const steamInfo = 'https://store.steampowered.com/app/'
     const skipMultiSubs = true //（魔改）是否隐藏多sub显示，选择true后将自动选择第一个sub（一般是价格最低的），可能会造成添加失败，请自行核对，后果自负。
-
+    const addCartInterval = 200 //（魔改）多选加入购物车的延时，默认为200ms
 
     let sessionId = '';
 
@@ -231,22 +231,24 @@
             console.log('wait for jquery.jgrowl')
         }
     }, 200)
-        function seleceAllBtn(){
-            function enable(){
-                allBtn.disabled = false
-                allBtn.textContent = "开启购物车多选功能"
-            }
-            document.querySelector("#start_card_query").addEventListener("click",enable)
-            var allBtn = document.createElement('button')
-            allBtn.textContent = '先点击👆开启购物车多选功能'
-            allBtn.className = "btn card-filter-btn"
-            allBtn.addEventListener('click',()=>{
-                createUI()
-                allBtn.style.display = "none"
-            })
-            var tab1 = document.querySelector('#card_filter_container')
-            tab1.appendChild(allBtn)
+
+    function seleceAllBtn(){
+        function enable(){
+            allBtn.disabled = false
+            allBtn.textContent = "开启购物车多选功能"
+        }
+        document.querySelector("#start_card_query").addEventListener("click",enable)
+        var allBtn = document.createElement('button')
+        allBtn.textContent = '先点击👆开启购物车多选功能'
+        allBtn.className = "btn card-filter-btn"
+        allBtn.addEventListener('click',()=>{
+            createUI()
+            allBtn.style.display = "none"
+        })
+        var tab1 = document.querySelector('#card_filter_container')
+        tab1.appendChild(allBtn)
     }
+
     function createUI(){
         function addListener(){
                 document.querySelector("#DataTables_Table_0_paginate").addEventListener("click",boxesCreate)
@@ -303,23 +305,19 @@
         appendElement('btn','统计信息',"btn card-filter-btn",showPrices,tab1)
         appendElement('btn','点击前往Steam购物车',"btn card-filter-btn",goToCart,tab1)
         }
-    function multiAdd(){
-        let ckBox = document.querySelectorAll(".box")
-        function btnClick(m){
-            ckBox[m].parentElement.cells[0].click()
-        }
-        var firstAdd = true
-        for(var i = 0;i < ckBox.length;i++){
-            let box = ckBox[i].checked
-            if (firstAdd && box){
-                firstAdd = false
-                btnClick(i)
+        function multiAdd() {
+            const ckBox = Array.from(document.querySelectorAll('.box')).filter(box => box.checked);
+            function btnClick(m) {
+                ckBox[m].parentElement.cells[0].click()
             }
-            else if (box){
-                setTimeout(function(i){btnClick(i)},3000,i)
+            if (ckBox.length === 0) {
+                return
+            }
+            setTimeout(btnClick, 2500, 0);
+            for (var i = 1; i < ckBox.length - 1; i++) {
+                setTimeout(btnClick, (2500 + addCartInterval * i), i)
             }
         }
-    }
     function filter(){
         cancelAll()
         let min = Number(document.querySelector("#lowestIncome").value)
@@ -372,13 +370,13 @@
         for (var i = 0;i < boxlist.length;i++){
             if (boxlist[i].checked){
                 count++
-                var pay = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td:nth-child(5)").dataset.sort
+                var pay = document.querySelector(`#DataTables_Table_0 > tbody > tr:nth-child(${i+1}) > td:nth-child(5)`).dataset.sort
                 sumPay += Number(pay)/100
-                sumGet += Number(document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+(i+1)+") > td.card_income").dataset.sort)
+                sumGet += Number(document.querySelector(`#DataTables_Table_0 > tbody > tr:nth-child(${i+1}) > td.card_income`).dataset.sort)
             }
         }
         var earn = sumGet - sumPay
-        popUp('一共勾选了'+ count +'款游戏，总价格是' + localCurrency + sumPay.toFixed(2) + ',预计赚' + localCurrency + earn.toFixed(2) + "。")
+        popUp(`一共勾选了${count}款游戏，总价格是${localCurrency} ${sumPay.toFixed(2)}，预计赚${localCurrency} ${earn.toFixed(2)}。`)
     }
     function goToCart(){
         window.open("https://store.steampowered.com/cart/");
