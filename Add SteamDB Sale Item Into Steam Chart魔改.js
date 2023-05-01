@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add SteamDB Sale Item Into Steam Chart魔改
 // @namespace    http://tampermonkey.net/
-// @version      1.5.4.9
+// @version      1.5.4.9.1
 // @description  SteamDB一键添加购物车
 // @icon         https://steamdb.info/static/logos/32px.png
 // @author       shiquda（原作者jklujklu）
@@ -314,7 +314,7 @@
                 return
             }
             setTimeout(btnClick, 2500, 0);
-            for (var i = 1; i < ckBox.length - 1; i++) {
+            for (var i = 1; i < ckBox.length; i++) {
                 setTimeout(btnClick, (2500 + addCartInterval * i), i)
             }
         }
