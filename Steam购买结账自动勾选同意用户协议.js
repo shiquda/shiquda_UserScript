@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam自动勾选同意用户协议
 // @namespace    http://tampermonkey.net/
-// @version      0.2.3
+// @version      0.2.4
 // @description  Steam自动勾选同意用户协议复选框
 // @author       shiquda
 // @include      https://store.steampowered.com/*
@@ -15,6 +15,11 @@
     if ($href.indexOf('checkout') != -1){
         console.log('checkout')
         $('accept_ssa').defaultChecked = true
+        var tab1 = document.querySelector(".cart_totals_area"),
+        tab2 = document.querySelector("#checkout_content_review"),
+        a = document.querySelector("#cart_area")
+        a.insertBefore(tab2,a.firstChild)
+        a.insertBefore(tab1,a.firstChild)
     }
     else if ($href.indexOf('inventory') != -1){
         console.log('inventory')
@@ -24,3 +29,4 @@
         }
     }
 })()
+
