@@ -15,6 +15,14 @@ function randomInt(min,max){
     return num
 }
 
+//中文大数值表示
+function toChineseNum(num,fig){
+    const len = num.length
+    if (len < 5) return num
+    else if (len < 9) return ((num/1e4).toFixed(fig) + "万")
+    else return ((num/1e8).toFixed(2) + "亿")        
+}
+
 //code from ChatGPT
 function sleep(fn, interval) {
     return new Promise(resolve => {
