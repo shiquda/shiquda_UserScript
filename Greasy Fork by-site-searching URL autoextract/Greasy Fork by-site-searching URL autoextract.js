@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         Greasy Fork by-site-searching URL autoextract
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/shiquda/shiquda_UserScript
+// @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @version      0.1
 // @description  Automatically extract the domain name from an input URL.
 // @author       shiquda

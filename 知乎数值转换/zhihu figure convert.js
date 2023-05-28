@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         知乎数值转换
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/shiquda/shiquda_UserScript
+// @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @version      0.1
 // @description  知乎数值转换，用于较大数据的转换，如浏览次数可显示xx.xx万或亿
 // @author       shiquda

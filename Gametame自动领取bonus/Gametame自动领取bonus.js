@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         Gametame自动领取bonus
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/shiquda/shiquda_UserScript
+// @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @version      0.1
 // @description  gametame自动领bonus，在主页面或者bonus zone页面生效
 // @author       shiquda

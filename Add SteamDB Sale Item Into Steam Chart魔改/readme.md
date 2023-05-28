@@ -16,4 +16,4 @@ SteamDB一键添加购物车魔改脚本
 
 ## 首发于其乐：[https://keylol.com/t861551-1-1](https://keylol.com/t861551-1-1)
 
-- [SteamDB加购物车魔改](https://greasyfork.org/zh-CN/scripts/457109-add-steamdb-sale-item-into-steam-chart魔改)
+ # [SteamDB加购物车魔改](https://greasyfork.org/zh-CN/scripts/457109-add-steamdb-sale-item-into-steam-chart魔改)

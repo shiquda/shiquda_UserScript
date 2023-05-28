@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         Steam自动勾选同意用户协议
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/shiquda/shiquda_UserScript
+// @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @version      0.2.5
 // @description  Steam自动勾选同意用户协议复选框
 // @author       shiquda
