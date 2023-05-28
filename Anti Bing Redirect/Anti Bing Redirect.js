@@ -2,8 +2,9 @@
 // @name         Anti Bing Redirect
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=bing.com
 // @version      0.1.0
-// @description  Anti Bing Redirect
+// @description  Remove the redirection of Bing Search by replacing the URL provided.
 // @author       shiquda
 // @match        https://www.bing.com/search?*
 // @license      MIT
