@@ -8,11 +8,11 @@
 // @include      /https://keylol.com/f\d+\-\d+
 // @license      MIT
 // ==/UserScript==
-(function() {
+(function () {
     'use strict';
 
     // Your code here...
     var $url = window.location.href
-    var fid = Number($url.slice(20,23))
+    var fid = Number($url.slice(20, 23))
     window.location.href = 'https://keylol.com/forum.php?mod=forumdisplay&fid=' + fid + '&filter=author&orderby=dateline'
 })()

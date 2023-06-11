@@ -54,7 +54,7 @@
     }
 
     function addChart(subId, subType, appId, parentElement) {
-        if (subType !== 'game'){
+        if (subType !== 'game') {
             popUp('暂不支持添加Bundle类型的游戏！');
             return;
         }
@@ -90,8 +90,8 @@
         $.jGrowl(msg)
     }
 
-    function getGameSubs(appId){
-        return new Promise(resolve =>{
+    function getGameSubs(appId) {
+        return new Promise(resolve => {
             GM_xmlhttpRequest({
                 url: steamInfo + appId,
                 headers: {
@@ -101,7 +101,7 @@
                 method: 'GET',
                 onload: response => {
                     console.log("获取游戏界面成功！");
-                    if(response.responseText.indexOf('agegate_birthday_selector') !== -1){
+                    if (response.responseText.indexOf('agegate_birthday_selector') !== -1) {
                         resolve('birthday')
                     }
                     const doc = new DOMParser().parseFromString(response.responseText, 'text/html');
@@ -112,11 +112,11 @@
                         let input_sub = game.querySelector('form input[name="subid"]');
                         const div_discount = game.querySelector('.discount_pct');
                         let div_price = game.querySelector('.discount_final_price');
-                        if(!div_discount){
+                        if (!div_discount) {
                             div_price = game.querySelector('.game_purchase_price');
                         }
                         let subType = 'game';
-                        if(!input_sub){
+                        if (!input_sub) {
                             subType = 'bundle';
                             input_sub = game.querySelector('form input[name="bundleid"]');
                         }
@@ -125,7 +125,7 @@
                         const sub = input_sub.getAttribute('value');
                         const price = div_price.firstChild.nodeValue.replace(/(^\s*)|(\s*$)/g, "");
                         console.log(title, discount, price, sub, subType);
-                        games.push({title, discount, price, sub, subType})
+                        games.push({ title, discount, price, sub, subType })
                     }
                     resolve(games);
                 },
@@ -136,7 +136,7 @@
         })
     }
 
-    function bindElement(){
+    function bindElement() {
         console.log('start bind steam icon')
         const appimgs = document.querySelectorAll('.app');
         for (let index = 0; index < appimgs.length; index++) {
@@ -144,24 +144,24 @@
             if (element.querySelector('td:nth-child(1) a').getAttribute('href') !== 'javascript:void(0)') {
                 element.querySelector('td:nth-child(1) a').setAttribute('href', 'javascript:void(0)');
                 element.querySelector('td:nth-child(1) a').removeAttribute('target');
-                element.querySelector('td:nth-child(1)').onclick = async() => {
+                element.querySelector('td:nth-child(1)').onclick = async () => {
                     document.querySelector('#app-2 tbody').innerHTML = '';
                     const dataId = element.getAttribute('data-appid');
                     const subs = await getGameSubs(dataId);
-                    if(subs === 'birthday'){
+                    if (subs === 'birthday') {
                         popUp('需要进行生日验证，请手动前往该游戏页面验证！');
-                        window.open(steamInfo + dataId,"_blank", '');
+                        window.open(steamInfo + dataId, "_blank", '');
                         return;
                     }
                     const game_subs = subs.filter(e => e.subType === 'game');
-                    if(game_subs.length === 1){
+                    if (game_subs.length === 1) {
                         addChart(game_subs[0].sub, game_subs[0].subType, dataId, element);
                         return;
-                    }else if(game_subs.length === 0){
+                    } else if (game_subs.length === 0) {
                         popUp('未找到该游戏的Sub，请前往商店查看是否存在购买选项！');
-                        window.open(steamInfo + dataId,"_blank", '');
+                        window.open(steamInfo + dataId, "_blank", '');
                         return;
-                    }else if(game_subs.length >0 && skipMultiSubs){
+                    } else if (game_subs.length > 0 && skipMultiSubs) {
                         addChart(game_subs[0].sub, game_subs[0].subType, dataId, element)
                         return
                     }
@@ -177,7 +177,7 @@
                             <th>${game.subType}</th>
                             <th>${game.sub}</th>
                             <th><button class="btn">Add</div></th>`
-                        _tr.querySelector('.btn').addEventListener('click', ()=>{
+                        _tr.querySelector('.btn').addEventListener('click', () => {
                             addChart(game.sub, game.subType, dataId, element);
                         })
                         document.querySelector('#app-2 tbody').append(_tr);
@@ -187,7 +187,7 @@
         }
     }
 
-    function initPane(){
+    function initPane() {
         const div = document.createElement('div');
         div.innerHTML =
             `<div id="app-2" class="header-sales-filters" style="display:none;opacity: 0;transition: 0.5s;width: 60%;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);background: #eee;z-index: 9999;color: black;padding: 10px;">
@@ -213,7 +213,7 @@
     const layerCss = GM_getResourceText('layerCss');
     GM_addStyle(layerCss);
 
-    async function start(){
+    async function start() {
         initPane();
         seleceAllBtn()
         bindElement();
@@ -222,26 +222,26 @@
         $("#DataTables_Table_0 > tbody").bind('DOMNodeInserted', bindElement);
     }
 
-    const timer = setInterval(()=>{
-        if(typeof $.jGrowl === 'function'){
+    const timer = setInterval(() => {
+        if (typeof $.jGrowl === 'function') {
             document.styleSheets[0].addRule('#jGrowl', 'top: 48px');
             clearInterval(timer);
             start();
-        }else{
+        } else {
             console.log('wait for jquery.jgrowl')
         }
     }, 200)
 
-    function seleceAllBtn(){
-        function enable(){
+    function seleceAllBtn() {
+        function enable() {
             allBtn.disabled = false
             allBtn.textContent = "开启购物车多选功能"
         }
-        document.querySelector("#start_card_query").addEventListener("click",enable)
+        document.querySelector("#start_card_query").addEventListener("click", enable)
         var allBtn = document.createElement('button')
         allBtn.textContent = '先点击👆开启购物车多选功能'
         allBtn.className = "btn card-filter-btn"
-        allBtn.addEventListener('click',()=>{
+        allBtn.addEventListener('click', () => {
             createUI()
             allBtn.style.display = "none"
         })
@@ -249,30 +249,31 @@
         tab1.appendChild(allBtn)
     }
 
-    function createUI(){
-        function addListener(){
-                document.querySelector("#DataTables_Table_0_paginate").addEventListener("click",boxesCreate)
-                document.querySelector("#DataTables_Table_0_length > label > select").addEventListener("change",boxesCreate)
-                document.querySelector("#DataTables_Table_0 > thead").addEventListener("click",boxesCreate)
-            }
+    function createUI() {
+        function addListener() {
+            document.querySelector("#DataTables_Table_0_paginate").addEventListener("click", boxesCreate)
+            document.querySelector("#DataTables_Table_0_length > label > select").addEventListener("change", boxesCreate)
+            document.querySelector("#DataTables_Table_0 > thead").addEventListener("click", boxesCreate)
+        }
         addListener()
         //复选框
-        function createBox (num){
+        function createBox(num) {
             var box = document.createElement("input")
-            box.setAttribute("type","checkbox")
+            box.setAttribute("type", "checkbox")
             box.className = 'box'
-            box.id ='box' + (num)
+            box.id = 'box' + (num)
             box.style = "width: 100%;height: 30px;"
             box.title = "购物车多选"
-            var tab = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child("+ num +")")
+            var tab = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + num + ")")
             tab.appendChild(box)
         }
-        function boxesCreate(){
-            for(var i = 0;i < document.querySelectorAll('.app').length;i++){
-                if (document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i + 1) + ") > input") !== null)continue
-                createBox(i+1)}
+        function boxesCreate() {
+            for (var i = 0; i < document.querySelectorAll('.app').length; i++) {
+                if (document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i + 1) + ") > input") !== null) continue
+                createBox(i + 1)
             }
-            //document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td.price-discount")
+        }
+        //document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td.price-discount")
         boxesCreate()
         //表头
         var table = document.querySelector(".text-left")
@@ -283,9 +284,9 @@
         table.appendChild(mult)
 
         var tab1 = document.querySelector('#card_filter_container')
-        appendElement('btn','确认',"btn card-filter-btn",multiAdd,tab1)
+        appendElement('btn', '确认', "btn card-filter-btn", multiAdd, tab1)
         //筛选
-        appendElement('btn','点击筛选👇可选条件',"btn card-filter-btn",filter,tab1)
+        appendElement('btn', '点击筛选👇可选条件', "btn card-filter-btn", filter, tab1)
 
         var low = document.createElement("input")
         low.id = "lowestIncome"
@@ -299,86 +300,86 @@
         max.style = "background-color: white;color: black;"
         tab1.appendChild(max)
 
-        appendElement('btn','全选',"btn card-filter-btn",tickAll,tab1)
-        appendElement('btn','反选',"btn card-filter-btn",overturnAll,tab1)
-        appendElement('btn','取消选择',"btn card-filter-btn",cancelAll,tab1)
-        appendElement('btn','统计信息',"btn card-filter-btn",showPrices,tab1)
-        appendElement('btn','点击前往Steam购物车',"btn card-filter-btn",goToCart,tab1)
+        appendElement('btn', '全选', "btn card-filter-btn", tickAll, tab1)
+        appendElement('btn', '反选', "btn card-filter-btn", overturnAll, tab1)
+        appendElement('btn', '取消选择', "btn card-filter-btn", cancelAll, tab1)
+        appendElement('btn', '统计信息', "btn card-filter-btn", showPrices, tab1)
+        appendElement('btn', '点击前往Steam购物车', "btn card-filter-btn", goToCart, tab1)
+    }
+    function multiAdd() {
+        const ckBox = Array.from(document.querySelectorAll('.box')).filter(box => box.checked);
+        function btnClick(m) {
+            ckBox[m].parentElement.cells[0].click()
         }
-        function multiAdd() {
-            const ckBox = Array.from(document.querySelectorAll('.box')).filter(box => box.checked);
-            function btnClick(m) {
-                ckBox[m].parentElement.cells[0].click()
-            }
-            if (ckBox.length === 0) {
-                return
-            }
-            btnClick(0)
-            for (var i = 1; i < ckBox.length; i++) {
-                setTimeout(btnClick, (2500 + addCartInterval * i), i)
-            }
+        if (ckBox.length === 0) {
+            return
         }
-    function filter(){
+        btnClick(0)
+        for (var i = 1; i < ckBox.length; i++) {
+            setTimeout(btnClick, (2500 + addCartInterval * i), i)
+        }
+    }
+    function filter() {
         cancelAll()
         let min = Number(document.querySelector("#lowestIncome").value)
         let max = Number(document.querySelector("#highestPrice").value)
-        if (max == 0){max = Infinity}
-        if (isNaN(min)||isNaN(max)||max < 0){
+        if (max == 0) { max = Infinity }
+        if (isNaN(min) || isNaN(max) || max < 0) {
             popUp("请检查筛选范围的输入!")
             return
         }
         var boxlist = document.querySelectorAll(".box")
-        for (var i = 0;i < document.querySelectorAll('.app').length;i++){
-            var inc = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i+1) + ") > td.card_income > a").textContent.slice(5)
-            var prc = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i+1) + ") > td:nth-child(5)").dataset.sort
-            if (inc === ''){continue}
-            else if (Number(inc) > min && Number(prc)/100 <= max){boxlist[i].checked = true}
+        for (var i = 0; i < document.querySelectorAll('.app').length; i++) {
+            var inc = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i + 1) + ") > td.card_income > a").textContent.slice(5)
+            var prc = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(" + (i + 1) + ") > td:nth-child(5)").dataset.sort
+            if (inc === '') { continue }
+            else if (Number(inc) > min && Number(prc) / 100 <= max) { boxlist[i].checked = true }
         }
         showPrices()
     }
-    function appendElement(type,text,class_name,func,appendTo){
-        if (type === 'btn'){
-        var a = document.createElement('button')
-        a.textContent = text
-        a.className = class_name
-        a.addEventListener("click",func)
-        appendTo.appendChild(a)
+    function appendElement(type, text, class_name, func, appendTo) {
+        if (type === 'btn') {
+            var a = document.createElement('button')
+            a.textContent = text
+            a.className = class_name
+            a.addEventListener("click", func)
+            appendTo.appendChild(a)
         }
     }
-    function cancelAll(){
+    function cancelAll() {
         var boxlist = document.querySelectorAll(".box")
-        for (var i = 0;i < boxlist.length;i++){
+        for (var i = 0; i < boxlist.length; i++) {
             boxlist[i].checked = false
         }
     }
-    function tickAll(){
+    function tickAll() {
         var boxlist = document.querySelectorAll(".box")
-        for (var i = 0;i < boxlist.length;i++){
+        for (var i = 0; i < boxlist.length; i++) {
             boxlist[i].checked = true
         }
     }
-    function overturnAll(){
+    function overturnAll() {
         var boxlist = document.querySelectorAll(".box")
-        for (var i = 0;i < boxlist.length;i++){
+        for (var i = 0; i < boxlist.length; i++) {
             boxlist[i].checked = !boxlist[i].checked
         }
     }
-    function showPrices(){
+    function showPrices() {
         var boxlist = document.querySelectorAll(".box")
-        var count = 0,sumPay = 0,sumGet = 0
+        var count = 0, sumPay = 0, sumGet = 0
         var localCurrency = document.querySelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(5)").textContent.match(/([A-Z]{3})?./)[0]
-        for (var i = 0;i < boxlist.length;i++){
-            if (boxlist[i].checked){
+        for (var i = 0; i < boxlist.length; i++) {
+            if (boxlist[i].checked) {
                 count++
-                var pay = document.querySelector(`#DataTables_Table_0 > tbody > tr:nth-child(${i+1}) > td:nth-child(5)`).dataset.sort
-                sumPay += Number(pay)/100
-                sumGet += Number(document.querySelector(`#DataTables_Table_0 > tbody > tr:nth-child(${i+1}) > td.card_income`).dataset.sort)
+                var pay = document.querySelector(`#DataTables_Table_0 > tbody > tr:nth-child(${i + 1}) > td:nth-child(5)`).dataset.sort
+                sumPay += Number(pay) / 100
+                sumGet += Number(document.querySelector(`#DataTables_Table_0 > tbody > tr:nth-child(${i + 1}) > td.card_income`).dataset.sort)
             }
         }
         var earn = sumGet - sumPay
         popUp(`一共勾选了${count}款游戏，总价格是${localCurrency} ${sumPay.toFixed(2)}，预计赚${localCurrency} ${earn.toFixed(2)}。`)
     }
-    function goToCart(){
+    function goToCart() {
         window.open("https://store.steampowered.com/cart/");
     }
 })();

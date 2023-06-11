@@ -10,7 +10,7 @@
 // @license      MIT
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
     //提取url的被加密字符串并解密
     function decode(url) {
@@ -19,16 +19,16 @@
         if (match) {
             const encodedString = match[0].replace(/-/g, '+').replace(/_/g, '/');
             const decodedString = atob(encodedString);
-        return decodedString;
+            return decodedString;
         }
-    return null;
+        return null;
     }
-    function replaceURLs(){
+    function replaceURLs() {
         //var txt = ""
         const URLs = document.querySelectorAll("a")
-        for (var i = 0;i < URLs.length;i++){
+        for (var i = 0; i < URLs.length; i++) {
             const rpl = decode(URLs[i].href)
-            if (rpl){
+            if (rpl) {
                 URLs[i].href = rpl
                 //txt += (" " + rpl)
             }

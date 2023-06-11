@@ -10,11 +10,11 @@
 // @license      MIT
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
     var tab = document.querySelector("body > div.width-constraint > section > form > input[type=search]:nth-child(2)")
-    tab.addEventListener("input",change)
-    function change(){
+    tab.addEventListener("input", change)
+    function change() {
         var text = tab.value
         var change = text.match(/^https?:\/\/(?:www\.)?([^/?#]+)/i)[1]
         tab.value = change
