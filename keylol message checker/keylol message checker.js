@@ -25,7 +25,7 @@
         currentTimestamp - lastExecutionTimestamp > interval * 60 * 1000
     ) check()
     else {
-        // console.log(`时间间隔在${interval}分钟内`);
+        console.log(`时间间隔在${interval}分钟内`);
         return;
     }
     setTimeout(check, (interval * 60 + 1) * 1000)
