@@ -1,13 +1,11 @@
 // ==UserScript==
 // @name         keylol检测是否有通知
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.1
 // @description  keylol检测是否有通知，在指定间隔下运行
 // @author       shiquda
-// @namespace    https://github.com/shiquda/shiquda_UserScript
-// @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @match        *://*/*
-// @icon         https://keylol.com/favicon.ico
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=keylol.com
 // @grant        GM_xmlhttpRequest
 // @grant        GM_notification
 // @grant        GM_setValue
@@ -17,7 +15,6 @@
 
 (function () {
     const interval = 5; // 检测间隔，单位是分钟
-    const timeout = 5; // 通知显示时间，单位是秒
 
 
 
@@ -28,7 +25,7 @@
         currentTimestamp - lastExecutionTimestamp > interval * 60 * 1000
     ) check()
     else {
-        console.log(`${t}   时间间隔在${interval}分钟内.`);
+        console.log(`时间间隔在${interval}分钟内`);
         return;
     }
     setTimeout(check, (interval * 60 + 1) * 1000)
@@ -36,7 +33,6 @@
 
 
     function check() {
-        const t = getBriefTime()
         // 执行脚本的代码
         GM_xmlhttpRequest({
             method: "GET",
@@ -49,40 +45,34 @@
                 var elements = doc.getElementsByClassName(
                     "btn-user-action-highlight"
                 );
-
                 if (elements.length > 0) {
                     GM_notification({
                         text: "点击前往", // 通知的文本内容
-                        title: `Keylol有消息！`, // 通知的标题（可选）
-                        timeout: 1000 * timeout, // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
+                        title: "Keylol有消息！", // 通知的标题（可选）
+                        timeout: 5000, // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
                         onclick: function () {
                             window.open(
                                 "https://keylol.com/home.php?mod=space&do=notice"
                             );
                         },
                     });
-                } else {
-                    console.log(`${t}   keylol没有通知.`);
-                }
+                } else console.log("keylol没有通知。");
+                /*            else {
+                GM_notification({
+                    text: '点击前往',  // 通知的文本内容
+                    title: 'Keylol没有消息。',  // 通知的标题（可选）
+                    timeout: 5000,  // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
+                    onclick: function() {
+                        window.open("https://keylol.com/home.php?mod=space&do=notice");
+                        }
+                    })
+            }
+            */
             },
             onerror: function (error) {
                 console.error(error); // 处理错误
             },
         });
         GM_setValue("lastExecutionTimestamp", currentTimestamp);
-    }
-    function getBriefTime(d) {
-        d = d ? d : new Date()
-        // 获取小时、分钟和秒
-        const hours = d.getHours();
-        const minutes = d.getMinutes();
-        const seconds = d.getSeconds();
-        // 格式化小时、分钟和秒，确保它们始终是两位数
-        hours = (hours < 10 ? "0" : "") + hours;
-        minutes = (minutes < 10 ? "0" : "") + minutes;
-        seconds = (seconds < 10 ? "0" : "") + seconds;
-        const currentTime = hours + ":" + minutes + ":" + seconds;
-        // 打印当前时间
-        return currentTime;
     }
 })();
