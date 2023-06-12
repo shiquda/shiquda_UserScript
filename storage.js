@@ -42,3 +42,20 @@ function executeWithInterval(fn, interval, times) {
 
 // 示例：每隔100ms打印一次 "Hello, world!"，共打印5次
 //executeWithInterval(() => console.log("Hello, world!"), 100, 5);
+
+
+// 创建一个新的Date对象
+function getBriefTime(d) {
+    d = d ? d : new Date()
+    // 获取小时、分钟和秒
+    const hours = d.getHours();
+    const minutes = d.getMinutes();
+    const seconds = d.getSeconds();
+    // 格式化小时、分钟和秒，确保它们始终是两位数
+    hours = (hours < 10 ? "0" : "") + hours;
+    minutes = (minutes < 10 ? "0" : "") + minutes;
+    seconds = (seconds < 10 ? "0" : "") + seconds;
+    const currentTime = hours + ":" + minutes + ":" + seconds;
+    // 打印当前时间
+    return currentTime;
+}
