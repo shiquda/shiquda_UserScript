@@ -20,7 +20,7 @@
     const timeout = 5; // 通知显示时间，单位是秒
 
 
-
+    let t = getBriefTime()
     var lastExecutionTimestamp = GM_getValue("lastExecutionTimestamp");
     var currentTimestamp = new Date().getTime();
     if (
@@ -36,7 +36,7 @@
 
 
     function check() {
-        const t = getBriefTime()
+        let t = getBriefTime()
         // 执行脚本的代码
         GM_xmlhttpRequest({
             method: "GET",
@@ -72,17 +72,17 @@
         GM_setValue("lastExecutionTimestamp", currentTimestamp);
     }
     function getBriefTime(d) {
-        d = d ? d : new Date()
+        d = d ? new Date() : new Date();
         // 获取小时、分钟和秒
-        const hours = d.getHours();
-        const minutes = d.getMinutes();
-        const seconds = d.getSeconds();
+        let hours = d.getHours();
+        let minutes = d.getMinutes();
+        let seconds = d.getSeconds();
         // 格式化小时、分钟和秒，确保它们始终是两位数
         hours = (hours < 10 ? "0" : "") + hours;
         minutes = (minutes < 10 ? "0" : "") + minutes;
         seconds = (seconds < 10 ? "0" : "") + seconds;
         const currentTime = hours + ":" + minutes + ":" + seconds;
-        // 打印当前时间
+        // 返回当前时间
         return currentTime;
     }
 })();
