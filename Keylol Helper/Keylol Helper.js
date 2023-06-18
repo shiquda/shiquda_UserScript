@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.2.2
+// @version      0.2.1
 // @description  Keylol Helper 提供其乐论坛多便捷功能支持，包括自动检测是否有其乐消息，
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -24,13 +24,19 @@
     const botID = "" // 指定的ASF bot名字
     const message = "{:17_1010:}"// 自动回复要发送的信息，默认为阿鲁点赞
     const checkInterval = 5; // 检测消息间隔，单位是分钟
-    const noticeTimeout = 10; // Win10/11通知显示时间，单位是秒
+    const noticfeTimeout = 10; // Win10/11通知显示时间，单位是秒
 
 
 
 
 
-    const featureInfo = ['检测是否有其乐消息', '添加自动回复功能', '抽奖自动加愿望单', '快速跳转激活key', '检查是否已回贴']
+    const featureInfo = [
+        '检测是否有其乐消息',
+        '添加自动回复功能',
+        '抽奖自动加愿望单',
+        '快速跳转激活key',
+        '检查是否已回贴'
+    ]
 
     for (var i = 0; i < featureInfo.length; i++) {
         setMenu(featureInfo[i])
@@ -215,7 +221,7 @@
                         GM_notification({
                             text: "点击前往", // 通知的文本内容
                             title: `Keylol有消息！`, // 通知的标题（可选）
-                            timeout: 1000 * noticeTimeout, // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
+                            timeout: 1000 * noticfeTimeout, // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
                             onclick: function () {
                                 window.open(
                                     "https://keylol.com/home.php?mod=space&do=notice"
@@ -249,19 +255,29 @@
     }
 
     // 检测帖子是否已恢复 感谢@chr_
-    function amIReplied() {
+    async function amIReplied(){
+        "use strict";
         if (!GM_getValue('检查是否已回贴')) return
+
         if ((location.pathname === "/forum.php" && !location.search.includes("tid")) || location.search.includes("authorid")) {
             return;
         }
 
-        const userId = discuz_uid
-        const testUrl = location.href + `&authorid=${userId}`;
+        const inlineMode = window.localStorage.getItem("air_inline") ?? "关";
+
+        const isDiscuz = typeof discuz_uid != "undefined";
+
+        const userId = isDiscuz ? discuz_uid : __CURRENT_UID;
+
+        const testUrl = location.href + (location.search ? `&authorid=${userId}` : `?authorid=${userId}`);
+
         fetch(testUrl)
             .then((res) => res.text())
             .then((html) => {
                 const replied = !(html.includes("未定义操作") || html.includes("ERROR:"));
+
                 const text = replied ? "✅已经回过贴了" : "❌还没回过贴子";
+
                 const tips = document.createElement("a");
                 tips.textContent = text;
                 if (replied) {
@@ -275,10 +291,41 @@
                             alert("❌还没回过贴子");
                         }
                     });
-                    const tab = document.querySelector("#pgt")
-                    tab.appendChild(tips)
                 }
-            }
-        )}
+
+                if (isDiscuz) {
+                    const btnArea = inlineMode !== "开" ?
+                        document.querySelector("#pgt") :
+                        document.querySelector("#postlist td.plc div.authi>span.none") ??
+                        document.querySelector("#postlist td.plc div.authi>span.pipe");
+
+                    if (btnArea === null) {
+                        return;
+                    }
+
+                    if (btnArea.tagName === "SPAN") {
+                        const span = document.createElement("span");
+                        span.textContent = "|";
+                        span.className = "pipe";
+                        const bar = btnArea.parentNode;
+                        bar.insertBefore(span, btnArea);
+                        bar.insertBefore(tips, btnArea);
+                    } else {
+                        btnArea.appendChild(tips);
+                    }
+                } else {
+                    const btnArea = document.querySelector("#m_nav>.nav");
+                    const anchor = btnArea.querySelector("div.clear");
+
+                    if (btnArea === null || anchor === null) {
+                        return;
+                    }
+
+                    tips.className = "nav_link";
+                    btnArea.insertBefore(tips, anchor);
+                }
+
+            });
+        }
     }
 ) ();
