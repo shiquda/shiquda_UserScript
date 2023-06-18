@@ -14,8 +14,10 @@
 | [3] | [Gametame 自动领取 bonus](/Gametame自动领取bonus)  |![3_b]  |❌|
 | [4] | [SteamDB 加购物车魔改](/Add%20SteamDB%20Sale%20Item%20Into%20Steam%20Chart魔改) | ![4_b] |❌|
 | [5] | [ChatGPT 提取 markdown](/Enhanced%20ChatGPT) | ![5_b] |❌|
-| [6] | [Greasy Fork by-site-searching URL    autoextract](/Greasy%20Fork%20by-site-searching%20URL%20autoextract) | ![6_b] |✔|
-
+| [6] | [Greasy Fork by-site-searching URL autoextract](/Greasy%20Fork%20by-site-searching%20URL%20autoextract) | ![6_b] |✔|
+| [7] | [Keylol Helper](/Keylol%20Helper) | ![7_b] |✔|
+| [8] | [Anti Bing Redirect](/Anti%20Bing%20Redirect) | ![8_b] |✔|
+| [9] | [知乎数值转换](/知乎数值转换) | ![9_b] |✔|
 
 [1_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/453565.json
 [1]: https://greasyfork.org/zh-CN/scripts/453565
@@ -29,4 +31,11 @@
 [5]: https://greasyfork.org/zh-CN/scripts/459473
 [6_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/463040.json
 [6]: https://greasyfork.org/zh-CN/scripts/463040
+[7_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/468930.json
+[7]: https://greasyfork.org/zh-CN/scripts/468930
+[8_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/467278.json
+[8]: https://greasyfork.org/zh-CN/scripts/467278
+[9_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/466764.json
+[9]: https://greasyfork.org/zh-CN/scripts/466764
+
 [Greasy Fork]: https://greasyfork.org/zh-CN/users/935206-shiquda
