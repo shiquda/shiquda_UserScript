@@ -1,10 +1,10 @@
 # Keylol Helper 脚本简介
 
-## 重点功能：
+## 功能：
 
 1. 自动检测是否有其乐消息
 
-   - 在已登录的状态下检测是否有其乐消息，有的话则用 Windows10/11 自带的通知模块显示一个通知，点击可前往[消息提醒页面](https://keylol.com/home.php?mod=space&do=notice)
+   - 在已登录的状态下检测是否有其乐消息，**即使您在站外**。若有则用 Windows10/11 自带的通知模块显示一个通知，点击可前往[消息提醒页面](https://keylol.com/home.php?mod=space&do=notice)
    - 默认间隔：5 分钟，通知显示 10 秒。
 
 2. 添加自动回复功能

@@ -2,7 +2,7 @@
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
 // @version      0.2.0
-// @description  Keylol Helper
+// @description  Keylol Helper 提供其乐论坛多便捷功能支持，包括自动检测是否有其乐消息，
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
