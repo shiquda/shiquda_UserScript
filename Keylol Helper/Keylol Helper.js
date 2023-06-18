@@ -14,7 +14,7 @@
 // @grant        GM_addStyle
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @license      MIT
+// @license      AGPL-3.0
 // ==/UserScript==
 
 (function () {
@@ -30,7 +30,7 @@
 
 
 
-    const featureInfo = ['检测是否有其乐消息', '添加自动回复功能', '抽奖自动加愿望单', '快速跳转激活key']
+    const featureInfo = ['检测是否有其乐消息', '添加自动回复功能', '抽奖自动加愿望单', '快速跳转激活key', '检查是否已回贴']
 
     for (var i = 0; i < featureInfo.length; i++) {
         setMenu(featureInfo[i])
@@ -38,6 +38,7 @@
     checkNotice()
     if (isInSite()) {
         addCSS()
+        amIReplied()
         autoReply()
         keyGiving()
         addList()
@@ -49,7 +50,7 @@
             GM_setValue(name, !status);
             window.location.reload();
         });
-        function initialize(name){
+        function initialize(name) {
             GM_setValue(name, true)
             return true
         }
@@ -68,9 +69,8 @@
         GM_addStyle(`
         .s_btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 9px 8px;
             font-size: 20px;
-            font-weight: bold;
             text-align: center;
             text-decoration: none;
             border-radius: 5px;
@@ -247,5 +247,37 @@
             return currentTime;
         }
     }
-}
-)();
+
+    // 检测帖子是否已恢复 感谢@chr_
+    function amIReplied() {
+        if (!GM_getValue('检查是否已回贴')) return
+        if ((location.pathname === "/forum.php" && !location.search.includes("tid")) || location.search.includes("authorid")) {
+            return;
+        }
+
+        const isDiscuz = typeof discuz_uid != "undefined";
+        const userId = discuz_uid
+        const testUrl = location.href + (location.search ? `&authorid=${userId}` : `?authorid=${userId}`);
+        fetch(testUrl)
+            .then((res) => res.text())
+            .then((html) => {
+                const replied = !(html.includes("未定义操作") || html.includes("ERROR:"));
+                const text = replied ? "✅已经回过贴了" : "❌还没回过贴子";
+                const tips = document.createElement("a");
+                tips.textContent = text;
+                if (replied) {
+                    tips.href = testUrl;
+                } else {
+                    tips.addEventListener("click", () => {
+                        if (isDiscuz) {
+                            showError("❌还没回过贴子");
+                        }
+                        else {
+                            alert("❌还没回过贴子");
+                        }
+                    });
+                }
+            }
+        )}
+    }
+) ();
