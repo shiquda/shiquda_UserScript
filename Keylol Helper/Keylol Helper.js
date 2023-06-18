@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.2.0
 // @description  Keylol Helper
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
