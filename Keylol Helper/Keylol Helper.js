@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.2.2
+// @version      0.2.3
 // @description  Keylol Helper 提供其乐论坛多便捷功能支持，包括自动检测是否有其乐消息，
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -24,7 +24,7 @@
     const botID = "" // 指定的ASF bot名字
     const message = "{:17_1010:}"// 自动回复要发送的信息，默认为阿鲁点赞
     const checkInterval = 5; // 检测消息间隔，单位是分钟
-    const noticfeTimeout = 10; // Win10/11通知显示时间，单位是秒
+    const noticeTimeout = 10; // Win10/11通知显示时间，单位是秒
 
 
 
@@ -221,7 +221,7 @@
                         GM_notification({
                             text: "点击前往", // 通知的文本内容
                             title: `Keylol有消息！`, // 通知的标题（可选）
-                            timeout: 1000 * noticfeTimeout, // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
+                            timeout: 1000 * noticeTimeout, // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
                             onclick: function () {
                                 window.open(
                                     "https://keylol.com/home.php?mod=space&do=notice"
@@ -254,7 +254,7 @@
         }
     }
 
-    // 检测帖子是否已恢复 感谢@chr_
+    // 检测帖子是否已回复 感谢@chr_
     async function amIReplied(){
         "use strict";
         if (!GM_getValue('检查是否已回贴')) return
