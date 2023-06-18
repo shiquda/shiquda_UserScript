@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.1.1
 // @description  Keylol Helper
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -11,7 +11,6 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
 // @grant        GM_notification
-// @grant        GM_setClipboard
 // @grant        GM_addStyle
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -21,11 +20,20 @@
 (function () {
     'use strict';
 
-    const info = ['自动检测是否有其乐消息', '添加自动回复功能', '抽奖自动加愿望单', '快速跳转激活key']
+    // 用户配置
+    const botID = "" // 指定的ASF bot名字
+    const message = "{:17_1010:}"// 自动回复要发送的信息，默认为阿鲁点赞
+    const checkInterval = 5; // 检测消息间隔，单位是分钟
+    const noticfeTimeout = 10; // Win10/11通知显示时间，单位是秒
 
 
-    for (var i = 0; i < info.length; i++) {
-        setMenu(info[i])
+
+
+
+    const featureInfo = ['检测是否有其乐消息', '添加自动回复功能', '抽奖自动加愿望单', '快速跳转激活key']
+
+    for (var i = 0; i < featureInfo.length; i++) {
+        setMenu(featureInfo[i])
     }
     checkNotice()
     if (isInSite()) {
@@ -35,14 +43,16 @@
         addList()
     }
 
-
-
     function setMenu(name) {
-        const status = GM_getValue(name) ? GM_getValue(name) : true;
+        const status = (GM_getValue(name) !== undefined) ? GM_getValue(name) : initialize(name);
         GM_registerMenuCommand(`${name}: ${status}`, () => {
             GM_setValue(name, !status);
             window.location.reload();
         });
+        function initialize(name){
+            GM_setValue(name, true)
+            return true
+        }
     }
 
 
@@ -87,7 +97,6 @@
     // 添加自动回复功能
     function autoReply() {
         if (!GM_getValue('添加自动回复功能')) return
-        const message = "{:17_1010:}"//要发送的信息
 
 
         createUI1()
@@ -116,8 +125,7 @@
     // 快速跳转激活key
     function keyGiving() {
         if (!GM_getValue('快速跳转激活key')) return
-        const keytab = document.querySelectorAll(".sk_info")
-        if (keytab) {
+        if (document.querySelector(".subforum_left_title_left_up").innerText.indexOf("[明Key]") > -1) {
             const url = 'https://store.steampowered.com/account/registerkey'
             const tab = document.querySelector("#pgt")
             const container = document.createElement('button');
@@ -133,15 +141,12 @@
 
         if (!GM_getValue('抽奖自动加愿望单')) return
 
-        const botID = "大号"
-
         if (judge()) {
             createUI2()
         }
 
         function judge() {
-            if (document.body.innerText.search("[活动推广]") > -1) return true
-            return false
+            return (document.querySelector(".subforum_left_title_left_up").innerText.indexOf("[活动推广]") > -1)
         }
         function getAppID(urls) {
             var AppIDs = []
@@ -160,7 +165,6 @@
 
         function createUI2() {
             let urls = document.querySelectorAll("iframe")
-
             const IDList = getAppID(urls)
             console.log(IDList)
             if (IDList.length === 0) { return }
@@ -172,8 +176,8 @@
             const tab = document.querySelector("#pgt")
             const container = document.createElement('button');
             container.classList.add('s_btn');
-            container.textContent = '点击可复制愿望单ASF代码';
-            container.addEventListener("click", () => { GM_setClipboard(txt); })
+            container.textContent = '复制愿望单ASF代码';
+            container.addEventListener("click", () => { setCopy(txt, `ASF代码复制成功：${txt}`) })
             tab.appendChild(container)
         }
     }
@@ -182,20 +186,18 @@
     // 检测是否有其乐消息
     function checkNotice() {
         if (!GM_getValue('检测是否有其乐消息')) return
-        const interval = 2; // 检测间隔，单位是分钟
-        const timeout = 5; // 通知显示时间，单位是秒
         let t = getBriefTime()
         var lastExecutionTimestamp = GM_getValue("lastExecutionTimestamp");
         var currentTimestamp = new Date().getTime();
         if (
             !lastExecutionTimestamp ||
-            currentTimestamp - lastExecutionTimestamp > interval * 60 * 1000
+            currentTimestamp - lastExecutionTimestamp > checkInterval * 60 * 1000
         ) check()
         else {
-            console.log(`${t}   时间间隔在${interval}分钟内.`);
+            console.log(`${t}   时间间隔在${checkInterval}分钟内.`);
             return;
         }
-        setTimeout(check, (interval * 60 + 1) * 1000)
+        setTimeout(check, (checkInterval * 60 + 1) * 1000)
         function check() {
             let t = getBriefTime()
             GM_xmlhttpRequest({
@@ -213,7 +215,7 @@
                         GM_notification({
                             text: "点击前往", // 通知的文本内容
                             title: `Keylol有消息！`, // 通知的标题（可选）
-                            timeout: 1000 * timeout, // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
+                            timeout: 1000 * noticfeTimeout, // 通知显示的时间（毫秒），过了时间后通知会自动关闭（可选）
                             onclick: function () {
                                 window.open(
                                     "https://keylol.com/home.php?mod=space&do=notice"
