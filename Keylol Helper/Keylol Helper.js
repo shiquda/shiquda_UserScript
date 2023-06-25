@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.2.3
+// @version      0.2.4
 // @description  Keylol Helper 提供其乐论坛多便捷功能支持，包括自动检测是否有其乐消息，
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -49,6 +49,9 @@
         keyGiving()
         addList()
     }
+    if (isNotice){
+        addNotice()
+    }
 
     function setMenu(name) {
         const status = (GM_getValue(name) !== undefined) ? GM_getValue(name) : initialize(name);
@@ -66,8 +69,12 @@
     // 判断是否在站内
     function isInSite() {
         const url = window.location.href;
-        if (url.includes('https://keylol.com/t') || url.includes('https://keylol.com/forum.php?mod=viewthread')) return true
-        return false
+        return (url.includes('https://keylol.com/t') || url.includes('https://keylol.com/forum.php?mod=viewthread'))
+    }
+
+    function isNotice() {
+        const url = window.location.href
+        return (url.includes('https://keylol.com/home.php?mod=space&do=notice'))
     }
 
     // 添加样式
@@ -218,6 +225,12 @@
                         "btn-user-action-highlight"
                     );
                     if (elements.length > 0) {
+                        var newNotices = doc.querySelectorAll('[style="color:#000;font-weight:bold;"]')
+                        var noticeID = GM_getValue("noticeID") ? GM_getValue("noticeID"): []
+                        for (var i = 0;i < noticeID.length;i++){
+                            noticeID.push(newNotices[i].parentElement.notice)
+                        }
+                        GM_setValue("noticeID", noticeID)
                         GM_notification({
                             text: "点击前往", // 通知的文本内容
                             title: `Keylol有消息！`, // 通知的标题（可选）
@@ -252,6 +265,16 @@
             // 返回当前时间
             return currentTime;
         }
+    }
+
+    function addNotice(){
+        if (!GM_getValue('检测是否有其乐消息')) return
+        const list = GM_getValue("noticeID")
+        console.log(list);
+        for (var i = 0; i < list.length; i++){
+            document.querySelector(`[notice="${list[i]}"]`).querySelector(".ntc_body").style = "color:#000;font-weight:bold;"
+        }
+        GM_setValue("noticeID",[])
     }
 
     // 检测帖子是否已回复 感谢@chr_
