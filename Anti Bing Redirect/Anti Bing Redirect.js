@@ -6,7 +6,7 @@
 // @version      0.1.2
 // @description  Remove the redirection of Bing Search by replacing the URL provided.
 // @author       shiquda
-// @match        https://www.bing.com/search?*
+// @match        https://*.bing.com/search?*
 // @license      MIT
 // ==/UserScript==
 
