@@ -3,7 +3,7 @@
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=bing.com
-// @version      0.1.2
+// @version      0.1.3
 // @description  Remove the redirection of Bing Search by replacing the URL provided.
 // @author       shiquda
 // @match        https://*.bing.com/search?*
