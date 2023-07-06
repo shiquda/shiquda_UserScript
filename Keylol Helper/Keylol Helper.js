@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.2.4
+// @version      0.2.5
 // @description  Keylol Helper 提供其乐论坛多便捷功能支持，包括自动检测是否有其乐消息，
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -49,7 +49,7 @@
         keyGiving()
         addList()
     }
-    if (isNotice()){
+    if (isNotice()) {
         addNotice()
     }
 
@@ -226,8 +226,8 @@
                     );
                     if (elements.length > 0) {
                         var newNotices = doc.querySelectorAll('[style="color:#000;font-weight:bold;"]')
-                        var noticeID = GM_getValue("noticeID") ? GM_getValue("noticeID"): []
-                        for (var i = 0;i < noticeID.length;i++){
+                        var noticeID = GM_getValue("noticeID") ? GM_getValue("noticeID") : []
+                        for (var i = 0; i < newNotices.length; i++) {
                             noticeID.push(newNotices[i].parentElement.getAttribute("notice"))
                         }
                         GM_setValue("noticeID", noticeID)
@@ -267,18 +267,18 @@
         }
     }
 
-    function addNotice(){
+    function addNotice() {
         if (!GM_getValue('检测是否有其乐消息')) return
         const list = GM_getValue("noticeID")
         console.log(list);
-        for (var i = 0; i < list.length; i++){
+        for (var i = 0; i < list.length; i++) {
             document.querySelector(`[notice="${list[i]}"]`).querySelector(".ntc_body").style = "color:#000;font-weight:bold;"
         }
-        GM_setValue("noticeID",[])
+        GM_setValue("noticeID", [])
     }
 
     // 检测帖子是否已回复 感谢@chr_
-    async function amIReplied(){
+    async function amIReplied() {
         "use strict";
         if (!GM_getValue('检查是否已回贴')) return
 
@@ -349,6 +349,6 @@
                 }
 
             });
-        }
     }
-) ();
+}
+)();
