@@ -49,7 +49,7 @@
         keyGiving()
         addList()
     }
-    if (isNotice){
+    if (isNotice()){
         addNotice()
     }
 
@@ -228,7 +228,7 @@
                         var newNotices = doc.querySelectorAll('[style="color:#000;font-weight:bold;"]')
                         var noticeID = GM_getValue("noticeID") ? GM_getValue("noticeID"): []
                         for (var i = 0;i < noticeID.length;i++){
-                            noticeID.push(newNotices[i].parentElement.notice)
+                            noticeID.push(newNotices[i].parentElement.getAttribute("notice"))
                         }
                         GM_setValue("noticeID", noticeID)
                         GM_notification({
