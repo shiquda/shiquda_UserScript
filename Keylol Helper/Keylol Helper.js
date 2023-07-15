@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.2.5
+// @version      0.2.6
 // @description  Keylol Helper 提供其乐论坛多便捷功能支持，包括自动检测是否有其乐消息，
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -42,7 +42,10 @@
         setMenu(featureInfo[i])
     }
     checkNotice()
-    if (isInSite()) {
+    if (isInKeylol()) {
+        noticeAlert()
+    }
+    if (isInThread()) {
         addCSS()
         amIReplied()
         autoReply()
@@ -66,8 +69,8 @@
     }
 
 
-    // 判断是否在站内
-    function isInSite() {
+    // 判断是否在帖子页面
+    function isInThread() {
         const url = window.location.href;
         return (url.includes('https://keylol.com/t') || url.includes('https://keylol.com/forum.php?mod=viewthread'))
     }
@@ -75,6 +78,11 @@
     function isNotice() {
         const url = window.location.href
         return (url.includes('https://keylol.com/home.php?mod=space&do=notice'))
+    }
+
+    function isInKeylol() {
+        const url = window.location.href
+        return (url.includes('https://keylol.com'))
     }
 
     // 添加样式
@@ -264,6 +272,21 @@
             const currentTime = hours + ":" + minutes + ":" + seconds;
             // 返回当前时间
             return currentTime;
+        }
+    }
+
+    function noticeAlert() {
+        if (!GM_getValue('检测是否有其乐消息')) return
+        if (GM_getValue("noticeID")) {
+            // 寻找提醒元素
+            const elements = document.querySelectorAll(".btn-user-action");
+            for (let i = 0; i < elements.length; i++) {
+                const element = elements[i];
+                if (element.textContent.trim() === "提醒") {
+                    element.classList.add("btn-user-action-highlight")
+                    break
+                }
+            }
         }
     }
 
