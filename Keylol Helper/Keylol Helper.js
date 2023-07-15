@@ -277,7 +277,8 @@
 
     function noticeAlert() {
         if (!GM_getValue('检测是否有其乐消息')) return
-        if (GM_getValue("noticeID")) {
+        if (GM_getValue("noticeID").length > 0) {
+            console.log(GM_getValue("noticeID"))
             // 寻找提醒元素
             const elements = document.querySelectorAll(".btn-user-action");
             for (let i = 0; i < elements.length; i++) {
