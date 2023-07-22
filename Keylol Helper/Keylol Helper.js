@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Keylol Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.2.6
+// @version      0.2.7
 // @description  Keylol Helper 提供其乐论坛多便捷功能支持，包括自动检测是否有其乐消息，
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -277,8 +277,8 @@
 
     function noticeAlert() {
         if (!GM_getValue('检测是否有其乐消息')) return
-        if (GM_getValue("noticeID").length > 0) {
-            console.log(GM_getValue("noticeID"))
+        if (GM_getValue("noticeID")?.length > 0) {
+            // console.log(GM_getValue("noticeID"))
             // 寻找提醒元素
             const elements = document.querySelectorAll(".btn-user-action");
             for (let i = 0; i < elements.length; i++) {
