@@ -7,7 +7,6 @@
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @match        *://*/*
-// @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @license      AGPL-3.0
