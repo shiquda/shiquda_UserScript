@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Script Finder
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.1.2
 // @description  Script Finder allows you to find userscripts from greasyfork on any website.
 // @author       shiquda
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -45,7 +45,7 @@
                 showScriptsInfo(scriptsInfo)
             }
         });
-        oneClickInstall();
+        // oneClickInstall();
     }
 
     // 解析脚本信息
@@ -166,10 +166,22 @@
                 color: white;
                 padding: 10px;
             }
+            button.to-greasyfork {
+                position: absolute; 
+                top: 10px; 
+                right: 10px;
+                border-radius: 4px;
+                padding: 8px;
+                font-size: 16px;
+                border: none;
+                background-color: #1e90ff;
+                color: #ffffff;
+                cursor: pointer;
+            }
         `);
 
 
-        // 创建按钮
+        // 创建打开列表按钮
         var button = document.createElement('button');
         button.className = 'script-button';
         button.innerText = 'Scripts';
@@ -184,11 +196,18 @@
         searchInput.placeholder = 'Search scripts...';
         searchInput.className = 'script-search-input';
 
+        // 创建指向greasyfork的链接
+
+        var toGreasyfork = document.createElement('button');
+        toGreasyfork.className = 'to-greasyfork';
+        toGreasyfork.innerText = 'View on Greasyfork';
+
         // 创建表头
         var tableHeader = document.createElement('div');
         tableHeader.className = 'table-header';
         tableHeader.appendChild(document.createTextNode('Script Finder'));
         tableHeader.appendChild(searchInput);
+        tableHeader.appendChild(toGreasyfork);
 
         // 创建脚本列表
         var infoList = document.createElement('ul');
@@ -253,6 +272,7 @@
         }
 
         infoContainer.appendChild(tableHeader)
+
         infoContainer.appendChild(infoList);
 
         var timeout;
@@ -274,8 +294,6 @@
             infoContainer.style.opacity = 1
         });
 
-
-
         infoContainer.addEventListener('click', function (event) {
             event.stopPropagation();
         });
@@ -284,6 +302,9 @@
             searchScript()
         })
 
+        toGreasyfork.addEventListener('click', function () {
+            window.open(`https://greasyfork.org/scripts/by-site/${domain}?q=${searchInput.value}`)
+        })
         document.body.addEventListener('click', function () {
             clearTimeout(timeout);
             button.style.right = '-50px';
