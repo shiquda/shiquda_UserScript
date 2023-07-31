@@ -1,13 +1,12 @@
 ## Script Finder
 
-The Script Finder userscript allows you to find and manage user scripts on any website. It provides a convenient way to search, install, and manage userscripts from Greasy Fork. With Script Finder, you can easily enhance your browsing experience by adding custom scripts to your favorite websites.
+The Script Finder userscript allows you to find and manage user scripts on any website. It provides a convenient way to search and install userscripts from Greasy Fork. With Script Finder, you can easily enhance your browsing experience by adding custom scripts to your favorite websites easily.
 
 ### Features
 
 -   Search for userscripts based on website domain
--   View detailed information about each script, including author, description, installs, and rating
--   Install or uninstall userscripts with a single click
--   Easily manage and organize your installed userscripts
+-   View detailed information about each script, including author, description, installs, version and rating
+-   Install userscripts with a single click
 
 ### How to Use
 
@@ -16,7 +15,7 @@ The Script Finder userscript allows you to find and manage user scripts on any w
 3. After installation, a "Scripts" button will appear on your browser toolbar.
 4. Click the "Scripts" button to open the Script Finder interface.
 5. Use the search bar to find userscripts for a specific website.
-6. Click on a userscript to view more details or install/uninstall it.
+6. Click on a userscript to view more details or install it by one-click.
 
 Enjoy discovering and using new userscripts with Script Finder!
 
