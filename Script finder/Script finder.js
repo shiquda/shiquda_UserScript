@@ -1,15 +1,18 @@
 // ==UserScript==
-// @name         Script Finder
-// @namespace    http://tampermonkey.net/
-// @version      0.1.2
-// @description  Script Finder allows you to find userscripts from greasyfork on any website.
-// @author       shiquda
-// @namespace    https://github.com/shiquda/shiquda_UserScript
-// @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
-// @match        *://*/*
-// @grant        GM_xmlhttpRequest
-// @grant        GM_addStyle
-// @license      AGPL-3.0
+// @name                    Script Finder
+// @name:zh-CN              Script Finder 油猴脚本查找
+// @namespace               http://tampermonkey.net/
+// @version                 0.1.3
+// @description             Script Finder allows you to find userscripts from greasyfork on any website.
+// @description:zh-CN       Script Finder 在任何网站上找到适用于该网站的greasyfork油猴脚本
+// @author                  shiquda
+// @namespace               https://github.com/shiquda/shiquda_UserScript
+// @supportURL              https://github.com/shiquda/shiquda_UserScript/issues
+// @match                   *://*/*
+// @icon                    data:image/jpeg;base64,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
+// @grant                   GM_xmlhttpRequest
+// @grant                   GM_addStyle
+// @license                 AGPL-3.0
 // ==/UserScript==
 
 (function () {
@@ -57,10 +60,10 @@
             description: script.querySelector(".script-description").textContent,
             version: script.getAttribute('data-script-version'),
             url: 'https://greasyfork.org/scripts/' + script.getAttribute('data-script-id'),
-            // createDate: script.getAttribute('data-script-created-date'),
-            // updateDate: script.getAttribute('data-script-updated-date'),
+            createDate: script.getAttribute('data-script-created-date'),
+            updateDate: script.getAttribute('data-script-updated-date'),
             installs: script.getAttribute('data-script-total-installs'),
-            // dailyInstalls: script.getAttribute('data-script-daily-installs'),
+            dailyInstalls: script.getAttribute('data-script-daily-installs'),
             ratingScore: script.getAttribute('data-script-rating-score')
         };
     }
@@ -72,7 +75,7 @@
                 bottom: 50%;
                 right: -50px;
                 transform: translateY(50%);
-                padding: 12px;
+                padding: 10px;
                 font-size: 16px;
                 border: none;
                 border-radius: 4px;
@@ -87,7 +90,7 @@
                 position: fixed;
                 top: 10%;
                 right: 100px;
-                width: 600px;
+                width: 650px;
                 padding: 12px;
                 background-color: #ffffff;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -106,11 +109,13 @@
             }
 
             li.info-item {
-                margin-bottom: 10px;
-                border: 1px solid #ddd;
-                padding: 10px;
+                margin-bottom: 15px;
+                padding: 12px;
+                padding-bottom: 22px;
                 display: flex;
                 flex-direction: column;
+                border: 1px solid #1e90ff;
+                border-radius: 5px;
             }
 
             .div.script-container {
@@ -129,10 +134,11 @@
                 color: black !important;
                 margin-top: 2px;
                 margin-bottom: 5px;
+                font-size: 16px;
             }
 
             div.details-container {
-                font-size: 18px ;
+                font-size: 15px;
                 font-weight: bold;
                 display: flex;
                 justify-content: space-between;
@@ -140,36 +146,43 @@
             }
 
             span.script-details {
+                font: !important
                 color: black !important;
-                flex-grow: 1;
-                text-align: left;
+                flex-grow: 1 !important;
+                text-align: center !important;
+                border: 1px solid #1e90ff !important;
+                border-radius: 5px !important;
+                margin: 4px !important;
             }
-            
+
             div.table-header {
                 color: #1e90ff !important;
                 font-size: 25px;
+                font-weight: bold;
             }
 
             input.script-search-input {
                 width: 96% !important;
                 padding: 10px !important;
                 font-size: 18px !important;
-                border: 1px solid #ddd !important;
+                border: 1px solid #1e90ff !important;
                 border-radius: 4px !important;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important;
                 margin-bottom: 15px !important;
                 margin-top: 20px !important;
             }
+
             a.install-button {
-                font-size: 25px;
+                font-size: 20px;
                 background-color: green;
                 color: white;
-                padding: 10px;
+                padding: 12px;
             }
+
             button.to-greasyfork {
                 position: absolute; 
-                top: 10px; 
-                right: 10px;
+                top: 12px; 
+                right: 12px;
                 border-radius: 4px;
                 padding: 8px;
                 font-size: 16px;
@@ -244,21 +257,21 @@
                 installButton.innerText = `Install ${script.version}`;
                 installButton.href = `https://greasyfork.org/scripts/${script.id}/code/script.user.js`;
 
-                var authorElement = document.createElement('span');
-                authorElement.className = 'script-details';
-                authorElement.innerText = 'Author: ' + script.author;
+                const details = [
+                    { key: 'Author', value: script.author },
+                    { key: 'Installs', value: script.installs },
+                    { key: 'Daily Installs', value: script.dailyInstalls },
+                    { key: 'Created', value: script.createDate },
+                    { key: 'Updated', value: script.updateDate },
+                    { key: 'Rating', value: script.ratingScore }
+                ];
 
-                var installsElement = document.createElement('span');
-                installsElement.className = 'script-details';
-                installsElement.innerText = 'Installs: ' + script.installs;
-
-                var ratingElement = document.createElement('span');
-                ratingElement.className = 'script-details';
-                ratingElement.innerText = 'Rating: ' + script.ratingScore;
-
-                detailsContainer.appendChild(authorElement);
-                detailsContainer.appendChild(installsElement);
-                detailsContainer.appendChild(ratingElement);
+                for (let i = 0; i < details.length; i++) {
+                    const spanElement = document.createElement('span');
+                    spanElement.className = 'script-details';
+                    spanElement.innerText = `${details[i].key}:\n${details[i].value}`;
+                    detailsContainer.appendChild(spanElement);
+                }
 
                 scriptContainer.appendChild(nameElement);
                 scriptContainer.appendChild(descriptionElement);
@@ -318,148 +331,17 @@
     }
 
     function searchScript() {
-        const searchWord = document.querySelector('.script-search-input').value;
-        const scriptList = document.querySelectorAll('.info-item')
+        const searchWord = document.querySelector('.script-search-input').value.toLowerCase(); // 将要匹配的文本转换为小写
+        const scriptList = document.querySelectorAll('.info-item');
         for (let i = 0; i < scriptList.length; i++) {
-            if (scriptList[i].innerText.includes(searchWord)) {
-                scriptList[i].style.display = 'block'
+            const scriptText = scriptList[i].innerText.toLowerCase(); // 将检索的文本转换为小写
+            if (scriptText.includes(searchWord)) {
+                scriptList[i].style.display = 'block';
             } else {
-                scriptList[i].style.display = 'none'
+                scriptList[i].style.display = 'none';
             }
         }
     }
-
-
-    // 一键安装 此处参考tampermonkey versioncheck.js 但是不知道为什么别的网站没有这个对象
-    /*
-        function oneClickInstall() {
-            const scriptList = document.querySelectorAll('.script-container');
-            // 获取tamppermonkey脚本信息
-            let tm = window.external?.Tampermonkey
-            let vm = window.external?.ViolentMonkey
-    
-            function getInstalledVersion(name, namespace) {
-                return new Promise(function (resolve, reject) {
-                    if (tm) {
-                        tm.isInstalled(name, namespace, function (i) {
-                            if (i.installed) {
-                                resolve(i.version);
-                            } else {
-                                resolve(null);
-                            }
-                        });
-                        return;
-                    }
-    
-                    if (vm) {
-                        vm.isInstalled(name, namespace).then(resolve);
-                        return;
-                    };
-    
-                    reject()
-                });
-            }
-    
-            // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/version/format
-            function compareVersions(a, b) {
-                if (a == b) {
-                    return 0;
-                }
-                let aParts = a.split('.');
-                let bParts = b.split('.');
-                for (let i = 0; i < aParts.length; i++) {
-                    let result = compareVersionPart(aParts[i], bParts[i]);
-                    if (result != 0) {
-                        return result;
-                    }
-                }
-                // If all of a's parts are the same as b's parts, but b has additional parts, b is greater.
-                if (bParts.length > aParts.length) {
-                    return -1;
-                }
-                return 0;
-            }
-    
-            function compareVersionPart(partA, partB) {
-                let partAParts = parseVersionPart(partA);
-                let partBParts = parseVersionPart(partB);
-                for (let i = 0; i < partAParts.length; i++) {
-                    // "A string-part that exists is always less than a string-part that doesn't exist"
-                    if (partAParts[i].length > 0 && partBParts[i].length == 0) {
-                        return -1;
-                    }
-                    if (partAParts[i].length == 0 && partBParts[i].length > 0) {
-                        return 1;
-                    }
-                    if (partAParts[i] > partBParts[i]) {
-                        return 1;
-                    }
-                    if (partAParts[i] < partBParts[i]) {
-                        return -1;
-                    }
-                }
-                return 0;
-            }
-    
-            // It goes number, string, number, string. If it doesn't exist, then
-            // 0 for numbers, empty string for strings.
-            function parseVersionPart(part) {
-                if (!part) {
-                    return [0, "", 0, ""];
-                }
-                let partParts = /([0-9]*)([^0-9]*)([0-9]*)([^0-9]*)/.exec(part)
-                return [
-                    partParts[1] ? parseInt(partParts[1]) : 0,
-                    partParts[2],
-                    partParts[3] ? parseInt(partParts[3]) : 0,
-                    partParts[4]
-                ];
-            }
-    
-            function handleInstallResult(installedVersion, version) {
-                if (installedVersion == null) {
-                    // Not installed
-                    return `Install { version } `;
-                }
-    
-                // installButton.removeAttribute("data-ping-url")
-    
-                switch (compareVersions(installedVersion, version)) {
-                    // Upgrade
-                    case -1:
-                        return `Upgrade ${version} `;
-                        break;
-                    // Downgrade
-                    case 1:
-                        return `Downgrade ${version} `;
-                        break;
-                    // Equal
-                    case 0:
-                        return `Reinstall ${version} `;
-                        break;
-                }
-            }
-            for (let i = 0; i < scriptList.length; i++) {
-                let script = scriptList[i];
-                let id = script.scriptId
-                GM_xmlhttpRequest({
-                    url: `https://greasyfork.org/scripts/${id}.json`,
-                    method: "GET",
-                    onload: (response) => {
-                        const data = JSON.parse(response.responseText)
-                        let latestVersion = data.version
-                        let namespace = data.namespace
-                        let installedVersion = getInstalledVersion(id, namespace)
-                        let versionInfo = handleInstallResult(installedVersion, latestVersion)
-                        script.querySelector('.install-button').innerText = versionInfo
-                    },
-                    onerror: (error) => {
-                        console.log(`An error occured when fetching script ${id}: ${error}`)
-                    }
-                })
-            }
-        }
-    */
 
     getScriptsInfo(domain);
 
