@@ -2,7 +2,7 @@
 // @name                    Script Finder
 // @name:zh-CN              Script Finder 油猴脚本查找
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.3
+// @version                 0.1.4
 // @description             Script Finder allows you to find userscripts from greasyfork on any website.
 // @description:zh-CN       Script Finder 在任何网站上找到适用于该网站的greasyfork油猴脚本
 // @author                  shiquda
@@ -83,8 +83,9 @@
                 color: #ffffff;
                 cursor: pointer;
                 transition: right 0.3s;
+                z-index: 9999999999999999; /* 设置一个较高的 z-index 值 */
             }
-            
+
             div.info-container {
                 display: none;
                 position: fixed;
@@ -191,6 +192,17 @@
                 color: #ffffff;
                 cursor: pointer;
             }
+            span.match-count {
+                background-color: #1e90ff;
+                font-size: 25px;
+                font-weight: bold;
+                color: white;
+                padding: 6px;
+                position: absolute;
+                right: 50%;
+                border-radius: 12px;
+                top: 10px;
+            }
         `);
 
 
@@ -210,15 +222,19 @@
         searchInput.className = 'script-search-input';
 
         // 创建指向greasyfork的链接
-
         var toGreasyfork = document.createElement('button');
         toGreasyfork.className = 'to-greasyfork';
         toGreasyfork.innerText = 'View on Greasyfork';
+
+        // 创建计数器
+        var matchCount = document.createElement('span');
+        matchCount.className = 'match-count';
 
         // 创建表头
         var tableHeader = document.createElement('div');
         tableHeader.className = 'table-header';
         tableHeader.appendChild(document.createTextNode('Script Finder'));
+        tableHeader.appendChild(matchCount);
         tableHeader.appendChild(searchInput);
         tableHeader.appendChild(toGreasyfork);
 
@@ -313,6 +329,7 @@
 
         searchInput.addEventListener('input', () => {
             searchScript()
+            updateMatches()
         })
 
         toGreasyfork.addEventListener('click', function () {
@@ -328,6 +345,12 @@
         document.body.appendChild(button);
 
         document.body.appendChild(infoContainer);
+
+        infoContainer.addEventListener('change', () => {
+            updateMatches()
+        })
+
+        updateMatches()
     }
 
     function searchScript() {
@@ -343,6 +366,23 @@
         }
     }
 
-    getScriptsInfo(domain);
+    function updateMatches() {
+        const matchCount = document.querySelectorAll('.info-item:not([style*="display: none"])').length;
+        document.querySelector('.match-count').innerText = matchCount
+    }
+
+    // function loadAll() {
+
+    // }
+    function main() {
+        if (window.self !== window.top) {
+            // 在iframe中执行时，直接退出
+            return;
+        }
+        getScriptsInfo(domain);
+    }
+
+    main()
+
 
 })();
