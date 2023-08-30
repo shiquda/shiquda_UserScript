@@ -1,20 +1,18 @@
 // ==UserScript==
-// @name                Advanced Search Assistant for Google
-// @name:zh-CN          Google 高级搜索助手
-// @name:en             Advanced Search Assistant for Google
-// @namespace           http://tampermonkey.net/
-// @version             0.1.2
-// @description         Add an advanced search form to the top of the page
-// @description:zh-CN   在谷歌搜索页面顶部添加一个高级搜索表单
-// @description:en      Add an advanced search form to the top of the page
-// @author              shiquda
-// @namespace           https://github.com/shiquda/shiquda_UserScript
-// @supportURL          https://github.com/shiquda/shiquda_UserScript/issues
-// @match               *://www.google.com/search*
-// @grant               GM_addStyle
-// @grant               GM_setValue
-// @grant               GM_getValue
-// @license             MIT
+// @name                    Advanced Search Assistant for Google
+// @name:zh-CN              Google 高级搜索助手
+// @namespace               http://tampermonkey.net/
+// @version                 0.1.2
+// @description             Add an advanced search form to the top of the page
+// @description:zh-CN       在谷歌搜索页面顶部添加一个高级搜索表单
+// @author                  shiquda
+// @namespace               https://github.com/shiquda/shiquda_UserScript
+// @supportURL              https://github.com/shiquda/shiquda_UserScript/issues
+// @match                   *://www.google.com/search*
+// @grant                   GM_addStyle
+// @grant                   GM_setValue
+// @grant                   GM_getValue
+// @license                 MIT
 // ==/UserScript==
 
 (function () {
