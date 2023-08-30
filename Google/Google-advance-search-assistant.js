@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name                Advanced Search Assistant for Google
 // @name:zh-CN          Google 高级搜索助手
+// @name:en             Advanced Search Assistant for Google
 // @namespace           http://tampermonkey.net/
-// @version             0.1.0
+// @version             0.1.1
 // @description         Add an advanced search form to the top of the page
 // @description:zh-CN   在谷歌搜索页面顶部添加一个高级搜索表单
+// @description:en      Add an advanced search form to the top of the page
 // @author              shiquda
 // @namespace           https://github.com/shiquda/shiquda_UserScript
 // @supportURL          https://github.com/shiquda/shiquda_UserScript/issues
@@ -98,13 +100,13 @@
     const params = {
         'as_q': '以下所有字词：',
         'as_epq': '与以下字词完全匹配：',
-        'as_oq': '以下任意字词：',
+        'as_oq': '包含以下任意字词：',
         'as_eq': '排除以下字词：',
         'as_nlo': "包含的数字范围：从",
         'as_nhi': "到：",
         // 'lr': '语言：',
         // 'cr': '地区：',
-        'as_qdr': '最后更新时间：',
+        // 'as_qdr': '最后更新时间：',
         'as_sitesearch': '网站或域名：',
         // 'as_occt': '字词出现位置：',
         'as_filetype': '文件类型：',
