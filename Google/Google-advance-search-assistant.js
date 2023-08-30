@@ -2,13 +2,14 @@
 // @name                    Advanced Search Assistant for Google
 // @name:zh-CN              Google 高级搜索助手
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.2
+// @version                 0.1.3
 // @description             Add an advanced search form to the top of the page
 // @description:zh-CN       在谷歌搜索页面顶部添加一个高级搜索表单
 // @author                  shiquda
 // @namespace               https://github.com/shiquda/shiquda_UserScript
 // @supportURL              https://github.com/shiquda/shiquda_UserScript/issues
 // @match                   *://www.google.com/search*
+// @include                 *://*google*/search*
 // @grant                   GM_addStyle
 // @grant                   GM_setValue
 // @grant                   GM_getValue
@@ -86,20 +87,26 @@
             'en': 'Clear'
         },
         'as_qdr_select': {
-            'zh-CN': {
-                '': '请选择',
-                'd': '一天内',
-                'w': '一周内',
-                'm': '一月内',
-                'y': '一年内',
+            '': {
+                'zh-CN': '请选择',
+                'en': 'Please select',
             },
-            'en': {
-                '': 'Please select',
-                'd': 'Past 24 hours',
-                'w': 'Past week',
-                'm': 'Past month',
-                'y': 'Past year',
-            }
+            'd': {
+                'zh-CN': '一天内',
+                'en': 'Past 24 hours',
+            },
+            'w': {
+                'zh-CN': '一周内',
+                'en': 'Past week',
+            },
+            'm': {
+                'zh-CN': '一月内',
+                'en': 'Past month',
+            },
+            'y': {
+                'zh-CN': '一年内',
+                'en': 'Past year',
+            },
         }
     }
     const style = `
@@ -161,7 +168,7 @@
     GM_addStyle(style)
 
     const language = userLanguage ? userLanguage : navigator.language ? navigator.language : 'en'
-    // 创建按钮和表单元素
+    // Create user interface
     const toggleButton = document.createElement('button');
     toggleButton.className = 'nfSF8e';
     toggleButton.textContent = translation['advancedSearch'][language];
@@ -172,7 +179,7 @@
     formContainer.id = 'advancedSearchFormContainer'
     document.body.appendChild(formContainer);
 
-    // 创建表单元素
+    // 
     const form = document.createElement('form');
     formContainer.appendChild(form);
 
@@ -189,11 +196,11 @@
             'name': translation['as_qdr'][language],
             'options':
             {
-                '': translation['as_qdr_select'][language][''],
-                'd': translation['as_qdr_select'][language]['d'],
-                'w': translation['as_qdr_select'][language]['w'],
-                'm': translation['as_qdr_select'][language]['m'],
-                'y': translation['as_qdr_select'][language]['y'],
+                '': translation['as_qdr_select'][''][language],
+                'd': translation['as_qdr_select']['d'][language],
+                'w': translation['as_qdr_select']['w'][language],
+                'm': translation['as_qdr_select']['m'][language],
+                'y': translation['as_qdr_select']['y'][language],
             }
         },
         'as_sitesearch': translation['as_sitesearch'][language],
@@ -261,7 +268,7 @@
         }
     });
 
-    // 在按钮点击时切换表单可见性
+    // Toggle the form display
     toggleButton.addEventListener('click', function (event) {
         event.preventDefault();
         let status = formContainer.style.display;
@@ -269,7 +276,7 @@
         formContainer.style.display = status;
     });
 
-    // 在表单提交时进行高级搜索
+    // Submit the form
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         const searchParams = new URLSearchParams();
