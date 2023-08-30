@@ -1,7 +1,5 @@
 # Google Advanced Search Assistant
 
-**Attention: Since this is a script under development, it could only provide Chinese UI now!**
-
 This is a user script that adds an advanced search form to Google. It adds a collapsible advanced search form at the top of the page, allowing you to search for information with more precision.
 
 ## Features

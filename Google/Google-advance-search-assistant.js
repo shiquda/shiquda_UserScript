@@ -3,7 +3,7 @@
 // @name:zh-CN          Google 高级搜索助手
 // @name:en             Advanced Search Assistant for Google
 // @namespace           http://tampermonkey.net/
-// @version             0.1.1
+// @version             0.1.2
 // @description         Add an advanced search form to the top of the page
 // @description:zh-CN   在谷歌搜索页面顶部添加一个高级搜索表单
 // @description:en      Add an advanced search form to the top of the page
@@ -19,6 +19,91 @@
 
 (function () {
     'use strict';
+    const userLanguage = '' // You can set your language config here manually. 'zh-CN' & 'en' are supported now.
+
+
+    const translation = {
+        'as_q': {
+            'zh-CN': '搜索字词：',
+            'en': 'Search word:'
+        },
+        'as_epq': {
+            'zh-CN': '与以下字词完全匹配：',
+            'en': 'Match the following words exactly:'
+        },
+        'as_oq': {
+            'zh-CN': '包含以下任意字词：',
+            'en': 'Contains any of the following words:'
+        },
+        'as_eq': {
+            'zh-CN': '排除以下字词：',
+            'en': 'Exclude the following words:'
+        },
+        'as_nlo': {
+            'zh-CN': '包含的数字范围：从',
+            'en': 'Number range: from'
+        },
+        'as_nhi': {
+            'zh-CN': '到：',
+            'en': 'to:'
+        },
+        'lr': {
+            'zh-CN': '语言：',
+            'en': 'Language:'
+        },
+        'cr': {
+            'zh-CN': '地区：',
+            'en': 'Region:'
+        },
+        'as_qdr': {
+            'zh-CN': '最后更新时间：',
+            'en': 'Last update time:'
+        },
+        'as_sitesearch': {
+            'zh-CN': '网站或域名：',
+            'en': 'Website or domain:'
+        },
+        'as_occt': {
+            'zh-CN': '字词出现位置：',
+            'en': 'Word position:'
+        },
+        'as_filetype': {
+            'zh-CN': '文件类型：',
+            'en': 'File type:'
+        },
+        'tbs': {
+            'zh-CN': '使用权限：',
+            'en': 'Usage rights:'
+        },
+        'advancedSearch': {
+            'zh-CN': '高级搜索',
+            'en': 'Advanced Search'
+        },
+        'search': {
+            'zh-CN': '搜索',
+            'en': 'Search'
+        },
+        'clear': {
+            'zh-CN': '清空',
+            'en': 'Clear'
+        },
+        'as_qdr_select': {
+            'zh-CN': {
+                '': '请选择',
+                'd': '一天内',
+                'w': '一周内',
+                'm': '一月内',
+                'y': '一年内',
+            },
+            'en': {
+                '': 'Please select',
+                'd': 'Past 24 hours',
+                'w': 'Past week',
+                'm': 'Past month',
+                'y': 'Past year',
+            }
+        }
+    }
     const style = `
     #advancedSearchToggleButton {
         margin-right: 10px;
@@ -76,21 +161,17 @@
     }
     `
     GM_addStyle(style)
+
+    const language = userLanguage ? userLanguage : navigator.language ? navigator.language : 'en'
     // 创建按钮和表单元素
     const toggleButton = document.createElement('button');
     toggleButton.className = 'nfSF8e';
-    toggleButton.textContent = '高级搜索';
+    toggleButton.textContent = translation['advancedSearch'][language];
     toggleButton.id = 'advancedSearchToggleButton'
     document.querySelector('.logo').appendChild(toggleButton);
 
     const formContainer = document.createElement('div');
     formContainer.id = 'advancedSearchFormContainer'
-    formContainer.addEventListener('click', function (event) {
-        // Hide the form container when clicking outside of it
-        if (!form.contains(event.target)) {
-            formContainer.style.display = 'none';
-        }
-    });
     document.body.appendChild(formContainer);
 
     // 创建表单元素
@@ -98,24 +179,52 @@
     formContainer.appendChild(form);
 
     const params = {
-        'as_q': '以下所有字词：',
-        'as_epq': '与以下字词完全匹配：',
-        'as_oq': '包含以下任意字词：',
-        'as_eq': '排除以下字词：',
-        'as_nlo': "包含的数字范围：从",
-        'as_nhi': "到：",
-        // 'lr': '语言：',
-        // 'cr': '地区：',
-        // 'as_qdr': '最后更新时间：',
-        'as_sitesearch': '网站或域名：',
-        // 'as_occt': '字词出现位置：',
-        'as_filetype': '文件类型：',
-        // 'tbs': '使用权限：',
+        'as_q': translation['as_q'][language],
+        'as_epq': translation['as_epq'][language],
+        'as_oq': translation['as_oq'][language],
+        'as_eq': translation['as_eq'][language],
+        'as_nlo': translation['as_nlo'][language],
+        'as_nhi': translation['as_nhi'][language],
+        // 'lr': translation['lr'][language],
+        // 'cr': translation['cr'][language],
+        'as_qdr': {
+            'name': translation['as_qdr'][language],
+            'options':
+            {
+                '': translation['as_qdr_select'][language][''],
+                'd': translation['as_qdr_select'][language]['d'],
+                'w': translation['as_qdr_select'][language]['w'],
+                'm': translation['as_qdr_select'][language]['m'],
+                'y': translation['as_qdr_select'][language]['y'],
+            }
+        },
+        'as_sitesearch': translation['as_sitesearch'][language],
+        // 'as_occt': translation['as_occt'][language],
+        'as_filetype': translation['as_filetype'][language],
+        // 'tbs': translation['tbs'][language],
     };
 
     for (const param in params) {
+        if (typeof params[param] === 'object') {
+            const label = document.createElement('label');
+            label.textContent = params[param].name;
+            const select = document.createElement('select');
+            select.name = param;
+
+            Object.keys(params[param]['options']).forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = params[param]['options'][option];
+                select.appendChild(optionElement);
+            });
+
+            form.appendChild(label);
+            form.appendChild(select);
+            form.appendChild(document.createElement('br'));
+            continue;
+        }
         const label = document.createElement('label');
-        label.textContent = params[param]; // 使用 params[param] 获取参数名称对应的中文解释
+        label.textContent = params[param];
         const input = document.createElement('input');
         input.name = param;
         input.type = 'text';
@@ -124,40 +233,13 @@
         form.appendChild(document.createElement('br'));
     }
 
-    // 在原有代码的这个位置插入新代码
-    const timeOptions = {
-        '': '请选择',
-        'd': '一天内',
-        'w': '一周内',
-        'm': '一月内',
-        'y': '一年内',
-    };
-
-    const timeLabel = document.createElement('label');
-    timeLabel.textContent = '最后更新时间：';
-    const timeSelect = document.createElement('select');
-    timeSelect.name = 'as_qdr';
-
-    for (const key in timeOptions) {
-        const option = document.createElement('option');
-        option.value = key;
-        option.textContent = timeOptions[key];
-        timeSelect.appendChild(option);
-    }
-
-    form.appendChild(timeLabel);
-    form.appendChild(timeSelect);
-    form.appendChild(document.createElement('br'));
-
     const searchButton = document.createElement('button');
-    searchButton.textContent = '搜索';
-    searchButton.className = 'nfSF8e';
+    searchButton.textContent = translation['search'][language];
     form.appendChild(searchButton);
 
     // Add a clear button to reset the form
     const clearButton = document.createElement('button');
-    clearButton.textContent = '清空';
-    clearButton.className = 'nfSF8e';
+    clearButton.textContent = translation['clear'][language];
     clearButton.addEventListener('click', function (event) {
         event.preventDefault();
         form.reset();
