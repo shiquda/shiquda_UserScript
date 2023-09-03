@@ -2,7 +2,7 @@
 // @name                    Advanced Search Assistant for Google
 // @name:zh-CN              Google 高级搜索助手
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.3
+// @version                 0.1.4
 // @description             Add an advanced search form to the top of the page
 // @description:zh-CN       在谷歌搜索页面顶部添加一个高级搜索表单
 // @author                  shiquda
@@ -126,7 +126,6 @@
         top: 130px;
         left: 40px;
         display: none;
-        background: #fff;
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -151,7 +150,6 @@
     #advancedSearchFormContainer select {
         margin-top: 5px;
         padding: 5px;
-        border: 1px solid #ccc;
         border-radius: 5px;
     }
 
