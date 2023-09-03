@@ -2,7 +2,7 @@
 // @name                    Advanced Search Assistant for Google
 // @name:zh-CN              Google 高级搜索助手
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.4
+// @version                 0.1.5
 // @description             Add an advanced search form to the top of the page
 // @description:zh-CN       在谷歌搜索页面顶部添加一个高级搜索表单
 // @author                  shiquda
@@ -107,6 +107,28 @@
                 'zh-CN': '一年内',
                 'en': 'Past year',
             },
+        },
+        'as_occt_select': {
+            '': {
+                'zh-CN': '请选择',
+                'en': 'Please select',
+            },
+            'title': {
+                'zh-CN': '网页标题中',
+                'en': 'In the title of the web page',
+            },
+            'body': {
+                'zh-CN': '网页正文中',
+                'en': 'In the body of the web page',
+            },
+            'url': {
+                'zh-CN': '网页网址中',
+                'en': 'In the URL of the web page',
+            },
+            'links': {
+                'zh-CN': '指向网页的链接中',
+                'en': 'In the links to the web page',
+            },
         }
     }
     const style = `
@@ -202,10 +224,20 @@
             }
         },
         'as_sitesearch': translation['as_sitesearch'][language],
-        // 'as_occt': translation['as_occt'][language],
+        'as_occt': {
+            'name': translation['as_occt'][language],
+            'options':
+            {
+                '': translation['as_occt_select'][''][language],
+                'title': translation['as_occt_select']['title'][language],
+                'body': translation['as_occt_select']['body'][language],
+                'url': translation['as_occt_select']['url'][language],
+                'links': translation['as_occt_select']['links'][language],
+            }
+        },
         'as_filetype': translation['as_filetype'][language],
         // 'tbs': translation['tbs'][language],
-    };
+    }
 
     for (const param in params) {
         if (typeof params[param] === 'object') {
@@ -287,4 +319,5 @@
         const searchUrl = 'https://www.google.com/search?' + searchParams.toString();
         window.location.href = searchUrl;
     });
-})();
+}
+)();
