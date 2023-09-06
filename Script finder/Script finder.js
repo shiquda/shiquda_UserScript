@@ -2,7 +2,7 @@
 // @name                    Script Finder
 // @name:zh-CN              Script Finder 油猴脚本查找
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.5
+// @version                 0.1.6
 // @description             Script Finder allows you to find userscripts from greasyfork on any website.
 // @description:zh-CN       Script Finder 在任何网站上找到适用于该网站的greasyfork油猴脚本
 // @author                  shiquda
@@ -61,7 +61,7 @@
                 updateMatches()
 
                 typeof (loadedPages) === 'number' ? loadedPages += 1 : loadedPages = loadedPages
-                console.log(loadedPages)
+                // console.log(loadedPages)
             },
             onerror: () => {
                 console.log("Some error occurred!");

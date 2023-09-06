@@ -2,7 +2,7 @@
 // @name                    Advanced Search Assistant for Google
 // @name:zh-CN              Google 高级搜索助手
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.5
+// @version                 0.1.6
 // @description             Add an advanced search form to the top of the page
 // @description:zh-CN       在谷歌搜索页面顶部添加一个高级搜索表单
 // @author                  shiquda
@@ -20,6 +20,7 @@
     'use strict';
     const userLanguage = '' // You can set your language config here manually. 'zh-CN' & 'en' are supported now.
 
+    const supportedLanguages = ['zh-CN', 'en']
 
     const translation = {
         'as_q': {
@@ -187,7 +188,7 @@
     `
     GM_addStyle(style)
 
-    const language = userLanguage ? userLanguage : navigator.language ? navigator.language : 'en'
+    const language = supportedLanguages.includes(userLanguage) ? userLanguage : supportedLanguages.includes(navigator.language) ? navigator.language : 'en'
     // Create user interface
     const toggleButton = document.createElement('button');
     toggleButton.className = 'nfSF8e';
