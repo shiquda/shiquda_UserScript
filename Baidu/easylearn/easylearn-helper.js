@@ -1,6 +1,5 @@
 // ==UserScript==
 // @name         百度教育直接查看答案
-// @namespace    http://tampermonkey.net/
 // @version      0.1.0
 // @description  百度教育直接查看答案，免去繁琐的点击
 // @author       shiquda
