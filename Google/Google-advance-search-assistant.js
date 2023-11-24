@@ -2,7 +2,7 @@
 // @name                    Advanced Search Assistant for Google
 // @name:zh-CN              Google 高级搜索助手
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.6
+// @version                 0.1.7
 // @description             Add an advanced search form to the top of the page
 // @description:zh-CN       在谷歌搜索页面顶部添加一个高级搜索表单
 // @author                  shiquda
@@ -17,7 +17,30 @@
 // ==/UserScript==
 
 (function () {
+
     'use strict';
+    let isMobile = false;
+    if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) ||
+        navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) ||
+        navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) ||
+        navigator.userAgent.match(/Windows Phone/i)) {
+        // On mobile device
+        isMobile = true;
+    }
+
+    let isDarkMode = false;
+    try {
+        let logoImg = document.querySelector('#logo')?.querySelector('img') ? document.querySelector('#logo')?.querySelector('img') : document.querySelector('#qslc')?.querySelector('img'); //
+        if (logoImg.src.match(/light/)) {
+            // Dark mode is enabled
+            isDarkMode = true;
+        }
+    }
+    catch {
+        console.log("Failed to determine the color mode.")
+    }
+
+
     const userLanguage = '' // You can set your language config here manually. 'zh-CN' & 'en' are supported now.
 
     const supportedLanguages = ['zh-CN', 'en']
@@ -141,19 +164,22 @@
         color: #fff;
         font-size: 14px;
         font-weight: bold;
+        margin: 10px;
     }
 
 
     #advancedSearchFormContainer {
         position: fixed;
-        top: 130px;
-        left: 40px;
+        ${isMobile ? 'top: 150px;' : 'top: 130px;'}
+        ${isMobile ? 'left: 15px;' : 'left: 30px;'}
         display: none;
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 14px;
         font-weight: bold;
+        ${isDarkMode ? 'background-color: rgba(0, 0, 0, 1);' : 'background-color: rgba(255, 255, 255, 1);'}
+        ${isMobile ? 'column-count: 2;' : ''} /* 在移动设备上分为两列 */
     }
 
 
@@ -194,7 +220,12 @@
     toggleButton.className = 'nfSF8e';
     toggleButton.textContent = translation['advancedSearch'][language];
     toggleButton.id = 'advancedSearchToggleButton'
-    document.querySelector('.logo').appendChild(toggleButton);
+    if (isMobile) {
+        document.querySelector('.Fh5muf').appendChild(toggleButton);
+    } else {
+        document.querySelector('.logo').appendChild(toggleButton);
+    }
+
 
     const formContainer = document.createElement('div');
     formContainer.id = 'advancedSearchFormContainer'
