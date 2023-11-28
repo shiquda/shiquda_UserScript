@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "Google-advance-search-assistant.js"
+        "Google-advance-search-assistant.js",
+        "bbdc-newword-export"
     ]
 }
