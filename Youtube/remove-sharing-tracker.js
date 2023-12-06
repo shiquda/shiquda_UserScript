@@ -2,8 +2,8 @@
 // @name         Remove tracker from Youtube sharing URL
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
-// @version      0.1
-// @description  Remove tracker from Youtube sharing URL, and add a button to copy the new URL to clipboard.
+// @version      0.1.1
+// @description  This UserScript removes trackers from YouTube sharing URLs.
 // @author       shiquda
 // @match        https://www.youtube.com/watch?v=*
 // @grant        none
