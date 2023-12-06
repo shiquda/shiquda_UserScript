@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "Google-advance-search-assistant.js",
-        "bbdc-newword-export"
+        "bbdc-newword-export",
+        "remove-sharing-tracker"
     ]
 }
