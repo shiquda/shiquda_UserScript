@@ -2,10 +2,10 @@
 // @name         Remove tracker from Youtube sharing URL
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
-// @version      0.1.1
+// @version      0.1.2
 // @description  This UserScript removes trackers from YouTube sharing URLs.
 // @author       shiquda
-// @match        https://www.youtube.com/watch?v=*
+// @match        https://www.youtube.com/watch*
 // @grant        none
 // @license      MIT
 // ==/UserScript==
