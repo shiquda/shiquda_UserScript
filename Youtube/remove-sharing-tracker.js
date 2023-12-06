@@ -2,7 +2,7 @@
 // @name         Remove tracker from Youtube sharing URL
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
-// @version      0.1.2
+// @version      0.1.3
 // @description  This UserScript removes trackers from YouTube sharing URLs.
 // @author       shiquda
 // @match        https://www.youtube.com/watch*
@@ -26,10 +26,10 @@
             if (mutation.type === 'childList') {
                 let url = document.querySelector('#share-url');
                 if (url) {
-                    url.addEventListener('change', removeParam);
-                    document.querySelector('#checkboxContainer').addEventListener('click', removeParam);
-                    document.querySelector('#copy-button').addEventListener('click', removeParam)
-                    document.querySelector('#input-2').addEventListener('blur', removeParam);
+                    // url.addEventListener('change', removeParam);
+                    // document.querySelector('#checkboxContainer').addEventListener('click', removeParam);
+                    // document.querySelector('#copy-button').addEventListener('click', removeParam)
+                    // document.querySelector('#input-2').addEventListener('blur', removeParam);
                     removeParam();
                 }
             }
