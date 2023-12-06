@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         不背单词生词本导出
 // @namespace    http://tampermonkey.net/
-// @version      0.2.1
+// @version      0.2.2
 // @description  不背单词生词本导出，目前支持自动获取单词列表并导出为txt文件。
 // @author       shiquda
 // @match        https://www.bbdc.cn/newword
@@ -55,8 +55,9 @@
 
     function downloadWords() {
         document.querySelector('#export-btn').innerText = '正在导出...';
+        document.querySelector('#export-btn').removeEventListener('click', downloadWords)
         document.querySelector('#export-btn').addEventListener('click', manipulateWords);
-        document.disabled = true;
+        document.querySelector('#export-btn').disabled = true;
         loadWords().then(() => {
             manipulateWords();
             document.querySelector('#info-tab').innerText = `导出完成！可以重新勾选选项设置导出格式！`;
