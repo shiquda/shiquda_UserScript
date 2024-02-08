@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -35,82 +35,80 @@
 
     // Add CSS for the selection box and the modal
     GM_addStyle(`
-    .selection-box {
-        border: 2px dashed #f00;
-        background-color: rgba(255, 0, 0, 0.2);
-    }
-    .no-scroll {
-        overflow: hidden;
-    }
-    .modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80%;
-        height: 80%;
-        background: white;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: row;
-        z-index: 9999;
-    }
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9998;
-    }
-    .modal textarea,
-    .modal .preview {
-        width: 50%;
-        height: 100%;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-    .modal .preview {
-        overflow-y: auto;
-    }
-    .modal .buttons {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-    }
-    .modal .buttons button {
-        margin-left: 10px;
-        background-color: #4CAF50; /* Green */
-        border: none;
-        color: white;
-        padding: 13px 16px;
-        border-radius: 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        transition-duration: 0.4s;
-        cursor: pointer;
-    }
-    .modal .buttons button:hover {
-        background-color: #45a049;
-    }
-    .modal .close {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        cursor: pointer;
-        width: 25px;
-        height: 25px;
-        background-color: #f44336;
-        color: white;
-        font-size: 20px;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 25px;
-    }
-`);
+        .h2m-selection-box {
+            border: 2px dashed #f00;
+            background-color: rgba(255, 0, 0, 0.2);
+        }
+        .h2m-no-scroll {
+            overflow: hidden;
+        }
+        .h2m-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: row;
+            z-index: 9999;
+        }
+        .h2m-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+        }
+        .h2m-modal textarea,
+        .h2m-modal .h2m-preview {
+            width: 50%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .h2m-modal .h2m-buttons {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        .h2m-modal .h2m-buttons button {
+            margin-left: 10px;
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 13px 16px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+        .h2m-modal .h2m-buttons button:hover {
+            background-color: #45a049;
+        }
+        .h2m-modal .h2m-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            width: 25px;
+            height: 25px;
+            background-color: #f44336;
+            color: white;
+            font-size: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+        }
+    `);
 
 
 
@@ -119,9 +117,9 @@
 
     $(document).on('mouseover', function (e) {
         if (isSelecting) {
-            $(selectedElement).removeClass('selection-box');
+            $(selectedElement).removeClass('h2m-selection-box');
             selectedElement = e.target;
-            $(selectedElement).addClass('selection-box');
+            $(selectedElement).addClass('h2m-selection-box');
         }
     }).on('wheel', function (e) {
         if (isSelecting) {
@@ -131,8 +129,8 @@
             } else {
                 selectedElement = $(selectedElement).find(':hover')[0];
             }
-            $('.selection-box').removeClass('selection-box');
-            $(selectedElement).addClass('selection-box');
+            $('.h2m-selection-box').removeClass('h2m-selection-box');
+            $(selectedElement).addClass('h2m-selection-box');
         }
     }).on('keydown', function (e) {
         if (e.key === 'Escape') {
@@ -159,18 +157,22 @@
     // 预览
     function showMarkdownModal(markdown) {
         var $modal = $(`
-            <div class="modal-overlay">
-                <div class="modal">
-                    <textarea>${markdown}</textarea>
-                    <div class="preview">${marked.parse(markdown)}</div>
-                    <div class="buttons">
-                        <button class="copy">Copy to clipboard</button>
-                        <button class="download">Download as MD</button>
+                <div class="h2m-modal-overlay">
+                    <div class="h2m-modal">
+                        <textarea>${markdown}</textarea>
+                        <div class="h2m-preview">${marked.parse(markdown)}</div>
+                        <div class="h2m-buttons">
+                            <button class="h2m-copy">Copy to clipboard</button>
+                            <button class="h2m-download">Download as MD</button>
+                        </div>
+                        <div class="close">X</div>
                     </div>
-                    <div class="close">X</div>
                 </div>
-            </div>
-        `);
+            `);
+
+
+
+
 
         $modal.find('textarea').on('input', function () {
             // console.log("Input event triggered");
@@ -188,15 +190,15 @@
         });
 
 
-        $modal.find('.copy').on('click', function () {
+        $modal.find('.h2m-copy').on('click', function () {
             GM_setClipboard($modal.find('textarea').val());
-            $modal.find('.copy').text('Copied!');
+            $modal.find('.h2m-copy').text('Copied!');
             setTimeout(() => {
-                $modal.find('.copy').text('Copy to clipboard');
+                $modal.find('.h2m-copy').text('Copy to clipboard');
             }, 1000);
         });
 
-        $modal.find('.download').on('click', function () {
+        $modal.find('.h2m-download').on('click', function () {
             var markdown = $modal.find('textarea').val();
             var blob = new Blob([markdown], { type: 'text/markdown' });
             var url = URL.createObjectURL(blob);
@@ -222,15 +224,15 @@
 
     // 开始选择
     function startSelecting() {
-        $('body').addClass('no-scroll');
+        $('body').addClass('h2m-no-scroll');
         isSelecting = true;
     }
 
     // 结束选择
     function endSelecting() {
         isSelecting = false;
-        $('.selection-box').removeClass('selection-box');
-        $('body').removeClass('no-scroll');
+        $('.h2m-selection-box').removeClass('h2m-selection-box');
+        $('body').removeClass('h2m-no-scroll');
     }
 
     $(document).on('keydown', function (e) {
