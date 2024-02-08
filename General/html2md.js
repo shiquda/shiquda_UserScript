@@ -180,7 +180,7 @@
             var html = marked.parse(markdown);
             // console.log("Markdown:", markdown);
             // console.log("HTML:", html);
-            $modal.find('.preview').html(html);
+            $modal.find('.h2m-preview').html(html);
         });
 
         $modal.on('keydown', function (e) {
