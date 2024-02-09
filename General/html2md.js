@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.3.0
+// @version      0.3.1
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -325,6 +325,23 @@
         $modal.find('.h2m-close').on('click', function () {
             $modal.remove();
         });
+
+        // 获取两个元素
+        var $textarea = $modal.find('textarea');
+        var $preview = $modal.find('.h2m-preview');
+
+        // 当 textarea 滚动时，设置 preview 的滚动位置
+        $textarea.on('scroll', function () {
+            var scrollPercentage = this.scrollTop / (this.scrollHeight - this.offsetHeight);
+            $preview[0].scrollTop = scrollPercentage * ($preview[0].scrollHeight - $preview[0].offsetHeight);
+        });
+
+        // 当 preview 滚动时，设置 textarea 的滚动位置
+        $preview.on('scroll', function () {
+            var scrollPercentage = this.scrollTop / (this.scrollHeight - this.offsetHeight);
+            $textarea[0].scrollTop = scrollPercentage * ($textarea[0].scrollHeight - $textarea[0].offsetHeight);
+        });
+
 
         $('body').append($modal);
     }
