@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.1.2
+// @version      0.2.0
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -22,6 +22,21 @@
 
 (function () {
     'use strict';
+
+    // 选择使用指南，Markdown
+    const guide = `
+
+- 使用**方向键**选择元素
+    - 上：选择父元素
+    - 下：选择第一个子元素
+    - 左：选择上一个兄弟元素
+    - 右：选择下一个兄弟元素
+- 使用**滚轮**放大缩小
+    - 上：选择父元素
+    - 下：选择第一个子元素
+- 点击元素选择
+- 按下 \`Esc\` 键取消选择
+    `
 
     // Create Turndown service
     var turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
@@ -108,6 +123,20 @@
             text-align: center;
             line-height: 25px;
         }
+        .h2m-tip {
+            position: fixed;
+            top: 22%;
+            left: 82%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid black;
+            padding: 8px;
+            z-index: 9999;
+            border-radius: 10px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        
     `);
 
 
@@ -125,18 +154,66 @@
         if (isSelecting) {
             e.preventDefault();
             if (e.originalEvent.deltaY < 0) {
-                selectedElement = selectedElement.parentElement;
+                selectedElement = selectedElement.parentElement ? selectedElement.parentElement : selectedElement; // 扩大
+                if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') {
+                    selectedElement = selectedElement.firstElementChild;
+                }
             } else {
-                selectedElement = $(selectedElement).find(':hover')[0];
+                selectedElement = selectedElement.firstElementChild ? selectedElement.firstElementChild : selectedElement; // 缩小
             }
             $('.h2m-selection-box').removeClass('h2m-selection-box');
             $(selectedElement).addClass('h2m-selection-box');
         }
     }).on('keydown', function (e) {
-        if (e.key === 'Escape') {
-            endSelecting();
+        if (isSelecting) {
+            e.preventDefault();
+            if (e.key === 'Escape') {
+                endSelecting();
+                return;
+            }
+            switch (e.key) {
+                case 'ArrowUp':
+                    selectedElement = selectedElement.parentElement ? selectedElement.parentElement : selectedElement; // 扩大
+                    if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') {
+                        selectedElement = selectedElement.firstElementChild;
+                    }
+                    break;
+                case 'ArrowDown':
+                    selectedElement = selectedElement.firstElementChild ? selectedElement.firstElementChild : selectedElement; // 缩小
+                    break;
+                case 'ArrowLeft': // 寻找上一个元素，若是最后一个子元素则选择父元素的下一个兄弟元素，直到找到一个元素
+                    var prev = selectedElement.previousElementSibling;
+                    while (prev === null && selectedElement.parentElement !== null) {
+                        selectedElement = selectedElement.parentElement;
+                        prev = selectedElement.previousElementSibling ? selectedElement.previousElementSibling.lastChild : null;
+                    }
+                    if (prev !== null) {
+                        if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') {
+                            selectedElement = selectedElement.firstElementChild;
+                        }
+                        selectedElement = prev;
+                    }
+                    break;
+                case 'ArrowRight':
+                    var next = selectedElement.nextElementSibling;
+                    while (next === null && selectedElement.parentElement !== null) {
+                        selectedElement = selectedElement.parentElement;
+                        next = selectedElement.nextElementSibling ? selectedElement.nextElementSibling.firstElementChild : null;
+                    }
+                    if (next !== null) {
+                        if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') {
+                            selectedElement = selectedElement.firstElementChild;
+                        }
+                        selectedElement = next;
+                    }
+                    break;
+            }
+
+            $('.h2m-selection-box').removeClass('h2m-selection-box');
+            $(selectedElement).addClass('h2m-selection-box');
         }
-    }).on('mousedown', function (e) {
+    }
+    ).on('mousedown', function (e) {
         if (isSelecting) {
             e.preventDefault();
             var markdown = convertToMarkdown(selectedElement);
@@ -165,7 +242,7 @@
                             <button class="h2m-copy">Copy to clipboard</button>
                             <button class="h2m-download">Download as MD</button>
                         </div>
-                        <div class="close">X</div>
+                        <div class="h2m-close">X</div>
                     </div>
                 </div>
             `);
@@ -209,7 +286,7 @@
             a.click();
         });
 
-        $modal.find('.close').on('click', function () {
+        $modal.find('.h2m-close').on('click', function () {
             $modal.remove();
         });
 
@@ -226,6 +303,8 @@
     function startSelecting() {
         $('body').addClass('h2m-no-scroll');
         isSelecting = true;
+        // 操作指南
+        tip(marked.parse(guide));
     }
 
     // 结束选择
@@ -233,7 +312,28 @@
         isSelecting = false;
         $('.h2m-selection-box').removeClass('h2m-selection-box');
         $('body').removeClass('h2m-no-scroll');
+        $('.h2m-tip').remove();
     }
+
+    function tip(message, timeout = null) {
+        var $tipElement = $('<div>')
+            .addClass('h2m-tip')
+            .html(message)
+            .appendTo('body')
+            .hide()
+            .fadeIn(200);
+        if (timeout === null) {
+            return;
+        }
+        setTimeout(function () {
+            $tipElement.fadeOut(200, function () {
+                $tipElement.remove();
+            });
+        }, timeout);
+    }
+
+
+
 
     $(document).on('keydown', function (e) {
         if (e.ctrlKey && e.key === 'm') {
