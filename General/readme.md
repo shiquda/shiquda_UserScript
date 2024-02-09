@@ -20,9 +20,9 @@
 1. Install a user script manager, such as Tampermonkey or Greasemonkey.
 2. Add this script to your user script manager.
 3. On any webpage, press `Ctrl + M` or open the function from the script manager's menu to start selecting HTML elements.
-4. During selection, move the mouse to select a location and use the mouse wheel to zoom in and out of the selection area. The content within the red box will be converted.
-5. After selection, you can edit the converted Markdown code on the left, and the right side will show its preview.
-6. You can either copy the Markdown to your clipboard or download it as a .md file.
+4. During selection, follow the guide to select elements using the mouse wheel or arrow keys.
+5. After selection, you can edit the converted Markdown code on the left, with a preview available on the right.
+6. You can either copy the Markdown to your clipboard, download it as a .md file, or configure the code to import it into Obsidian (using [Obsidian Advanced URI](https://vinzent03.github.io/obsidian-advanced-uri/installing)).
 
 ------
 
@@ -44,6 +44,6 @@
 1. 安装用户脚本管理器，如 Tampermonkey 或 Greasemonkey。
 2. 将此脚本添加到你的用户脚本管理器。
 3. 在任何网页，按 `Ctrl + M` ，或者在脚本管理器的菜单打开功能，开始选择 HTML 元素。
-4. 选择时，移动鼠标来选定位置，用鼠标滚轮来缩放选择区域的大小，红色方框内的部分即为将被转换的内容。
+4. 选择时，根据提示信息，使用鼠标滚轮或者方向键来选择元素。
 5. 选择后，可以在左侧对转换后的 Markdown 代码进行编辑，右侧为其预览。
-6. 可以将 Markdown 复制到剪贴板，也可以将其下载为 .md 文件。
+6. 可以将 Markdown 复制到剪贴板，也可以将其下载为 .md 文件，或者在代码中配置导入到Obsidian（使用[Obsidian Advanced URI](https://vinzent03.github.io/obsidian-advanced-uri/installing)）。
