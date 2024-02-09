@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.2.0
+// @version      0.3.0
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -23,7 +23,18 @@
 (function () {
     'use strict';
 
-    // 选择使用指南，Markdown
+    // User Config
+
+    // obsidian
+    const obsidianConfig = {
+        /* example
+            "my note": [
+                "Inbox/Web/",
+                "Collection/Web/Reading/"
+            ]
+        */
+    }
+
     const guide = `
 
 - 使用**方向键**选择元素
@@ -92,7 +103,8 @@
             bottom: 10px;
             right: 10px;
         }
-        .h2m-modal .h2m-buttons button {
+        .h2m-modal .h2m-buttons button,
+        .h2m-modal .h2m-obsidian-select {
             margin-left: 10px;
             background-color: #4CAF50; /* Green */
             border: none;
@@ -106,7 +118,8 @@
             transition-duration: 0.4s;
             cursor: pointer;
         }
-        .h2m-modal .h2m-buttons button:hover {
+        .h2m-modal .h2m-buttons button:hover,
+        .h2m-modal .h2m-obsidian-select:hover {
             background-color: #45a049;
         }
         .h2m-modal .h2m-close {
@@ -136,7 +149,6 @@
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
             background-color: rgba(255, 255, 255, 0.7);
         }
-        
     `);
 
 
@@ -241,6 +253,7 @@
                         <div class="h2m-buttons">
                             <button class="h2m-copy">Copy to clipboard</button>
                             <button class="h2m-download">Download as MD</button>
+                            <select class="h2m-obsidian-select">Send to Obsidian</button>
                         </div>
                         <div class="h2m-close">X</div>
                     </div>
@@ -248,8 +261,16 @@
             `);
 
 
-
-
+        $modal.find('.h2m-obsidian-select').append($('<option>').val('').text('Send to Obsidian'));
+        for (const vault in obsidianConfig) {
+            for (const path of obsidianConfig[vault]) {
+                // 插入元素
+                const $option = $('<option>')
+                    .val(`obsidian://advanced-uri?vault=${vault}&filepath=${path}`)
+                    .text(`${vault}: ${path}`);
+                $modal.find('.h2m-obsidian-select').append($option);
+            }
+        }
 
         $modal.find('textarea').on('input', function () {
             // console.log("Input event triggered");
@@ -286,8 +307,13 @@
             a.click();
         });
 
-        $modal.find('.h2m-close').on('click', function () {
-            $modal.remove();
+        $modal.find('.h2m-obsidian-select').on('change', function () {
+            const val = $(this).val();
+            if (!val) return;
+            const markdown = $modal.find('textarea').val();
+            GM_setClipboard(markdown);
+            const url = `${val}${document.title}.md&clipboard=true`;
+            window.open(url);
         });
 
         // $modal.on('click', function (e) {
@@ -295,6 +321,10 @@
         //         $modal.remove();
         //     }
         // });
+
+        $modal.find('.h2m-close').on('click', function () {
+            $modal.remove();
+        });
 
         $('body').append($modal);
     }
