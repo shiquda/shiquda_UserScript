@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.3.2
+// @version      0.3.3
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -134,10 +134,11 @@
             height: 25px;
             background-color: #f44336;
             color: white;
-            font-size: 20px;
+            font-size: 16px;
             border-radius: 50%;
-            text-align: center;
-            line-height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .h2m-tip {
             position: fixed;
@@ -256,9 +257,9 @@
                         <div class="h2m-buttons">
                             <button class="h2m-copy">Copy to clipboard</button>
                             <button class="h2m-download">Download as MD</button>
-                            <select class="h2m-obsidian-select">Send to Obsidian</button>
+                            <select class="h2m-obsidian-select">Send to Obsidian</select>
                         </div>
-                        <div class="h2m-close">X</div>
+                        <button class="h2m-close">X</button>
                     </div>
                 </div>
             `);
@@ -325,9 +326,9 @@
         //     }
         // });
 
-        $modal.find('.h2m-close').on('click', function () {
-            $modal.remove();
-        });
+        // $modal.find('.h2m-close').on('click', function () {
+        //     $modal.remove();
+        // });
 
         // 获取两个元素
         var $textarea = $modal.find('textarea');
@@ -345,6 +346,11 @@
             $textarea[0].scrollTop = scrollPercentage * ($textarea[0].scrollHeight - $textarea[0].offsetHeight);
         });
 
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape' && $('.h2m-modal-overlay').length > 0) {
+                $('.h2m-modal-overlay').remove();
+            }
+        });
 
         $('body').append($modal);
     }
