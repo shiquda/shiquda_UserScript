@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.3.1
+// @version      0.3.2
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -15,6 +15,7 @@
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
 // @require      https://unpkg.com/turndown/dist/turndown.js
+// @require      https://unpkg.com/turndown-plugin-gfm/dist/turndown-plugin-gfm.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js
 // @license      AGPL-3.0
 // ==/UserScript==
@@ -51,12 +52,14 @@
 
     // Create Turndown service
     var turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
+
     turndownService.addRule('strikethrough', {
         filter: ['del', 's', 'strike'],
         replacement: function (content) {
             return '~' + content + '~'
         }
-    })
+    });
+    turndownPluginGfm.gfm(turndownService);
 
 
     // Add CSS for the selection box and the modal
