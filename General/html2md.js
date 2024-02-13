@@ -326,9 +326,9 @@
         //     }
         // });
 
-        // $modal.find('.h2m-close').on('click', function () {
-        //     $modal.remove();
-        // });
+        $modal.find('.h2m-close').on('click', function () {
+            $modal.remove();
+        });
 
         // 获取两个元素
         var $textarea = $modal.find('textarea');
