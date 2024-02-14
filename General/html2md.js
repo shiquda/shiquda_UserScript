@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.3.4
+// @version      0.3.5
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -26,18 +26,15 @@
 
     // User Config
 
-    // obsidian
-    const obsidianConfig = {
-        /* example
+    // Obsidian
+    const obsidianConfig = { /* Example:
             "my note": [
                 "Inbox/Web/",
                 "Collection/Web/Reading/"
-            ]
-        */
+            ] */
     }
 
     const guide = `
-
 - 使用**方向键**选择元素
     - 上：选择父元素
     - 下：选择第一个子元素
@@ -50,16 +47,167 @@
 - 按下 \`Esc\` 键取消选择
     `
 
-    // Create Turndown service
+    // 全局变量
+    var isSelecting = false;
+    var selectedElement = null;
+
+    // HTML2Markdown
+    function convertToMarkdown(element) {
+        var html = element.outerHTML;
+        let turndownMd = turndownService.turndown(html);
+        turndownMd = turndownMd.replaceAll('[\n\n]', '[]'); // 防止 <a> 元素嵌套的暂时方法，并不完善
+        return turndownMd;
+    }
+
+
+    // 预览
+    function showMarkdownModal(markdown) {
+        var $modal = $(`
+                    <div class="h2m-modal-overlay">
+                        <div class="h2m-modal">
+                            <textarea>${markdown}</textarea>
+                            <div class="h2m-preview">${marked.parse(markdown)}</div>
+                            <div class="h2m-buttons">
+                                <button class="h2m-copy">Copy to clipboard</button>
+                                <button class="h2m-download">Download as MD</button>
+                                <select class="h2m-obsidian-select">Send to Obsidian</select>
+                            </div>
+                            <button class="h2m-close">X</button>
+                        </div>
+                    </div>
+                `);
+
+
+        $modal.find('.h2m-obsidian-select').append($('<option>').val('').text('Send to Obsidian'));
+        for (const vault in obsidianConfig) {
+            for (const path of obsidianConfig[vault]) {
+                // 插入元素
+                const $option = $('<option>')
+                    .val(`obsidian://advanced-uri?vault=${vault}&filepath=${path}`)
+                    .text(`${vault}: ${path}`);
+                $modal.find('.h2m-obsidian-select').append($option);
+            }
+        }
+
+        $modal.find('textarea').on('input', function () {
+            // console.log("Input event triggered");
+            var markdown = $(this).val();
+            var html = marked.parse(markdown);
+            // console.log("Markdown:", markdown);
+            // console.log("HTML:", html);
+            $modal.find('.h2m-preview').html(html);
+        });
+
+        $modal.on('keydown', function (e) {
+            if (e.key === 'Escape') {
+                $modal.remove();
+            }
+        });
+
+
+        $modal.find('.h2m-copy').on('click', function () { // 复制到剪贴板
+            GM_setClipboard($modal.find('textarea').val());
+            $modal.find('.h2m-copy').text('Copied!');
+            setTimeout(() => {
+                $modal.find('.h2m-copy').text('Copy to clipboard');
+            }, 1000);
+        });
+
+        $modal.find('.h2m-download').on('click', function () { // 下载
+            var markdown = $modal.find('textarea').val();
+            var blob = new Blob([markdown], { type: 'text/markdown' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            // 当前页面标题 + 时间
+            a.download = `${document.title}-${new Date().toISOString().replace(/:/g, '-')}.md`;
+            a.click();
+        });
+
+        $modal.find('.h2m-obsidian-select').on('change', function () { // 发送到 Obsidian
+            const val = $(this).val();
+            if (!val) return;
+            const markdown = $modal.find('textarea').val();
+            GM_setClipboard(markdown);
+            const title = document.title.replaceAll(/[\\/:*?"<>|]/g, '_'); // File name cannot contain any of the following characters: * " \ / < > : | ?
+            const url = `${val}${title}.md&clipboard=true`;
+            window.open(url);
+        });
+
+        $modal.find('.h2m-close').on('click', function () { // 关闭按钮 X
+            $modal.remove();
+        });
+
+        // 同步滚动
+        // 获取两个元素
+        var $textarea = $modal.find('textarea');
+        var $preview = $modal.find('.h2m-preview');
+
+        // 当 textarea 滚动时，设置 preview 的滚动位置
+        $textarea.on('scroll', function () {
+            var scrollPercentage = this.scrollTop / (this.scrollHeight - this.offsetHeight);
+            $preview[0].scrollTop = scrollPercentage * ($preview[0].scrollHeight - $preview[0].offsetHeight);
+        });
+
+        // 当 preview 滚动时，设置 textarea 的滚动位置
+        $preview.on('scroll', function () {
+            var scrollPercentage = this.scrollTop / (this.scrollHeight - this.offsetHeight);
+            $textarea[0].scrollTop = scrollPercentage * ($textarea[0].scrollHeight - $textarea[0].offsetHeight);
+        });
+
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape' && $('.h2m-modal-overlay').length > 0) {
+                $('.h2m-modal-overlay').remove();
+            }
+        });
+
+        $('body').append($modal);
+    }
+
+    // 开始选择
+    function startSelecting() {
+        $('body').addClass('h2m-no-scroll'); // 防止页面滚动
+        isSelecting = true;
+        // 操作指南
+        tip(marked.parse(guide));
+    }
+
+    // 结束选择
+    function endSelecting() {
+        isSelecting = false;
+        $('.h2m-selection-box').removeClass('h2m-selection-box');
+        $('body').removeClass('h2m-no-scroll');
+        $('.h2m-tip').remove();
+    }
+
+    function tip(message, timeout = null) {
+        var $tipElement = $('<div>')
+            .addClass('h2m-tip')
+            .html(message)
+            .appendTo('body')
+            .hide()
+            .fadeIn(200);
+        if (timeout === null) {
+            return;
+        }
+        setTimeout(function () {
+            $tipElement.fadeOut(200, function () {
+                $tipElement.remove();
+            });
+        }, timeout);
+    }
+
+    // Turndown 配置
     var turndownPluginGfm = TurndownPluginGfmService;
     var turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
 
-    turndownService.addRule('strikethrough', {
-        filter: ['del', 's', 'strike'],
-        replacement: function (content) {
-            return '~' + content + '~'
-        }
-    });
+    turndownPluginGfm.gfm(turndownService); // 引入全部插件
+    // turndownService.addRule('strikethrough', {
+    //     filter: ['del', 's', 'strike'],
+    //     replacement: function (content) {
+    //         return '~' + content + '~'
+    //     }
+    // });
 
     // turndownService.addRule('latex', {
     //     filter: ['mjx-container'],
@@ -77,10 +225,11 @@
     //         return '';
     //     }
     // });
-    turndownPluginGfm.gfm(turndownService);
 
 
-    // Add CSS for the selection box and the modal
+
+
+    // 添加CSS样式
     GM_addStyle(`
         .h2m-selection-box {
             border: 2px dashed #f00;
@@ -88,6 +237,7 @@
         }
         .h2m-no-scroll {
             overflow: hidden;
+            z-index: 9997;
         }
         .h2m-modal {
             position: fixed;
@@ -173,18 +323,27 @@
         }
     `);
 
+    // 注册触发器
+    $(document).on('keydown', function (e) {
+        if (e.ctrlKey && e.key === 'm') {
+            e.preventDefault();
+            startSelecting()
+        }
+    });
+
+    GM_registerMenuCommand('Convert to Markdown', function () {
+        startSelecting()
+    });
 
 
-    var isSelecting = false;
-    var selectedElement = null;
 
-    $(document).on('mouseover', function (e) {
+    $(document).on('mouseover', function (e) { // 开始选择
         if (isSelecting) {
             $(selectedElement).removeClass('h2m-selection-box');
             selectedElement = e.target;
             $(selectedElement).addClass('h2m-selection-box');
         }
-    }).on('wheel', function (e) {
+    }).on('wheel', function (e) { // 滚轮事件
         if (isSelecting) {
             e.preventDefault();
             if (e.originalEvent.deltaY < 0) {
@@ -198,17 +357,17 @@
             $('.h2m-selection-box').removeClass('h2m-selection-box');
             $(selectedElement).addClass('h2m-selection-box');
         }
-    }).on('keydown', function (e) {
+    }).on('keydown', function (e) { // 键盘事件
         if (isSelecting) {
             e.preventDefault();
             if (e.key === 'Escape') {
                 endSelecting();
                 return;
             }
-            switch (e.key) {
+            switch (e.key) { // 方向键：上下左右
                 case 'ArrowUp':
                     selectedElement = selectedElement.parentElement ? selectedElement.parentElement : selectedElement; // 扩大
-                    if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') {
+                    if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') { // 排除HTML 和 BODY
                         selectedElement = selectedElement.firstElementChild;
                     }
                     break;
@@ -244,10 +403,10 @@
             }
 
             $('.h2m-selection-box').removeClass('h2m-selection-box');
-            $(selectedElement).addClass('h2m-selection-box');
+            $(selectedElement).addClass('h2m-selection-box'); // 更新选中元素的样式
         }
     }
-    ).on('mousedown', function (e) {
+    ).on('mousedown', function (e) { // 鼠标事件，选择 mousedown 是因为防止点击元素后触发其他事件
         if (isSelecting) {
             e.preventDefault();
             var markdown = convertToMarkdown(selectedElement);
@@ -256,169 +415,4 @@
         }
     });
 
-    // HTML2Markdown
-    function convertToMarkdown(element) {
-        var html = element.outerHTML;
-        let turndownMd = turndownService.turndown(html);
-        turndownMd = turndownMd.replaceAll('[\n\n]', '[]');
-        return turndownMd;
-    }
-
-
-    // 预览
-    function showMarkdownModal(markdown) {
-        var $modal = $(`
-                <div class="h2m-modal-overlay">
-                    <div class="h2m-modal">
-                        <textarea>${markdown}</textarea>
-                        <div class="h2m-preview">${marked.parse(markdown)}</div>
-                        <div class="h2m-buttons">
-                            <button class="h2m-copy">Copy to clipboard</button>
-                            <button class="h2m-download">Download as MD</button>
-                            <select class="h2m-obsidian-select">Send to Obsidian</select>
-                        </div>
-                        <button class="h2m-close">X</button>
-                    </div>
-                </div>
-            `);
-
-
-        $modal.find('.h2m-obsidian-select').append($('<option>').val('').text('Send to Obsidian'));
-        for (const vault in obsidianConfig) {
-            for (const path of obsidianConfig[vault]) {
-                // 插入元素
-                const $option = $('<option>')
-                    .val(`obsidian://advanced-uri?vault=${vault}&filepath=${path}`)
-                    .text(`${vault}: ${path}`);
-                $modal.find('.h2m-obsidian-select').append($option);
-            }
-        }
-
-        $modal.find('textarea').on('input', function () {
-            // console.log("Input event triggered");
-            var markdown = $(this).val();
-            var html = marked.parse(markdown);
-            // console.log("Markdown:", markdown);
-            // console.log("HTML:", html);
-            $modal.find('.h2m-preview').html(html);
-        });
-
-        $modal.on('keydown', function (e) {
-            if (e.key === 'Escape') {
-                $modal.remove();
-            }
-        });
-
-
-        $modal.find('.h2m-copy').on('click', function () {
-            GM_setClipboard($modal.find('textarea').val());
-            $modal.find('.h2m-copy').text('Copied!');
-            setTimeout(() => {
-                $modal.find('.h2m-copy').text('Copy to clipboard');
-            }, 1000);
-        });
-
-        $modal.find('.h2m-download').on('click', function () {
-            var markdown = $modal.find('textarea').val();
-            var blob = new Blob([markdown], { type: 'text/markdown' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            // 当前页面标题 + 时间
-            a.download = `${document.title}-${new Date().toISOString().replace(/:/g, '-')}.md`;
-            a.click();
-        });
-
-        $modal.find('.h2m-obsidian-select').on('change', function () {
-            const val = $(this).val();
-            if (!val) return;
-            const markdown = $modal.find('textarea').val();
-            GM_setClipboard(markdown);
-            const title = document.title.replaceAll(/[\\/:*?"<>|]/g, '_'); // File name cannot contain any of the following characters: * " \ / < > : | ?
-            const url = `${val}${title}.md&clipboard=true`;
-            window.open(url);
-        });
-
-        // $modal.on('click', function (e) {
-        //     if (e.target === this) {
-        //         $modal.remove();
-        //     }
-        // });
-
-        $modal.find('.h2m-close').on('click', function () {
-            $modal.remove();
-        });
-
-        // 获取两个元素
-        var $textarea = $modal.find('textarea');
-        var $preview = $modal.find('.h2m-preview');
-
-        // 当 textarea 滚动时，设置 preview 的滚动位置
-        $textarea.on('scroll', function () {
-            var scrollPercentage = this.scrollTop / (this.scrollHeight - this.offsetHeight);
-            $preview[0].scrollTop = scrollPercentage * ($preview[0].scrollHeight - $preview[0].offsetHeight);
-        });
-
-        // 当 preview 滚动时，设置 textarea 的滚动位置
-        $preview.on('scroll', function () {
-            var scrollPercentage = this.scrollTop / (this.scrollHeight - this.offsetHeight);
-            $textarea[0].scrollTop = scrollPercentage * ($textarea[0].scrollHeight - $textarea[0].offsetHeight);
-        });
-
-        $(document).on('keydown', function (e) {
-            if (e.key === 'Escape' && $('.h2m-modal-overlay').length > 0) {
-                $('.h2m-modal-overlay').remove();
-            }
-        });
-
-        $('body').append($modal);
-    }
-
-    // 开始选择
-    function startSelecting() {
-        $('body').addClass('h2m-no-scroll');
-        isSelecting = true;
-        // 操作指南
-        tip(marked.parse(guide));
-    }
-
-    // 结束选择
-    function endSelecting() {
-        isSelecting = false;
-        $('.h2m-selection-box').removeClass('h2m-selection-box');
-        $('body').removeClass('h2m-no-scroll');
-        $('.h2m-tip').remove();
-    }
-
-    function tip(message, timeout = null) {
-        var $tipElement = $('<div>')
-            .addClass('h2m-tip')
-            .html(message)
-            .appendTo('body')
-            .hide()
-            .fadeIn(200);
-        if (timeout === null) {
-            return;
-        }
-        setTimeout(function () {
-            $tipElement.fadeOut(200, function () {
-                $tipElement.remove();
-            });
-        }, timeout);
-    }
-
-
-
-
-    $(document).on('keydown', function (e) {
-        if (e.ctrlKey && e.key === 'm') {
-            e.preventDefault();
-            startSelecting()
-        }
-    });
-
-    // Register menu command
-    GM_registerMenuCommand('Convert to Markdown', function () {
-        startSelecting()
-    });
 })();
