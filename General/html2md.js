@@ -142,17 +142,28 @@
         // 获取两个元素
         var $textarea = $modal.find('textarea');
         var $preview = $modal.find('.h2m-preview');
+        var isScrolling = false;
 
         // 当 textarea 滚动时，设置 preview 的滚动位置
         $textarea.on('scroll', function () {
+            if (isScrolling) {
+                isScrolling = false;
+                return;
+            }
             var scrollPercentage = this.scrollTop / (this.scrollHeight - this.offsetHeight);
             $preview[0].scrollTop = scrollPercentage * ($preview[0].scrollHeight - $preview[0].offsetHeight);
+            isScrolling = true;
         });
 
         // 当 preview 滚动时，设置 textarea 的滚动位置
         $preview.on('scroll', function () {
+            if (isScrolling) {
+                isScrolling = false;
+                return;
+            }
             var scrollPercentage = this.scrollTop / (this.scrollHeight - this.offsetHeight);
             $textarea[0].scrollTop = scrollPercentage * ($textarea[0].scrollHeight - $textarea[0].offsetHeight);
+            isScrolling = true;
         });
 
         $(document).on('keydown', function (e) {
