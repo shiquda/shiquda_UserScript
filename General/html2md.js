@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.3.3
+// @version      0.3.4
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -15,7 +15,7 @@
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
 // @require      https://unpkg.com/turndown/dist/turndown.js
-// @require      https://unpkg.com/turndown-plugin-gfm/dist/turndown-plugin-gfm.js
+// @require      https://unpkg.com/@guyplusplus/turndown-plugin-gfm/dist/turndown-plugin-gfm.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js
 // @license      AGPL-3.0
 // ==/UserScript==
@@ -51,6 +51,7 @@
     `
 
     // Create Turndown service
+    var turndownPluginGfm = TurndownPluginGfmService;
     var turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
 
     turndownService.addRule('strikethrough', {
@@ -59,6 +60,23 @@
             return '~' + content + '~'
         }
     });
+
+    // turndownService.addRule('latex', {
+    //     filter: ['mjx-container'],
+    //     replacement: function (content, node) {
+    //         const text = node.querySelector('img')?.title;
+    //         const isInline = !node.getAttribute('display');
+    //         if (text) {
+    //             if (isInline) {
+    //                 return '$' + text + '$'
+    //             }
+    //             else {
+    //                 return '$$' + text + '$$'
+    //             }
+    //         }
+    //         return '';
+    //     }
+    // });
     turndownPluginGfm.gfm(turndownService);
 
 
@@ -316,7 +334,8 @@
             if (!val) return;
             const markdown = $modal.find('textarea').val();
             GM_setClipboard(markdown);
-            const url = `${val}${document.title}.md&clipboard=true`;
+            const title = document.title.replaceAll(/[\\/:*?"<>|]/g, '_'); // File name cannot contain any of the following characters: * " \ / < > : | ?
+            const url = `${val}${title}.md&clipboard=true`;
             window.open(url);
         });
 
