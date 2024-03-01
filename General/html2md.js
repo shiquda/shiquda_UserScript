@@ -2,7 +2,7 @@
 // @name         Easy Web Page to Markdown
 // @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
-// @version      0.3.5
+// @version      0.3.6
 // @description  Convert selected HTML to Markdown
 // @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
@@ -12,6 +12,8 @@
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
 // @grant        GM_setClipboard
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
 // @require      https://unpkg.com/turndown/dist/turndown.js
@@ -25,13 +27,25 @@
     'use strict';
 
     // User Config
+    // Short cut
+
+    const shortCutUserConfig = {
+        /* Example:
+        "Shift": false,
+        "Ctrl": true,
+        "Alt": false,
+        "Key": "m"
+        */
+    }
 
     // Obsidian
-    const obsidianConfig = { /* Example:
+    const obsidianUserConfig = {
+        /* Example:
             "my note": [
                 "Inbox/Web/",
                 "Collection/Web/Reading/"
-            ] */
+            ]
+        */
     }
 
     const guide = `
@@ -50,6 +64,27 @@
     // 全局变量
     var isSelecting = false;
     var selectedElement = null;
+    let shortCutConfig, obsidianConfig;
+    // 读取配置
+    // 初始化快捷键配置
+    let storedShortCutConfig = GM_getValue('shortCutConfig');
+    if (Object.keys(shortCutUserConfig).length !== 0) {
+        GM_setValue('shortCutConfig', JSON.stringify(shortCutUserConfig));
+        shortCutConfig = shortCutUserConfig;
+    } else if (storedShortCutConfig) {
+        shortCutConfig = JSON.parse(storedShortCutConfig);
+    }
+
+    // 初始化Obsidian配置
+    let storedObsidianConfig = GM_getValue('obsidianConfig');
+    if (Object.keys(obsidianUserConfig).length !== 0) {
+        GM_setValue('obsidianConfig', JSON.stringify(obsidianUserConfig));
+        obsidianConfig = obsidianUserConfig;
+    } else if (storedObsidianConfig) {
+        obsidianConfig = JSON.parse(storedObsidianConfig);
+    }
+
+
 
     // HTML2Markdown
     function convertToMarkdown(element) {
@@ -335,12 +370,30 @@
     `);
 
     // 注册触发器
+    shortCutConfig = shortCutConfig ? shortCutConfig : {
+        "Shift": false,
+        "Ctrl": true,
+        "Alt": false,
+        "Key": "m"
+    };
     $(document).on('keydown', function (e) {
-        if (e.ctrlKey && e.key === 'm') {
+        if (e.ctrlKey === shortCutConfig['Ctrl'] &&
+            e.altKey === shortCutConfig['Alt'] &&
+            e.shiftKey === shortCutConfig['Shift'] &&
+            e.key.toUpperCase() === shortCutConfig['Key'].toUpperCase()) {
             e.preventDefault();
-            startSelecting()
+            startSelecting();
         }
+        // else {
+        //     console.log(e.ctrlKey, e.altKey, e.shiftKey, e.key.toUpperCase());
+        // }
     });
+    // $(document).on('keydown', function (e) {
+    //     if (e.ctrlKey && e.key === 'm') {
+    //         e.preventDefault();
+    //         startSelecting()
+    //     }
+    // });
 
     GM_registerMenuCommand('Convert to Markdown', function () {
         startSelecting()
