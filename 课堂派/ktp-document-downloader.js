@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         课堂派下载助手
 // @namespace    https://shiquda.link/
-// @version      0.1.0
+// @version      0.1.1
 // @description  可用于下载被禁止的文件
 // @author       shiquda
 // @match        *://document.ketangpai.com/*
@@ -20,8 +20,7 @@
     'use strict';
 
     function loadImages() {
-        // 滚到页面底部
-        window.scrollTo(0, document.body.scrollHeight);
+
     }
 
     function getImageLinks() {
@@ -34,47 +33,64 @@
         console.log('转换为PDF接受到的links', imageLinks);
 
         console.log('图片属性', imgProps);
-        pdf = new jspdf.jsPDF({
+        const pdf = new jspdf.jsPDF({
             orientation: "landscape",
             unit: "px",
             format: [imgProps.width, imgProps.height],
             hotfixes: ["px_scaling"]
         });
 
-        // 创建一个Promise数组，用于等待所有图片加载完毕
-        let promises = imageLinks.map((link, index) => new Promise((resolve, reject) => {
+        let imageDownloadCache = {};
+        // key是链接，value是base64编码的图片
+        for (let link of imageLinks) {
+            imageDownloadCache[link] = null;
+        }
+
+        let imageDownloadPromises = imageLinks.map(link => new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: link,
                 responseType: 'arraybuffer',
                 onload: function (response) {
-                    console.log(response);
+                    console.log('图片下载响应', response);
                     const blob = new Blob([response.response], { type: 'image/jpeg' });
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         const base64 = e.target.result;
-                        pdf.addImage(base64, 'JPEG', 0, 0, imgProps.width, imgProps.height);
-                        if (index < imageLinks.length - 1) {
-                            pdf.addPage();
-                        }
-                        resolve();  // 当图片加载完毕，调用resolve
+                        imageDownloadCache[link] = base64;
+                        resolve(); // 图片加载完毕
                     }
                     reader.readAsDataURL(blob);
+                },
+                onerror: function (error) {
+                    reject(error); // 处理下载错误
                 }
             });
         }));
 
         // 当所有图片都加载完毕，再保存PDF
-        Promise.all(promises).then(() => {
-            const title = document.querySelector('.mgr-16').textContent;
+        Promise.all(imageDownloadPromises).then(() => {
+            console.log('所有图片下载完毕');
+            imageLinks.forEach((link, i) => {
+                const base64 = imageDownloadCache[link];
+                console.log('添加图片', base64);
+                pdf.addImage(base64, 'JPEG', 0, 0, imgProps.width, imgProps.height);
+                if (i !== imageLinks.length - 1) {
+                    pdf.addPage();
+                }
+            });
+            // 提供一个默认的PDF标题，以防无法获取页面元素的文本内容
+            const title = document.querySelector('.mgr-16') ? document.querySelector('.mgr-16').textContent : "Downloaded_Images";
             pdf.save(title);
-            console.log('下载完成');
+        }).catch(error => {
+            console.error('图片下载或添加到PDF过程中出现错误: ', error);
         });
     }
 
+
+
+    // 开始
     let pdf = new jspdf.jsPDF();
-
-
 
     // 判断是不是iframe
     if (window.parent === window) {
@@ -102,7 +118,7 @@
                     time: new Date().getTime()
                 };
                 GM_setValue('imageLinks', imageLinksMessage);
-            }, 1500);
+            }, 500);
         });
         document.body.appendChild(donwloadButton);
         loadImages();
