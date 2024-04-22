@@ -184,11 +184,10 @@
         border-radius: 5px;
         font-size: 14px;
         font-weight: bold;
-        ${
-          isDarkMode
-            ? "background-color: rgba(0, 0, 0, 1);"
-            : "background-color: rgba(255, 255, 255, 1);"
-        }
+        ${isDarkMode
+      ? "background-color: rgba(0, 0, 0, 1);"
+      : "background-color: rgba(255, 255, 255, 1);"
+    }
         ${isMobile ? "column-count: 2;" : ""} /* 在移动设备上分为两列 */
         z-index: 1000; // Make sure the button is on top of the search bar
     }
@@ -225,12 +224,25 @@
     `;
   GM_addStyle(style);
 
-  // Check if any of the user's preferred languages are supported
-  const language =
-    navigator.languages
-      .map((lang) => lang.split("-")[0]) // Consider only the language part, not the region
-      .find((lang) => supportedLanguages.includes(lang)) || "en";
-  console.log(`Here is the language: ${language}`);
+  let language = "en";
+  if (userLanguage.length > 0) { // userLanguage is set manually
+    if (supportedLanguages.includes(userLanguage)) {
+      language = userLanguage;
+    } else {
+      console.log(`Unsupported language: ${userLanguage}`);
+    }
+  } else {
+    // Check if any of the user's preferred languages are supported
+    language =
+      navigator.languages
+        .map((lang) => lang.split("-")[0]) // Consider only the language part, not the region
+        .map((lang) => supportedLanguages.find((supportedLang) => supportedLang.split("-")[0] === lang)) // Match with the supported languages
+        .filter(Boolean) // Remove undefined values
+        .shift() // Take the first matched language
+      || "en"; // Default to 'en' if no match found
+    console.log(`Here is the language: ${language}`);
+  }
+
   // Create user interface
   const toggleButton = document.createElement("button");
   toggleButton.className = "nfSF8e";
