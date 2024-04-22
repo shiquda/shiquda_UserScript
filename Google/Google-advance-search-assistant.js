@@ -224,11 +224,12 @@
     `;
   GM_addStyle(style);
 
-  const language = supportedLanguages.includes(userLanguage)
-    ? userLanguage
-    : supportedLanguages.includes(navigator.language)
-    ? navigator.language
-    : "en";
+  // Check if any of the user's preferred languages are supported
+  const language =
+    navigator.languages
+      .map((lang) => lang.split("-")[0]) // Consider only the language part, not the region
+      .find((lang) => supportedLanguages.includes(lang)) || "en";
+  console.log(`Here is the language: ${language}`);
   // Create user interface
   const toggleButton = document.createElement("button");
   toggleButton.className = "nfSF8e";
