@@ -29,16 +29,17 @@
     }
 
     let isDarkMode = false;
+
     try {
-        let logoImg = document.querySelector('#logo')?.querySelector('img') ? document.querySelector('#logo')?.querySelector('img') : document.querySelector('#qslc')?.querySelector('img'); //
-        if (logoImg.src.match(/light/)) {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             // Dark mode is enabled
             isDarkMode = true;
+            console.log("Dark mode is enabled.");
         }
+    } catch (error) {
+        console.log("Failed to determine the color mode.", error);
     }
-    catch {
-        console.log("Failed to determine the color mode.")
-    }
+
 
 
     const userLanguage = '' // You can set your language config here manually. 'zh-CN' & 'en' are supported now.
@@ -231,7 +232,7 @@
     formContainer.id = 'advancedSearchFormContainer'
     document.body.appendChild(formContainer);
 
-    // 
+    //
     const form = document.createElement('form');
     formContainer.appendChild(form);
 
