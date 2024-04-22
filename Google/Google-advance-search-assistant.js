@@ -190,6 +190,7 @@
             : "background-color: rgba(255, 255, 255, 1);"
         }
         ${isMobile ? "column-count: 2;" : ""} /* 在移动设备上分为两列 */
+        z-index: 1000; // Make sure the button is on top of the search bar
     }
 
 
