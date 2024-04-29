@@ -1,12 +1,16 @@
 # shiquda 的小脚本库
 
-## Just for testing and learning😀
+## 相关信息
 
-- ~~为什么要看屎山~~
-- 前端小白学习 ing
+这个仓库是我自己随手写的一些脚本，大多是自用的。
+
+这个仓库记录了从我初学开始乱写的一些东西，如果出现奇怪的BUG🐛或者是一些看起来令人恶心的代码，并不奇怪。我也在多写多学，努力让自己写的代码更*优雅*。
+
 - **[Greasy Fork]**
 
-## 脚本列表 | Script List
+## 脚本列表
+
+以下是仓库里面的脚本信息：
 
 | 脚本链接 | 名称 | 徽章 | 是否上架 |
 | :-: | - | :-: | :-: |
@@ -22,7 +26,12 @@
 | [10] |Script finder| ![10_b] | ✔ |
 | [11] |Advanced Search Assistant for Google| ![11_b] | ✔ |
 | [12] |不背单词生词本导出| ![12_b] | ✔ |
+| [13] |百度教育直接查看答案| ![13_b] | ✔ |
+| [14] |Easy Web Page to Markdown| ![14_b] | ✔ |
+| [15] |课堂派下载助手| ![15_b] | ✔ |
+| [16] |Google 高级搜索助手| ![16_b] | ✔ |
 
+[Greasy Fork]: https://greasyfork.org/zh-CN/users/935206-shiquda
 [1_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/453565.json
 [1]: https://greasyfork.org/zh-CN/scripts/453565
 [2_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/455146.json
@@ -45,4 +54,11 @@
 [11]: https://greasyfork.org/zh-CN/scripts/474178
 [12_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/474142.json
 [12]: https://greasyfork.org/zh-CN/scripts/474142
-[Greasy Fork]: https://greasyfork.org/zh-CN/users/935206-shiquda
+[13_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/475172.json
+[13]: https://greasyfork.org/zh-CN/scripts/475172
+[14_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/486888.json
+[14]: https://greasyfork.org/zh-CN/scripts/486888
+[15_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/474178.json
+[15]: https://greasyfork.org/zh-CN/scripts/474178
+[16_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/489551.json
+[16]: https://greasyfork.org/zh-CN/scripts/489551
