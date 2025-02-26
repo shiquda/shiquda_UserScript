@@ -7,6 +7,7 @@
 // @author       shiquda
 // @match        https://www.coursera.org/*
 // @grant        none
+// @license      MIT
 // ==/UserScript==
 
 (function () {
