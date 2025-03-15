@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         不背单词生词本导出
 // @namespace    http://tampermonkey.net/
-// @version      0.2.2
+// @version      0.2.3
 // @description  不背单词生词本导出，目前支持自动获取单词列表并导出为txt文件。
 // @author       shiquda
 // @match        https://www.bbdc.cn/newword
@@ -75,9 +75,7 @@
                 xhr.onload = function (e) {
                     const data = JSON.parse(e.target.responseText);
                     for (const item of data.data_body.wordList) {
-                        for (const sentence of item.sentenceList) {
-                            words.push(sentence.word);
-                        }
+                        words.push(item.word);
                     }
                     console.log(`page ${i + 1} loaded`);
                     loadedPages++;
