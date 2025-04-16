@@ -16,11 +16,19 @@
     'use strict';
     // 查找确认按钮并点击
     function clickAndClose() {
-        // 查找确认按钮
-        const confirmBtn = document.querySelector('[data-testid="confirmationSheetConfirm"]');
-        if (confirmBtn) {
-            // 点击确认按钮
-            confirmBtn.click();
+        // 根据当前页面类型查找不同的按钮
+        let targetBtn;
+        if (window.location.href.includes('/intent/post')) {
+            // 如果是发帖页面，查找发帖按钮
+            targetBtn = document.querySelector('[data-testid="tweetButton"]');
+        } else {
+            // 其他页面查找确认按钮
+            targetBtn = document.querySelector('[data-testid="confirmationSheetConfirm"]');
+        }
+
+        if (targetBtn) {
+            // 点击目标按钮
+            targetBtn.click();
             // 3秒后关闭页面
             setTimeout(() => {
                 window.close();
