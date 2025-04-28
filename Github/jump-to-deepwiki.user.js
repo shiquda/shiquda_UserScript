@@ -2,7 +2,7 @@
 // @name                    Jump to DeepWiki from Github
 // @name:zh-CN              Github 跳转至 DeepWiki
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.1
+// @version                 0.1.2
 // @description             Add a button to jump to DeepWiki from Github
 // @description:zh-CN       在 Github 页面添加一个按钮，跳转至 DeepWiki
 // @author                  shiquda
