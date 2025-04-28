@@ -2,7 +2,7 @@
 // @name                    Jump to DeepWiki from Github
 // @name:zh-CN              Github 跳转至 DeepWiki
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.2
+// @version                 0.1.3
 // @description             Add a button to jump to DeepWiki from Github
 // @description:zh-CN       在 Github 页面添加一个按钮，跳转至 DeepWiki
 // @author                  shiquda
@@ -22,11 +22,16 @@ function isGithubRepo(path) {
 }
 
 function CreateUI() {
+    // 如果按钮已经存在，则不再创建
+    if (document.querySelector('.deepwiki-button')) {
+        return;
+    }
+
     const path = window.location.pathname;
     const deepwikiUrl = `https://deepwiki.com${path}`;
 
     const button = document.createElement('button');
-    button.classList.add('Box-sc-g0xbh4-0', 'exSala', 'prc-Button-ButtonBase-c50BI');
+    button.classList.add('Box-sc-g0xbh4-0', 'exSala', 'prc-Button-ButtonBase-c50BI', 'deepwiki-button');
     button.setAttribute('type', 'button');
     button.setAttribute('data-size', 'small');
     button.setAttribute('data-variant', 'default');
@@ -40,8 +45,8 @@ function CreateUI() {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('aria-hidden', 'true');
     svg.setAttribute('focusable', 'false');
-    svg.setAttribute('class', 'octicon octicon-eye');
-    svg.setAttribute('viewBox', '0 0 16 16');
+    svg.setAttribute('class', 'size-4 transform transition-transform duration-700 group-hover:rotate-180 [&_path]:stroke-0');
+    svg.setAttribute('viewBox', '110 110 460 500');
     svg.setAttribute('width', '16');
     svg.setAttribute('height', '16');
     svg.setAttribute('fill', 'currentColor');
@@ -85,17 +90,42 @@ function CreateUI() {
         window.open(deepwikiUrl, '_blank');
     });
     document.querySelector('ul.pagehead-actions').insertBefore(li, document.querySelector('ul.pagehead-actions').firstChild);
+}
 
+function checkAndCreateUI() {
+    const path = window.location.pathname;
+    if (isGithubRepo(path)) {
+        CreateUI();
+    }
 }
 
 (function () {
     "use strict";
 
-    // 获取当前路径
-    const path = window.location.pathname;
+    // 初始检查
+    checkAndCreateUI();
 
-    // 判断当前path是否是一个 github repo，且位于项目的主页面
-    if (isGithubRepo(path)) {
-        CreateUI();
-    }
+    // 监听页面变化
+    const observer = new MutationObserver((mutations) => {
+        // 检查页面头部是否存在
+        if (document.querySelector('.pagehead-actions')) {
+            checkAndCreateUI();
+        }
+    });
+
+    // 监听整个body的变化
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // 监听URL变化（适用于单页应用）
+    let lastUrl = location.href;
+    new MutationObserver(() => {
+        const url = location.href;
+        if (url !== lastUrl) {
+            lastUrl = url;
+            checkAndCreateUI();
+        }
+    }).observe(document, { subtree: true, childList: true });
 })();
