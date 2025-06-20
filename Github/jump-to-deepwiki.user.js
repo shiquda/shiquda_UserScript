@@ -2,7 +2,7 @@
 // @name                    Jump to DeepWiki from Github
 // @name:zh-CN              Github 跳转至 DeepWiki
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.3
+// @version                 0.1.4
 // @description             Add a button to jump to DeepWiki from Github
 // @description:zh-CN       在 Github 页面添加一个按钮，跳转至 DeepWiki
 // @author                  shiquda
@@ -18,7 +18,8 @@
 
 // 判断当前path是否是一个 github repo，且位于项目的主页面
 function isGithubRepo(path) {
-    return path.split('/').length === 3;
+    path = path.slice(0, -1);
+    return (path.split('/').length === 3);
 }
 
 function CreateUI() {
@@ -86,9 +87,6 @@ function CreateUI() {
 
     const li = document.createElement('li');
     li.appendChild(button);
-    li.addEventListener('click', () => {
-        window.open(deepwikiUrl, '_blank');
-    });
     document.querySelector('ul.pagehead-actions').insertBefore(li, document.querySelector('ul.pagehead-actions').firstChild);
 }
 
