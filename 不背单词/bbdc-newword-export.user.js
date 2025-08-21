@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         不背单词生词本导出
 // @namespace    http://tampermonkey.net/
-// @version      0.2.3
+// @version      0.2.4
 // @description  不背单词生词本导出，目前支持自动获取单词列表并导出为txt文件。
 // @author       shiquda
 // @match        https://www.bbdc.cn/newword
+// @match        https://bbdc.cn/newword
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=bbdc.cn
@@ -68,10 +69,11 @@
 
     function loadWords() {
         let promises = [];
+        const apiBase = window.location.hostname.includes('www') ? 'https://www.bbdc.cn' : 'https://bbdc.cn';
         for (let i = 0; i < pages; i++) {
             promises.push(new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
-                xhr.open('GET', `https://www.bbdc.cn/api/user-new-word?page=${i}`);
+                xhr.open('GET', `${apiBase}/api/user-new-word?page=${i}`);
                 xhr.onload = function (e) {
                     const data = JSON.parse(e.target.responseText);
                     for (const item of data.data_body.wordList) {
@@ -123,8 +125,9 @@
 
     function init() {
         return new Promise((resolve, reject) => {
+            const apiBase = window.location.hostname.includes('www') ? 'https://www.bbdc.cn' : 'https://bbdc.cn';
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', `https://www.bbdc.cn/api/user-new-word?page=0`);
+            xhr.open('GET', `${apiBase}/api/user-new-word?page=0`);
             xhr.onload = function (e) {
                 // 读取页面数
                 let data = JSON.parse(e.target.responseText);
