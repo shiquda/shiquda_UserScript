@@ -31,9 +31,11 @@ function CreateUI() {
     const path = window.location.pathname;
     const deepwikiUrl = `https://deepwiki.com${path}`;
 
-    const button = document.createElement('button');
+    const button = document.createElement('a');
+    button.href = deepwikiUrl;
+    button.target = '_blank';
+    button.rel = 'noopener noreferrer';
     button.classList.add('Box-sc-g0xbh4-0', 'exSala', 'prc-Button-ButtonBase-c50BI', 'deepwiki-button');
-    button.setAttribute('type', 'button');
     button.setAttribute('data-size', 'small');
     button.setAttribute('data-variant', 'default');
 
@@ -80,10 +82,6 @@ function CreateUI() {
     buttonContent.appendChild(leadingVisual);
     buttonContent.appendChild(text);
     button.appendChild(buttonContent);
-
-    button.addEventListener('click', () => {
-        window.open(deepwikiUrl, '_blank');
-    });
 
     const li = document.createElement('li');
     li.appendChild(button);
