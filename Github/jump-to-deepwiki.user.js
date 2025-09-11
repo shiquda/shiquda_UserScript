@@ -3,8 +3,8 @@
 // @name:zh-CN              Github 跳转至 DeepWiki
 // @namespace               http://tampermonkey.net/
 // @version                 0.1.4
-// @description             Add a button to jump to DeepWiki from Github
-// @description:zh-CN       在 Github 页面添加一个按钮，跳转至 DeepWiki
+// @description             Add an anchor to jump to DeepWiki from Github
+// @description:zh-CN       在 Github 页面添加一个链接，跳转至 DeepWiki
 // @author                  shiquda
 // @namespace               https://github.com/shiquda/shiquda_UserScript
 // @supportURL              https://github.com/shiquda/shiquda_UserScript/issues
@@ -23,24 +23,24 @@ function isGithubRepo(path) {
 }
 
 function CreateUI() {
-    // 如果按钮已经存在，则不再创建
-    if (document.querySelector('.deepwiki-button')) {
+    // 如果链接已经存在，则不再创建
+    if (document.querySelector('.deepwiki-anchor')) {
         return;
     }
 
     const path = window.location.pathname;
     const deepwikiUrl = `https://deepwiki.com${path}`;
 
-    const button = document.createElement('a');
-    button.href = deepwikiUrl;
-    button.target = '_blank';
-    button.rel = 'noopener noreferrer';
-    button.classList.add('Box-sc-g0xbh4-0', 'exSala', 'prc-Button-ButtonBase-c50BI', 'deepwiki-button');
-    button.setAttribute('data-size', 'small');
-    button.setAttribute('data-variant', 'default');
+    const anchor = document.createElement('a');
+    anchor.href = deepwikiUrl;
+    anchor.target = '_blank';
+    anchor.rel = 'noopener noreferrer';
+    anchor.classList.add('Box-sc-g0xbh4-0', 'exSala', 'prc-Button-ButtonBase-c50BI', 'deepwiki-anchor');
+    anchor.setAttribute('data-size', 'small');
+    anchor.setAttribute('data-variant', 'default');
 
-    const buttonContent = document.createElement('span');
-    buttonContent.classList.add('Box-sc-g0xbh4-0', 'gUkoLg', 'prc-Button-ButtonContent-HKbr-');
+    const anchorContent = document.createElement('span');
+    anchorContent.classList.add('Box-sc-g0xbh4-0', 'gUkoLg', 'prc-Button-ButtonContent-HKbr-');
 
     const leadingVisual = document.createElement('span');
     leadingVisual.classList.add('prc-Button-Visual-2epfX', 'prc-Button-VisualWrap-Db-eB');
@@ -79,12 +79,12 @@ function CreateUI() {
     text.classList.add('prc-Button-Label-pTQ3x');
     text.textContent = 'DeepWiki';
 
-    buttonContent.appendChild(leadingVisual);
-    buttonContent.appendChild(text);
-    button.appendChild(buttonContent);
+    anchorContent.appendChild(leadingVisual);
+    anchorContent.appendChild(text);
+    anchor.appendChild(anchorContent);
 
     const li = document.createElement('li');
-    li.appendChild(button);
+    li.appendChild(anchor);
     document.querySelector('ul.pagehead-actions').insertBefore(li, document.querySelector('ul.pagehead-actions').firstChild);
 }
 
