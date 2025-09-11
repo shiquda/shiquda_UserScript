@@ -2,7 +2,7 @@
 // @name                    Jump to DeepWiki from Github
 // @name:zh-CN              Github 跳转至 DeepWiki
 // @namespace               http://tampermonkey.net/
-// @version                 0.1.4
+// @version                 0.1.5
 // @description             Add an anchor to jump to DeepWiki from Github
 // @description:zh-CN       在 Github 页面添加一个链接，跳转至 DeepWiki
 // @author                  shiquda
@@ -10,9 +10,6 @@
 // @supportURL              https://github.com/shiquda/shiquda_UserScript/issues
 // @match                   *://github.com/*
 // @include                 *://*github*/
-// @grant                   GM_addStyle
-// @grant                   GM_setValue
-// @grant                   GM_getValue
 // @license                 MIT
 // ==/UserScript==
 
