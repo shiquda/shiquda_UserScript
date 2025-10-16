@@ -1,64 +1,73 @@
-# shiquda 的小脚本库
+# Shiquda's User Scripts
 
-## 相关信息
+---
 
-这个仓库是我自己随手写的一些脚本，大多是自用的。
+## [中文] / [English]
 
-这个仓库记录了从我初学开始乱写的一些东西，如果出现奇怪的BUG🐛或者是一些看起来令人恶心的代码，并不奇怪。我也在多写多学，努力让自己写的代码更*优雅*。
+---
 
-- **[Greasy Fork]**
+## 中文
 
-## 脚本列表
+### 关于这个仓库
 
-以下是仓库里面的脚本信息：
+这个仓库收集了我开发的各种用户脚本，主要用于提升网页浏览体验和自动化日常操作。这些脚本大多是为了满足个人需求而编写的，现在分享给有类似需求的用户。
 
-| 脚本链接 | 名称 | 徽章 | 是否上架 |
-| :-: | - | :-: | :-: |
-| [1] |keylol 板块自动按最新发布排序| ![1_b] | ✔ |
-| [2] |steam 购买结账自动勾选同意用户协议| ![2_b] | ✔ |
-| ~~[3]~~ |~~Gametame 自动领取 bonus~~| 已下架 | ❌ |
-| [4] |SteamDB 加购物车魔改| ![4_b] | ❌ |
-| ~~[5]~~ |~~ChatGPT 提取 markdown~~| 已下架 | ❌ |
-| [6] | Greasy Fork by-site-searching URL autoextract| ![6_b] | ✔ |
-| [7] | Keylol Helper| ![7_b] | ✔ |
-| [8] |Anti Bing Redirect| ![8_b] | ✔ |
-| [9] | 知乎数值转换| ![9_b] | ✔ |
-| [10] |Script finder| ![10_b] | ✔ |
-| [11] |Advanced Search Assistant for Google| ![11_b] | ✔ |
-| [12] |不背单词生词本导出| ![12_b] | ✔ |
-| [13] |百度教育直接查看答案| ![13_b] | ✔ |
-| [14] |Easy Web Page to Markdown| ![14_b] | ✔ |
-| [15] |课堂派下载助手| ![15_b] | ✔ |
-| [16] |Google 高级搜索助手| ![16_b] | ✔ |
+### 脚本特点
 
-[Greasy Fork]: https://greasyfork.org/zh-CN/users/935206-shiquda
-[1_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/453565.json
-[1]: https://greasyfork.org/zh-CN/scripts/453565
-[2_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/455146.json
-[2]: https://greasyfork.org/zh-CN/scripts/455146
-[3]: https://greasyfork.org/zh-CN/scripts/456752
-[4_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/457109.json
-[4]: https://greasyfork.org/zh-CN/scripts/457109
-[5]: https://greasyfork.org/zh-CN/scripts/459473
-[6_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/463040.json
-[6]: https://greasyfork.org/zh-CN/scripts/463040
-[7_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/468930.json
-[7]: https://greasyfork.org/zh-CN/scripts/468930
-[8_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/467278.json
-[8]: https://greasyfork.org/zh-CN/scripts/467278
-[9_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/466764.json
-[9]: https://greasyfork.org/zh-CN/scripts/466764
-[10_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/472056.json
-[10]: https://greasyfork.org/zh-CN/scripts/472056
-[11_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/474178.json
-[11]: https://greasyfork.org/zh-CN/scripts/474178
-[12_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/474142.json
-[12]: https://greasyfork.org/zh-CN/scripts/474142
-[13_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/475172.json
-[13]: https://greasyfork.org/zh-CN/scripts/475172
-[14_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/486888.json
-[14]: https://greasyfork.org/zh-CN/scripts/486888
-[15_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/474178.json
-[15]: https://greasyfork.org/zh-CN/scripts/474178
-[16_b]: https://img.shields.io/badge/dynamic/json?color=%23990000&label=GreasyFork&query=total_installs&suffix=%20installs&url=https://greasyfork.org/scripts/489551.json
-[16]: https://greasyfork.org/zh-CN/scripts/489551
+- **实用性强**：解决实际使用中的痛点问题
+- **轻量简洁**：代码精简，不影响页面性能
+- **持续更新**：根据用户反馈和网站变化持续改进
+
+### 获取脚本
+
+所有已发布的脚本都可以在 **[Greasy Fork](https://greasyfork.org/zh-CN/users/935206-shiquda)** 上找到和安装。
+
+### 脚本类型
+
+- **网页增强**：改善网站功能和用户体验
+- **自动化工具**：简化重复性操作
+- **内容提取**：帮助获取和整理网页内容
+- **搜索辅助**：提升搜索效率
+
+### 反馈与建议
+
+如果遇到问题或有改进建议，欢迎通过以下方式联系：
+- 在 Greasy Fork 脚本页面留言
+- 提交 GitHub Issue
+
+---
+
+## English
+
+### About This Repository
+
+This repository contains various user scripts I've developed to enhance web browsing experience and automate daily operations. Most of these scripts were originally created for personal use and are now shared with users who have similar needs.
+
+### Script Features
+
+- **Practical**: Solve real-world pain points in web usage
+- **Lightweight**: Clean code that doesn't impact page performance
+- **Continuously Updated**: Regular improvements based on user feedback and website changes
+
+### Get Scripts
+
+All published scripts are available on **[Greasy Fork](https://greasyfork.org/en/users/935206-shiquda)** for browsing and installation.
+
+### Script Categories
+
+- **Web Enhancement**: Improve website functionality and user experience
+- **Automation Tools**: Simplify repetitive operations
+- **Content Extraction**: Help retrieve and organize web content
+- **Search Assistance**: Enhance search efficiency
+
+### Feedback & Suggestions
+
+If you encounter issues or have suggestions for improvement, please reach out:
+- Leave comments on Greasy Fork script pages
+- Submit GitHub Issues
+
+---
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
