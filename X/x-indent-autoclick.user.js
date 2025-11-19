@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         X Indent Autoclick | 推特自动确认点赞/转贴
+// @name         X Indent Autoclick
 // @namespace    http://tampermonkey.net/
 // @version      0.0.1
-// @description  Click and close 推特自动确认点赞/转贴，点击后自动退出（撸毛辅助）
+// @description  Auto-confirm likes/retweets on X (Twitter), automatically exits after clicking
 // @author       shiquda
 // @match        https://x.com/intent/*
 // @match        https://twitter.com/intent/*
@@ -14,31 +14,31 @@
 // ==/UserScript==
 (function () {
     'use strict';
-    // 查找确认按钮并点击
+    // Find and click confirmation button
     function clickAndClose() {
-        // 根据当前页面类型查找不同的按钮
+        // Find different buttons based on current page type
         let targetBtn;
         if (window.location.href.includes('/intent/post')) {
-            // 如果是发帖页面，查找发帖按钮
+            // If it's a post page, find the tweet button
             targetBtn = document.querySelector('[data-testid="tweetButton"]');
         } else {
-            // 其他页面查找确认按钮
+            // For other pages, find the confirmation button
             targetBtn = document.querySelector('[data-testid="confirmationSheetConfirm"]');
         }
 
         if (targetBtn) {
-            // 点击目标按钮
+            // Click the target button
             targetBtn.click();
-            // 3秒后关闭页面
+            // Close page after 3 seconds
             setTimeout(() => {
                 window.close();
             }, 3000);
         } else {
-            // 如果没有找到按钮，继续循环等待
+            // If button not found, continue waiting
             setTimeout(clickAndClose, 500);
         }
     }
 
-    // 开始执行
+    // Start execution
     clickAndClose();
 })();
