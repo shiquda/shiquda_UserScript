@@ -1,10 +1,8 @@
 // ==UserScript==
 // @name                    Script Finder
-// @name:zh-CN              Script Finder 油猴脚本查找
 // @namespace               http://tampermonkey.net/
 // @version                 0.1.6
 // @description             Script Finder allows you to find userscripts from greasyfork on any website.
-// @description:zh-CN       Script Finder 在任何网站上找到适用于该网站的greasyfork油猴脚本
 // @author                  shiquda
 // @namespace               https://github.com/shiquda/shiquda_UserScript
 // @supportURL              https://github.com/shiquda/shiquda_UserScript/issues
@@ -30,7 +28,7 @@
             method: "GET",
             url: url,
             onload: (response) => {
-                // 解析结果
+                // Parse result
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(response.responseText, "text/html");
                 const scripts = doc.querySelector("#browse-script-list")?.querySelectorAll('[data-script-id]');
@@ -43,7 +41,7 @@
                     }
                 }
 
-                // 处理对象
+                // Process object
                 const loadMoreButton = document.querySelector('.load-more')
                 console.log(doc.querySelector('.next_page'))
                 if (doc.querySelector('.next_page') == null || doc.querySelector('.next_page')?.getAttribute('aria-disabled') === 'true') {
@@ -74,7 +72,7 @@
         });
     }
 
-    // 解析脚本信息
+    // Parse script information
     function parseScriptInfo(script) {
         return {
             id: script.getAttribute('data-script-id'),
@@ -91,7 +89,7 @@
         };
     }
 
-    // 插入脚本
+    // Insert script
     function appendScriptsInfo(scriptsInfo) {
         const infoList = document.querySelector('.info-list');
         if (scriptsInfo === errorMessage) {
@@ -118,7 +116,7 @@
                 var detailsContainer = document.createElement('div');
                 detailsContainer.className = 'details-container';
 
-                // 创建一键安装按钮
+                // Create one-click install button
                 var installButton = document.createElement('a');
                 installButton.className = 'install-button';
                 installButton.innerText = `Install ${script.version}`;
@@ -167,7 +165,7 @@
                 color: #ffffff;
                 cursor: pointer;
                 transition: right 0.3s;
-                z-index: 9999999999999999; /* 设置一个较高的 z-index 值 */
+                z-index: 9999999999999999; /* Set a high z-index value */
             }
             div.info-container {
                 display: none;
@@ -321,31 +319,31 @@
         `);
 
 
-        // 创建打开列表按钮
+        // Create open list button
         var button = document.createElement('button');
         button.className = 'script-button';
         button.innerText = 'Scripts';
 
-        // 创建脚本容器
+        // Create script container
         var infoContainer = document.createElement('div');
         infoContainer.className = 'info-container';
 
-        // 创建搜索框
+        // Create search box
         var searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.placeholder = 'Search scripts...';
         searchInput.className = 'script-search-input';
 
-        // 创建指向greasyfork的链接
+        // Create link to Greasyfork
         var toGreasyfork = document.createElement('button');
         toGreasyfork.className = 'to-greasyfork';
         toGreasyfork.innerText = 'View on Greasyfork';
 
-        // 创建计数器
+        // Create counter
         var matchCount = document.createElement('span');
         matchCount.className = 'match-count';
 
-        // 创建表头
+        // Create table header
         var tableHeader = document.createElement('div');
         tableHeader.className = 'table-header';
         tableHeader.appendChild(document.createTextNode('Script Finder'));
@@ -353,16 +351,16 @@
         tableHeader.appendChild(searchInput);
         tableHeader.appendChild(toGreasyfork);
 
-        // 创建脚本列表
+        // Create script list
         var infoList = document.createElement('ul');
         infoList.className = 'info-list';
 
-        // 创建等待加载
+        // Create loading message
         var waitLoading = document.createElement('div');
         waitLoading.className = 'wait-loading';
         waitLoading.innerText = 'Loading scripts...';
 
-        // 创建加载更多
+        // Create load more button
         var loadMore = document.createElement('button');
         loadMore.className = 'load-more';
         loadMore.innerText = 'Load more';

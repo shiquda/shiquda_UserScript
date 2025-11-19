@@ -1,10 +1,8 @@
 // ==UserScript==
 // @name         Easy Web Page to Markdown
-// @name:zh      网页转Markdown工具
 // @namespace    http://tampermonkey.net/
 // @version      0.3.6
 // @description  Convert selected HTML to Markdown
-// @description:zh 将选定的HTML转换为Markdown
 // @author       shiquda
 // @match        *://*/*
 // @namespace    https://github.com/shiquda/shiquda_UserScript
@@ -49,24 +47,24 @@
     }
 
     const guide = `
-- 使用**方向键**选择元素
-    - 上：选择父元素
-    - 下：选择第一个子元素
-    - 左：选择上一个兄弟元素
-    - 右：选择下一个兄弟元素
-- 使用**滚轮**放大缩小
-    - 上：选择父元素
-    - 下：选择第一个子元素
-- 点击元素选择
-- 按下 \`Esc\` 键取消选择
+- Use **Arrow Keys** to select elements
+    - Up: Select parent element
+    - Down: Select first child element
+    - Left: Select previous sibling element
+    - Right: Select next sibling element
+- Use **Mouse Wheel** to zoom in/out
+    - Up: Select parent element
+    - Down: Select first child element
+- Click to select element
+- Press \`Esc\` to cancel selection
     `
 
-    // 全局变量
+    // Global variables
     var isSelecting = false;
     var selectedElement = null;
     let shortCutConfig, obsidianConfig;
-    // 读取配置
-    // 初始化快捷键配置
+    // Read configuration
+    // Initialize shortcut key configuration
     let storedShortCutConfig = GM_getValue('shortCutConfig');
     if (Object.keys(shortCutUserConfig).length !== 0) {
         GM_setValue('shortCutConfig', JSON.stringify(shortCutUserConfig));
@@ -75,7 +73,7 @@
         shortCutConfig = JSON.parse(storedShortCutConfig);
     }
 
-    // 初始化Obsidian配置
+    // Initialize Obsidian configuration
     let storedObsidianConfig = GM_getValue('obsidianConfig');
     if (Object.keys(obsidianUserConfig).length !== 0) {
         GM_setValue('obsidianConfig', JSON.stringify(obsidianUserConfig));
@@ -90,12 +88,12 @@
     function convertToMarkdown(element) {
         var html = element.outerHTML;
         let turndownMd = turndownService.turndown(html);
-        turndownMd = turndownMd.replaceAll('[\n\n]', '[]'); // 防止 <a> 元素嵌套的暂时方法，并不完善
+        turndownMd = turndownMd.replaceAll('[\n\n]', '[]'); // Temporary workaround to prevent <a> element nesting, not perfect
         return turndownMd;
     }
 
 
-    // 预览
+    // Preview
     function showMarkdownModal(markdown) {
         var $modal = $(`
                     <div class="h2m-modal-overlay">
@@ -210,15 +208,15 @@
         $('body').append($modal);
     }
 
-    // 开始选择
+    // Start selecting
     function startSelecting() {
-        $('body').addClass('h2m-no-scroll'); // 防止页面滚动
+        $('body').addClass('h2m-no-scroll'); // Prevent page scrolling
         isSelecting = true;
-        // 操作指南
+        // Operation guide
         tip(marked.parse(guide));
     }
 
-    // 结束选择
+    // End selecting
     function endSelecting() {
         isSelecting = false;
         $('.h2m-selection-box').removeClass('h2m-selection-box');
@@ -247,7 +245,7 @@
     var turndownPluginGfm = TurndownPluginGfmService;
     var turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
 
-    turndownPluginGfm.gfm(turndownService); // 引入全部插件
+    turndownPluginGfm.gfm(turndownService); // Import all plugins
     // turndownService.addRule('strikethrough', {
     //     filter: ['del', 's', 'strike'],
     //     replacement: function (content) {
@@ -275,7 +273,7 @@
 
 
 
-    // 添加CSS样式
+    // Add CSS styles
     GM_addStyle(`
         .h2m-selection-box {
             border: 2px dashed #f00;
@@ -369,7 +367,7 @@
         }
     `);
 
-    // 注册触发器
+    // Register trigger
     shortCutConfig = shortCutConfig ? shortCutConfig : {
         "Shift": false,
         "Ctrl": true,
@@ -401,44 +399,44 @@
 
 
 
-    $(document).on('mouseover', function (e) { // 开始选择
+    $(document).on('mouseover', function (e) { // Start selecting
         if (isSelecting) {
             $(selectedElement).removeClass('h2m-selection-box');
             selectedElement = e.target;
             $(selectedElement).addClass('h2m-selection-box');
         }
-    }).on('wheel', function (e) { // 滚轮事件
+    }).on('wheel', function (e) { // Mouse wheel event
         if (isSelecting) {
             e.preventDefault();
             if (e.originalEvent.deltaY < 0) {
-                selectedElement = selectedElement.parentElement ? selectedElement.parentElement : selectedElement; // 扩大
+                selectedElement = selectedElement.parentElement ? selectedElement.parentElement : selectedElement; // Expand
                 if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') {
                     selectedElement = selectedElement.firstElementChild;
                 }
             } else {
-                selectedElement = selectedElement.firstElementChild ? selectedElement.firstElementChild : selectedElement; // 缩小
+                selectedElement = selectedElement.firstElementChild ? selectedElement.firstElementChild : selectedElement; // Shrink
             }
             $('.h2m-selection-box').removeClass('h2m-selection-box');
             $(selectedElement).addClass('h2m-selection-box');
         }
-    }).on('keydown', function (e) { // 键盘事件
+    }).on('keydown', function (e) { // Keyboard event
         if (isSelecting) {
             e.preventDefault();
             if (e.key === 'Escape') {
                 endSelecting();
                 return;
             }
-            switch (e.key) { // 方向键：上下左右
+            switch (e.key) { // Arrow keys: up down left right
                 case 'ArrowUp':
-                    selectedElement = selectedElement.parentElement ? selectedElement.parentElement : selectedElement; // 扩大
-                    if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') { // 排除HTML 和 BODY
+                    selectedElement = selectedElement.parentElement ? selectedElement.parentElement : selectedElement; // Expand
+                    if (selectedElement.tagName === 'HTML' || selectedElement.tagName === 'BODY') { // Exclude HTML and BODY
                         selectedElement = selectedElement.firstElementChild;
                     }
                     break;
                 case 'ArrowDown':
-                    selectedElement = selectedElement.firstElementChild ? selectedElement.firstElementChild : selectedElement; // 缩小
+                    selectedElement = selectedElement.firstElementChild ? selectedElement.firstElementChild : selectedElement; // Shrink
                     break;
-                case 'ArrowLeft': // 寻找上一个元素，若是最后一个子元素则选择父元素的下一个兄弟元素，直到找到一个元素
+                case 'ArrowLeft': // Find previous element, if it's the last child, select parent's next sibling until an element is found
                     var prev = selectedElement.previousElementSibling;
                     while (prev === null && selectedElement.parentElement !== null) {
                         selectedElement = selectedElement.parentElement;
@@ -467,10 +465,10 @@
             }
 
             $('.h2m-selection-box').removeClass('h2m-selection-box');
-            $(selectedElement).addClass('h2m-selection-box'); // 更新选中元素的样式
+            $(selectedElement).addClass('h2m-selection-box'); // Update selected element style
         }
     }
-    ).on('mousedown', function (e) { // 鼠标事件，选择 mousedown 是因为防止点击元素后触发其他事件
+    ).on('mousedown', function (e) { // Mouse event, using mousedown to prevent triggering other events after clicking element
         if (isSelecting) {
             e.preventDefault();
             var markdown = convertToMarkdown(selectedElement);

@@ -14,12 +14,10 @@
 (function () {
     'use strict';
 
-    // Your code here...
-
     function createUI() {
         // Add export button to the page
         const exportBtn = document.createElement("button");
-        exportBtn.innerHTML = "导出";
+        exportBtn.innerHTML = "Export";
         exportBtn.style.position = "fixed";
         exportBtn.style.left = "20px";
         exportBtn.style.top = "20%";
@@ -34,7 +32,7 @@
 
         // Add import button to the page
         const importBtn = document.createElement("button");
-        importBtn.innerHTML = "预览";
+        importBtn.innerHTML = "Preview";
         importBtn.style.position = "fixed";
         importBtn.style.left = "20px";
         importBtn.style.top = "30%";
@@ -47,12 +45,12 @@
         importBtn.style.cursor = "pointer";
         document.body.appendChild(importBtn);
         exportBtn.addEventListener("click", createMarkdown)
-        // 预览
+        // Preview
         importBtn.addEventListener("click", function () {
             console.log(createMarkdown(false))
-            this.textContent = "已在控制台输出，请按F12打开查看。"
+            this.textContent = "Output in console, press F12 to view."
             function textBack() {
-                importBtn.textContent = "预览"
+                importBtn.textContent = "Preview"
             }
             setTimeout(textBack, 2000)
             return
@@ -81,9 +79,9 @@
         }
         const date = new Date();
         const dateStr = date.toLocaleString();
-        const title = prompt("输入对话的标题：")
+        const title = prompt("Enter dialog title:")
         if (title === null) return
-        dialog = `# ${title}\n 时间：${dateStr}\n\n` + dialog
+        dialog = `# ${title}\n Time: ${dateStr}\n\n` + dialog
         if (!isDownload) {
             return dialog
         }
