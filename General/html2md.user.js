@@ -3,10 +3,12 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.3.6
 // @description  Convert selected HTML to Markdown
-// @author       shiquda
+// @author       shiquda (forked & modified by ExactDoug)
 // @match        *://*/*
-// @namespace    https://github.com/shiquda/shiquda_UserScript
-// @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
+// @namespace    https://github.com/ExactDoug/webpage_to_markdown_userscript
+// @supportURL   https://github.com/ExactDoug/webpage_to_markdown_userscript/issues
+// @updateURL   https://raw.githubusercontent.com/ExactDoug/webpage_to_markdown_userscript/main/General/html2md.user.js
+// @downloadURL https://raw.githubusercontent.com/ExactDoug/webpage_to_markdown_userscript/main/General/html2md.user.js
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
 // @grant        GM_setClipboard
