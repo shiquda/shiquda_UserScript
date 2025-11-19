@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         不背单词生词本导出
+// @name         Bbdc New Word Export
 // @namespace    http://tampermonkey.net/
 // @version      0.2.4
-// @description  不背单词生词本导出，目前支持自动获取单词列表并导出为txt文件。
+// @description  Bbdc new word export, currently supports automatic word list retrieval and export to txt file.
 // @author       shiquda
 // @match        https://www.bbdc.cn/newword
 // @match        https://bbdc.cn/newword
@@ -22,7 +22,7 @@
     function createUI() {
         const btn = document.createElement('button');
         btn.id = 'export-btn';
-        btn.innerText = '导出单词为txt';
+        btn.innerText = 'Export Words as TXT';
         btn.addEventListener('click', downloadWords);
         document.querySelector('.crumb-wrap').appendChild(btn);
         const infotab = document.createElement('div');
@@ -32,10 +32,10 @@
         document.querySelector('.crumb-wrap').appendChild(infotab);
 
         const options = [
-            { id: 'random-checkbox', text: '随机打乱', checked: false },
-            { id: 'order-checkbox', text: '按顺序排列', checked: false },
-            { id: 'phrase-checkbox', text: '去除词组', checked: true },
-            { id: 'unique-checkbox', text: '去重', checked: true }
+            { id: 'random-checkbox', text: 'Shuffle randomly', checked: false },
+            { id: 'order-checkbox', text: 'Sort alphabetically', checked: false },
+            { id: 'phrase-checkbox', text: 'Remove phrases', checked: true },
+            { id: 'unique-checkbox', text: 'Remove duplicates', checked: true }
         ];
 
         options.forEach(option => {
@@ -55,15 +55,15 @@
     }
 
     function downloadWords() {
-        document.querySelector('#export-btn').innerText = '正在导出...';
+        document.querySelector('#export-btn').innerText = 'Exporting...';
         document.querySelector('#export-btn').removeEventListener('click', downloadWords)
         document.querySelector('#export-btn').addEventListener('click', manipulateWords);
         document.querySelector('#export-btn').disabled = true;
         loadWords().then(() => {
             manipulateWords();
-            document.querySelector('#info-tab').innerText = `导出完成！可以重新勾选选项设置导出格式！`;
+            document.querySelector('#info-tab').innerText = `Export complete! You can re-check options to set export format!`;
             document.querySelector('#export-btn').disabled = false;
-            document.querySelector('#export-btn').innerText = '重新导出';
+            document.querySelector('#export-btn').innerText = 'Re-export';
         })
     }
 
@@ -81,13 +81,13 @@
                     }
                     console.log(`page ${i + 1} loaded`);
                     loadedPages++;
-                    document.querySelector('#info-tab').innerText = `正在加载单词列表...${loadedPages}/${pages}`;
+                    document.querySelector('#info-tab').innerText = `Loading word list...${loadedPages}/${pages}`;
                     resolve();
                 }
                 xhr.send();
             }));
         }
-        return Promise.all(promises); // 等待所有请求都完成
+        return Promise.all(promises); // Wait for all requests to complete
     }
 
     function manipulateWords() {
@@ -98,7 +98,7 @@
             unique: document.querySelector('#unique-checkbox').checked,
         }
         if (cfg.random && cfg.order) {
-            alert('随机打乱和按顺序排列不能同时选择!');
+            alert('Cannot select both shuffle and sort!');
             return;
         }
         if (cfg.random) {
@@ -129,7 +129,7 @@
             let xhr = new XMLHttpRequest();
             xhr.open('GET', `${apiBase}/api/user-new-word?page=0`);
             xhr.onload = function (e) {
-                // 读取页面数
+                // Read page count
                 let data = JSON.parse(e.target.responseText);
                 pages = data.data_body.pageInfo.totalPage;
                 // console.log(pages);

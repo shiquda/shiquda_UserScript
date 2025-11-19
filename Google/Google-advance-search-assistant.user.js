@@ -1,10 +1,8 @@
 // ==UserScript==
 // @name                    Advanced Search Assistant for Google
-// @name:zh-CN              Google 高级搜索助手
 // @namespace               http://tampermonkey.net/
 // @version                 0.1.8
 // @description             Add an advanced search form to the top of the page
-// @description:zh-CN       在谷歌搜索页面顶部添加一个高级搜索表单
 // @author                  shiquda
 // @namespace               https://github.com/shiquda/shiquda_UserScript
 // @supportURL              https://github.com/shiquda/shiquda_UserScript/issues
@@ -47,116 +45,90 @@
     console.log("Failed to determine the color mode.", error);
   }
 
-  const userLanguage = ""; // You can set your language config here manually. 'zh-CN' & 'en' are supported now.
+  const userLanguage = ""; // You can set your language config here manually. Only 'en' is supported now.
 
-  const supportedLanguages = ["zh-CN", "en"];
+  const supportedLanguages = ["en"];
 
   const translation = {
     as_q: {
-      "zh-CN": "搜索字词：",
       en: "Search word:",
     },
     as_epq: {
-      "zh-CN": "与以下字词完全匹配：",
       en: "Match the following words exactly:",
     },
     as_oq: {
-      "zh-CN": "包含以下任意字词：",
       en: "Contains any of the following words:",
     },
     as_eq: {
-      "zh-CN": "排除以下字词：",
       en: "Exclude the following words:",
     },
     as_nlo: {
-      "zh-CN": "包含的数字范围：从",
       en: "Number range: from",
     },
     as_nhi: {
-      "zh-CN": "到：",
       en: "to:",
     },
     lr: {
-      "zh-CN": "语言：",
       en: "Language:",
     },
     cr: {
-      "zh-CN": "地区：",
       en: "Region:",
     },
     as_qdr: {
-      "zh-CN": "最后更新时间：",
       en: "Last update time:",
     },
     as_sitesearch: {
-      "zh-CN": "网站或域名：",
       en: "Website or domain:",
     },
     as_occt: {
-      "zh-CN": "字词出现位置：",
       en: "Word position:",
     },
     as_filetype: {
-      "zh-CN": "文件类型：",
       en: "File type:",
     },
     tbs: {
-      "zh-CN": "使用权限：",
       en: "Usage rights:",
     },
     advancedSearch: {
-      "zh-CN": "高级搜索",
       en: "Advanced Search",
     },
     search: {
-      "zh-CN": "搜索",
       en: "Search",
     },
     clear: {
-      "zh-CN": "清空",
       en: "Clear",
     },
     as_qdr_select: {
       "": {
-        "zh-CN": "请选择",
         en: "Please select",
       },
       d: {
-        "zh-CN": "一天内",
         en: "Past 24 hours",
       },
       w: {
-        "zh-CN": "一周内",
         en: "Past week",
       },
       m: {
-        "zh-CN": "一月内",
         en: "Past month",
       },
       y: {
-        "zh-CN": "一年内",
         en: "Past year",
       },
     },
     as_occt_select: {
       "": {
-        "zh-CN": "请选择",
         en: "Please select",
       },
       title: {
-        "zh-CN": "网页标题中",
         en: "In the title of the web page",
       },
       body: {
-        "zh-CN": "网页正文中",
         en: "In the body of the web page",
       },
       url: {
-        "zh-CN": "网页网址中",
         en: "In the URL of the web page",
       },
       links: {
-        "zh-CN": "指向网页的链接中",
         en: "In the links to the web page",
       },
     },
@@ -188,7 +160,7 @@
       ? "background-color: rgba(0, 0, 0, 1);"
       : "background-color: rgba(255, 255, 255, 1);"
     }
-        ${isMobile ? "column-count: 2;" : ""} /* 在移动设备上分为两列 */
+        ${isMobile ? "column-count: 2;" : ""} /* Split into two columns on mobile devices */
         z-index: 1000; // Make sure the button is on top of the search bar
     }
 
