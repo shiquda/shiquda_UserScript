@@ -1,10 +1,8 @@
 // ==UserScript==
 // @name           Medium Free
-// @name:zh-CN     Medium Free
 // @namespace      https://github.com/shiquda
 // @version        1.1.0
-// @description:zh-CN    支持自动检测Medium文章（包括子域名和自定义域名），替换URL为archive.is/oldest/来解锁Medium付费文章
-// @description Automatically detect Medium articles (including subdomains and custom domains) and replace the URL with archive.is/oldest/ to unlock Medium Posts.
+// @description    Automatically detect Medium articles (including subdomains and custom domains) and replace the URL with archive.is/oldest/ to unlock Medium Posts.
 // @author         origin by blacksev, fixed by shiquda
 // @match          *://medium.com/*
 // @match          *://*.medium.com/*
@@ -31,46 +29,46 @@
     const DragButton = function () {
     };
     DragButton.prototype = {
-        //window对象
+        // Window object
         win: window,
-        //拖拽dom
+        // Draggable DOM element
         ele: null,
-        //默认配置
+        // Default configuration
         options: {
-            edge: true, //是否吸附边缘，默认吸附
-            extRoute: null,//标签Ext的路由，进行跳转的
-            elemId: 'medium-unlock-button',//组件要加载的节点位置ID，默认加在body下
+            edge: true, // Whether to snap to edges, default snap
+            extRoute: null, // Ext tag route for navigation
+            elemId: 'medium-unlock-button', // Node ID where component will be loaded, default is body
             instance: 'archive.is'
         },
-        //系统变量集
+        // System variables
         data: {
             distanceX: 0,
             distanceY: 0
         },
 
         /**
-         * @method 初始化
-         * @param opts 由@method config() 提供的配置参数
+         * @method Initialize
+         * @param opts Configuration parameters provided by @method config()
          */
         init: function (opts) {
             const _this = this;
-            const option = _this.config(opts, _this.options);//用户配置
+            const option = _this.config(opts, _this.options); // User configuration
             const _elem = document.getElementById(option.elemId) ? document.getElementById(option.elemId) : document.body;
             if (!_elem) {
                 console.log("not find nodeId!!");
                 return;
             }
-            //初始拖拽按钮，加载到_elem内
+            // Initialize drag button, load into _elem
             _this.initEle(_elem);
-            //注册点击事件
+            // Register click event
             _this.ele.addEventListener('click', function () {
                 _this.click();
             });
-            //注册拖拽开始事件
+            // Register drag start event
             _this.ele.addEventListener('touchstart', function (event) {
                 _this.touchstart(event);
             });
-            //注册拖拽移动事件
+            // Register drag move event
             document.addEventListener(
                 'touchmove',
                 function (event) {
@@ -78,19 +76,19 @@
                 }, {// fix #3 #5
                 passive: false
             });
-            //注册拖拽完成事件
+            // Register drag end event
             document.addEventListener('touchend', function () {
                 _this.touchend();
             });
         },
         /**
-         * @method 配置
-         * @param opts { object } 用户提供的参数，在没有提供参数的情况下使用默认参数
-         * @param options { object } 默认参数
-         * @return options { object } 返回一个配置对象
+         * @method Configuration
+         * @param opts { object } User-provided parameters, use default parameters if not provided
+         * @param options { object } Default parameters
+         * @return options { object } Returns a configuration object
          */
         config: function (opts, options) {
-            //默认参数
+            // Default parameters
             if (!opts) {
                 return options;
             }
@@ -103,15 +101,15 @@
         },
 
         /**
-         * @method 初始拖拽按钮，加载到_elem内
-         * @param _elem { object } 指定挂载的节点
-         * @return options { object } 返回一个拖拽按钮
+         * @method Initialize drag button, load into _elem
+         * @param _elem { object } Specified mounting node
+         * @return options { object } Returns a drag button
          */
         initEle: function (_elem) {
             const _this = this;
-            //创建一个div
+            // Create a div
             const ele = document.createElement('div');
-            //通过createElementNS创建svg元素并设置属性
+            // Create SVG element via createElementNS and set attributes
             const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
             svg.setAttribute("class", "unlock-svg");
@@ -123,13 +121,13 @@
 
             svg.appendChild(path);
 
-            //SVG元素添加到页面内显示
+            // Add SVG element to page for display
             ele.appendChild(svg);
 
             ele.id = "drag_button_id";
             ele.className = "drag-button-div";
 
-            //样式
+            // Styles
             ele.style.position = "fixed";
             ele.style.lineHeight = "4rem";
             ele.style.width = "4rem";
@@ -148,7 +146,7 @@
             ele.style.zIndex = "1";
             ele.style.transition = "box-shadow .2s";
 
-            //js控制css的黑魔法
+            // CSS control magic with JS
             const head = document.getElementsByTagName('head')[0];
             const style = document.createElement('style');
             const declarations = document.createTextNode('.drag-button-div:hover{ box-shadow: 0px 0 0 11px #FFF,  0px 0 0 10px #27ae60, 0px 0 0 50px #FFF inset;}.drag-button-div:active{ box-shadow: 0px 0 0 11px #27ae60,  0px 0 0 10px #27ae60, 0px 0 0 50px #FFF inset;}.drag-button-div:hover .unlock-svg{color:blue;}');
@@ -160,22 +158,22 @@
             }
             head.appendChild(style);
 
-            //动态插入到body中
+            // Dynamically insert into body
             _elem.insertBefore(ele, _elem.lastChild);
-            //赋值到全局变量
+            // Assign to global variable
             _this.ele = ele;
-            //初始化位置
+            // Initialize position
             let strStoreDistance = '';
-            // 居然有android机子不支持localStorage
+            // Some Android devices don't support localStorage
             if (_this.ele.id && _this.win.localStorage && (strStoreDistance = localStorage['Inertia_' + _this.ele.id])) {
                 const arrStoreDistance = strStoreDistance.split(',');
                 _this.ele.distanceX = +arrStoreDistance[0];
                 _this.ele.distanceY = +arrStoreDistance[1];
                 _this.ele = _this.fnTranslate(_this.ele, _this.ele.distanceX, _this.ele.distanceY);
             }
-            // 显示拖拽元素
+            // Show drag element
             _this.ele.style.visibility = 'visible';
-            // 如果元素在屏幕之外，位置使用初始值
+            // If element is outside screen, use initial position
             const initBound = _this.ele.getBoundingClientRect();
             if (initBound.left < -0.5 * initBound.width ||
                 initBound.top < -0.5 * initBound.height ||
@@ -188,11 +186,11 @@
             }
         },
         /**
-         * easeOutBounce算法
-         * t: current time（当前时间）；
-         * b: beginning value（初始值）；
-         * c: change in value（变化量）；
-         * d: duration（持续时间）。
+         * easeOutBounce algorithm
+         * t: current time
+         * b: beginning value
+         * c: change in value
+         * d: duration
          */
         easeOutBounce: function (t, b, c, d) {
             if ((t /= d) < (1 / 2.75)) {
@@ -206,7 +204,7 @@
             }
         },
 
-        // 设置transform坐标等方法
+        // Method to set transform coordinates
         fnTranslate: function (_ele, x, y) {
             x = Math.round(1000 * x) / 1000;
             y = Math.round(1000 * y) / 1000;
@@ -218,7 +216,7 @@
         },
 
         /**
-         * 拖拽按钮开始事件
+         * Drag button start event
          */
         touchstart: function (event) {
             const _this = this;
@@ -236,14 +234,14 @@
                 _this.data.distanceY = _this.ele.distanceY;
             }
 
-            // 元素的位置数据
+            // Element position data
             _this.data.bound = _this.ele.getBoundingClientRect();
 
             _this.data.timerready = true;
         },
 
         /**
-         * 拖拽按钮移动事件
+         * Drag button move event
          */
         touchmove: function (event) {
             const _this = this;
@@ -251,7 +249,7 @@
                 return;
             }
 
-            // 当移动开始的时候开始记录时间
+            // Start recording time when movement begins
             if (_this.data.timerready === true) {
                 _this.data.timerstart = +new Date();
                 _this.data.timerready = false;
@@ -267,13 +265,13 @@
             let distanceX = _this.data.nowX - _this.data.posX,
                 distanceY = _this.data.nowY - _this.data.posY;
 
-            // 此时元素的位置
+            // Current element position
             const absLeft = distanceX + _this.data.bound.left,
                 absTop = distanceY + _this.data.bound.top,
                 absRight = absLeft + _this.data.bound.width,
                 absBottom = absTop + _this.data.bound.height;
 
-            // 边缘检测
+            // Edge detection
             if (absLeft < 0) {
                 distanceX = distanceX - absLeft;
             }
@@ -287,26 +285,26 @@
                 distanceY = distanceY - (absBottom - _this.win.innerHeight);
             }
 
-            // 元素位置跟随
+            // Element position follows
             const x = _this.data.distanceX + distanceX,
                 y = _this.data.distanceY + distanceY;
             _this.ele = _this.fnTranslate(_this.ele, x, y);
 
-            // 缓存移动位置
+            // Cache movement position
             _this.ele.distanceX = x;
             _this.ele.distanceY = y;
         },
 
         /**
-         * 拖拽按钮移动完成事件
+         * Drag button move complete event
          */
         touchend: function () {
             const edge = function () {
-                // 时间
+                // Time
                 let start = 0, during = 25;
-                // 初始值和变化量
+                // Initial value and change amount
                 let init = _this.ele.distanceX, y = _this.ele.distanceY, change = 0;
-                // 判断元素现在在哪个半区
+                // Determine which half the element is in now
                 const bound = _this.ele.getBoundingClientRect();
                 if (bound.left + bound.width / 2 < _this.win.innerWidth / 2) {
                     change = -1 * bound.left;
@@ -315,7 +313,7 @@
                 }
 
                 const run = function () {
-                    // 如果用户触摸元素，停止继续动画
+                    // If user touches element, stop animation
                     if (_this.data.touching === true) {
                         _this.data.inertiaing = false;
                         return;
@@ -345,14 +343,14 @@
             }
             _this.data.touching = false;
 
-            // 计算速度
+            // Calculate speed
             _this.data.timerend = +new Date();
 
             if (!_this.data.nowX || !_this.data.nowY) {
                 return;
             }
 
-            // 移动的水平和垂直距离
+            // Horizontal and vertical movement distance
             const distanceX = _this.data.nowX - _this.data.posX,
                 distanceY = _this.data.nowY - _this.data.posY;
 
@@ -360,25 +358,25 @@
                 return;
             }
 
-            // 距离和时间
+            // Distance and time
             const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY),
                 time = _this.data.timerend - _this.data.timerstart;
 
-            // 速度，每一个自然刷新此时移动的距离
+            // Speed: distance moved per natural refresh
             let speed = distance / time * 16.666;
 
-            // 经测试，2~60多px不等
-            // 设置衰减速率
-            // 数值越小，衰减越快
+            // Tested 2~60+ px variation
+            // Set decay rate
+            // Smaller value = faster decay
             const rate = Math.min(10, speed);
 
-            // 开始惯性缓动
+            // Start inertia easing
             _this.data.inertiaing = true;
 
-            // 反弹的参数
+            // Bounce parameters
             let reverseX = 1, reverseY = 1;
 
-            // 速度计算法
+            // Speed calculation method
             const step = function () {
                 if (_this.data.touching === true) {
                     _this.data.inertiaing = false;
@@ -386,15 +384,15 @@
                 }
                 speed = speed - speed / rate;
 
-                // 根据运动角度，分配给x, y方向
+                // Distribute to x, y directions based on movement angle
                 let moveX = reverseX * speed * distanceX / distance, moveY = reverseY * speed * distanceY / distance;
 
-                // 此时元素的各个数值
+                // Current element values
                 const bound = _this.ele.getBoundingClientRect();
 
                 if (moveX < 0 && bound.left + moveX < 0) {
                     moveX = 0 - bound.left;
-                    // 碰触边缘方向反转
+                    // Reverse direction on edge contact
                     reverseX = reverseX * -1;
                 } else if (moveX > 0 && bound.right + moveX > _this.win.innerWidth) {
                     moveX = _this.win.innerWidth - bound.right;
@@ -410,7 +408,7 @@
                 }
 
                 const x = _this.ele.distanceX + moveX, y = _this.ele.distanceY + moveY;
-                // 位置变化
+                // Position change
                 _this.ele = _this.fnTranslate(_this.ele, x, y);
 
                 _this.ele.distanceX = x;
@@ -425,7 +423,7 @@
                             localStorage['Inertia_' + _this.ele.id] = [x, y].join();
                         }
                     } else {
-                        // 边缘吸附
+                        // Edge snap
                         edge();
                     }
                 } else {
@@ -435,7 +433,7 @@
             step();
         },
         /**
-         * 拖拽按钮点击事件
+         * Drag button click event
          */
         click: function () {
             const _this = this;
