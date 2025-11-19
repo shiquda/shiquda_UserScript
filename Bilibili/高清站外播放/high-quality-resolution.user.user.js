@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         B站高清站外播放
+// @name         Bilibili High Quality External Playback
 // @namespace    http://tampermonkey.net/
 // @version      1.0
-// @description  自动获取用户B站Cookie并替换B站视频iframe的src为真实播放地址
+// @description  Automatically get user Bilibili cookies and replace Bilibili video iframe src with real playback address
 // @author       Your Name
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
@@ -13,14 +13,14 @@
 (function () {
     'use strict';
 
-    // 从浏览器中获取指定名称的Cookie值
+    // Get cookie value by name from browser
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
-    // 获取B站的Cookie信息
+    // Get Bilibili cookie information
     // const SESSDATA = getCookie('SESSDATA');
     // const bili_jct = getCookie('bili_jct');
 
@@ -29,11 +29,11 @@
 
 
     // if (!SESSDATA || !bili_jct) {
-    //     console.error('无法找到B站的SESSDATA或bili_jct Cookie，请确保你已登录B站');
+    //     console.error('Unable to find Bilibili SESSDATA or bili_jct Cookie, please ensure you are logged into Bilibili');
     //     return;
     // }
 
-    // 正则表达式用于匹配aid或bvid
+    // Regular expression for matching aid or bvid
     function get_aid_or_bvid(src) {
         const pattern = /(bvid|aid)=([^&]+)/;
         const matches = src.match(pattern);
@@ -46,7 +46,7 @@
         return null;
     }
 
-    // 获取cid
+    // Get cid
     function get_cid(idObj, callback) {
         const params = idObj.type === 'aid' ? `aid=${idObj.id}` : `bvid=${idObj.id}`;
         const url = `https://api.bilibili.com/x/web-interface/view?${params}`;
@@ -63,14 +63,14 @@
                 }
             },
             onerror: function () {
-                console.error('获取cid失败');
+                console.error('Failed to get cid');
                 console.error(response);
                 callback(null);
             }
         });
     }
 
-    // 获取真实播放地址
+    // Get real playback URL
     function get_real_url(bvid, cid, callback) {
         const params = `bvid=${bvid}&cid=${cid}&qn=112&platform=html5&high_quality=1`;
         const url = `https://api.bilibili.com/x/player/playurl?${params}`;
@@ -95,7 +95,7 @@
         });
     }
 
-    // 遍历所有iframe
+    // Iterate through all iframes
     function parse_iframes() {
         const iframes = document.querySelectorAll('iframe');
         iframes.forEach(iframe => {
@@ -119,6 +119,6 @@
         });
     }
 
-    // 等待页面加载完成后执行
+    // Execute after page load completes
     window.addEventListener('load', parse_iframes);
 })();

@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Steam自动勾选同意用户协议
+// @name         Steam Auto-accept User Agreement
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @version      0.2.5
-// @description  Steam自动勾选同意用户协议复选框
+// @description  Steam automatically checks the user agreement checkbox
 // @author       shiquda
 // @include      https://store.steampowered.com/*
 // @include      https://steamcommunity.com/*
@@ -11,7 +11,7 @@
 // ==/UserScript==
 (function () {
     'use strict';
-    //读取网址
+    // Read URL
     var $href = window.location.href
     if ($href.indexOf('checkout') != -1) {
         //console.log('checkout')

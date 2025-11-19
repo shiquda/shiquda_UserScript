@@ -19,5 +19,4 @@
         var change = text.match(/^https?:\/\/(?:www\.)?([^/?#]+)/i)[1]
         tab.value = change
     }
-    // Your code here...
 })();
