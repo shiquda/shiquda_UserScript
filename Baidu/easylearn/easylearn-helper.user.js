@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         百度教育直接查看答案
+// @name         Baidu Education Answer Viewer
 // @version      0.1.0
-// @description  百度教育直接查看答案，免去繁琐的点击
+// @description  View answers directly on Baidu Education, eliminating tedious clicks
 // @author       shiquda
 // @match        https://easylearn.baidu.com/edu-page/tiangong/questiondetail*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=baidu.com
@@ -13,12 +13,12 @@
 
 (function () {
     'use strict';
-    let intervalId; // 在全局作用域中定义 intervalId 变量
+    let intervalId; // Define intervalId variable in global scope
 
     intervalId = setInterval(() => {
         if (document.querySelector('.mask')) {
             removeMasks();
-            clearInterval(intervalId); // 在检测到元素后停止 Interval
+            clearInterval(intervalId); // Stop interval after detecting element
         }
         if (document.querySelector('.kaixue-dialog-close')) {
             document.querySelector('.kaixue-dialog-close').click();
@@ -34,5 +34,4 @@
             e.remove();
         });
     }
-    // Your code here...
 })();

@@ -21,7 +21,7 @@
         }
     `;
 
-    // 创建并插入style标签
+    // Create and insert style tag
     const style = document.createElement('style');
     style.type = 'text/css';
     style.appendChild(document.createTextNode(css));

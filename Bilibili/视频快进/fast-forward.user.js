@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         bilibili 视频快进
+// @name         Bilibili Video Fast Forward
 // @namespace    https://github.com/shiquda/shiquda_UserScript
 // @supportURL   https://github.com/shiquda/shiquda_UserScript/issues
 // @version      0.1.0
-// @description  把长按方向右键的倍速播放改为连续快进，类似于快退
+// @description  Change long-press right arrow from speed-up playback to continuous fast-forward, similar to rewind
 // @author       shiquda
 // @match        https://*.bilibili.com/video/*
 // @grant        none
@@ -14,25 +14,25 @@
 (function () {
     'use strict';
 
-    const interval = 200; // 每隔 200 ms 快进一次
-    const fastForwardTime = 5; // 快进 5 秒
+    const interval = 200; // Fast forward every 200 ms
+    const fastForwardTime = 5; // Fast forward 5 seconds
 
-    // 获取视频元素
+    // Get video element
     let video = document.querySelector('video');
 
     let isLongPressing = false;
     let shouldFastForward = false;
 
-    // 定义一个变量来存储定时器的ID
+    // Variable to store the timer ID
     let intervalId = null;
 
-    // 监听键盘按下事件
+    // Listen for keydown events
     window.addEventListener('keydown', (event) => {
-        // 判断是否是方向右键
+        // Check if it's the right arrow key
         if (event.key === 'ArrowRight') {
             isLongPressing = true;
             shouldFastForward = true;
-            // 如果没有定时器在运行，创建一个新的定时器
+            // If no timer is running, create a new timer
             if (intervalId === null) {
                 intervalId = setInterval(() => {
                     if (shouldFastForward) {
@@ -46,7 +46,7 @@
         }
     });
 
-    // 监听键盘松开事件
+    // Listen for keyup events
     window.addEventListener('keyup', (event) => {
         if (event.key === 'ArrowRight') {
             isLongPressing = false;

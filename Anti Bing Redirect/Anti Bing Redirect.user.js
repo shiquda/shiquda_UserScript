@@ -12,7 +12,7 @@
 
 (function () {
     'use strict';
-    //提取url的被加密字符串并解密
+    // Extract and decrypt the encrypted string from URL
     function decode(url) {
         const regex = /(?<=&u=a1)[^&]*/;
         const match = regex.exec(url);
@@ -36,8 +36,6 @@
         //console.log(txt)
     }
     replaceURLs()
-    //适配自动翻页
+    // Adapt to auto page-turn
     document.querySelector("#b_results").addEventListener('DOMNodeInserted', replaceURLs)
-
-    // Your code here...
 })();
