@@ -1,10 +1,8 @@
 // ==UserScript==
 // @name                    Jump to DeepWiki from Github
-// @name:zh-CN              Github 跳转至 DeepWiki
 // @namespace               http://tampermonkey.net/
 // @version                 0.1.5
 // @description             Add an anchor to jump to DeepWiki from Github
-// @description:zh-CN       在 Github 页面添加一个链接，跳转至 DeepWiki
 // @author                  shiquda
 // @namespace               https://github.com/shiquda/shiquda_UserScript
 // @supportURL              https://github.com/shiquda/shiquda_UserScript/issues
@@ -13,14 +11,14 @@
 // @license                 MIT
 // ==/UserScript==
 
-// 判断当前path是否是一个 github repo，且位于项目的主页面
+// Check if current path is a github repo and located on project homepage
 function isGithubRepo(path) {
     path = path.slice(0, -1);
     return (path.split('/').length === 3);
 }
 
 function CreateUI() {
-    // 如果链接已经存在，则不再创建
+    // Don't create if link already exists
     if (document.querySelector('.deepwiki-anchor')) {
         return;
     }
@@ -95,24 +93,24 @@ function checkAndCreateUI() {
 (function () {
     "use strict";
 
-    // 初始检查
+    // Initial check
     checkAndCreateUI();
 
-    // 监听页面变化
+    // Listen for page changes
     const observer = new MutationObserver((mutations) => {
-        // 检查页面头部是否存在
+        // Check if page header exists
         if (document.querySelector('.pagehead-actions')) {
             checkAndCreateUI();
         }
     });
 
-    // 监听整个body的变化
+    // Monitor changes to entire body
     observer.observe(document.body, {
         childList: true,
         subtree: true
     });
 
-    // 监听URL变化（适用于单页应用）
+    // Monitor URL changes (for single page apps)
     let lastUrl = location.href;
     new MutationObserver(() => {
         const url = location.href;
