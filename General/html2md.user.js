@@ -114,7 +114,7 @@
         $modal.find('.h2m-obsidian-select').append($('<option>').val('').text('Send to Obsidian'));
         for (const vault in obsidianConfig) {
             for (const path of obsidianConfig[vault]) {
-                // 插入元素
+                // Insert element
                 const $option = $('<option>')
                     .val(`obsidian://advanced-uri?vault=${vault}&filepath=${path}`)
                     .text(`${vault}: ${path}`);
@@ -138,7 +138,7 @@
         });
 
 
-        $modal.find('.h2m-copy').on('click', function () { // 复制到剪贴板
+        $modal.find('.h2m-copy').on('click', function () { // Copy to clipboard
             GM_setClipboard($modal.find('textarea').val());
             $modal.find('.h2m-copy').text('Copied!');
             setTimeout(() => {
@@ -146,18 +146,18 @@
             }, 1000);
         });
 
-        $modal.find('.h2m-download').on('click', function () { // 下载
+        $modal.find('.h2m-download').on('click', function () { // Download
             var markdown = $modal.find('textarea').val();
             var blob = new Blob([markdown], { type: 'text/markdown' });
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            // 当前页面标题 + 时间
+            // Current page title + time
             a.download = `${document.title}-${new Date().toISOString().replace(/:/g, '-')}.md`;
             a.click();
         });
 
-        $modal.find('.h2m-obsidian-select').on('change', function () { // 发送到 Obsidian
+        $modal.find('.h2m-obsidian-select').on('change', function () { // Send to Obsidian
             const val = $(this).val();
             if (!val) return;
             const markdown = $modal.find('textarea').val();
@@ -167,17 +167,17 @@
             window.open(url);
         });
 
-        $modal.find('.h2m-close').on('click', function () { // 关闭按钮 X
+        $modal.find('.h2m-close').on('click', function () { // Close button X
             $modal.remove();
         });
 
-        // 同步滚动
-        // 获取两个元素
+        // Sync scrolling
+        // Get two elements
         var $textarea = $modal.find('textarea');
         var $preview = $modal.find('.h2m-preview');
         var isScrolling = false;
 
-        // 当 textarea 滚动时，设置 preview 的滚动位置
+        // When textarea scrolls, set preview scroll position
         $textarea.on('scroll', function () {
             if (isScrolling) {
                 isScrolling = false;
@@ -188,7 +188,7 @@
             isScrolling = true;
         });
 
-        // 当 preview 滚动时，设置 textarea 的滚动位置
+        // When preview scrolls, set textarea scroll position
         $preview.on('scroll', function () {
             if (isScrolling) {
                 isScrolling = false;
@@ -241,7 +241,7 @@
         }, timeout);
     }
 
-    // Turndown 配置
+    // Turndown configuration
     var turndownPluginGfm = TurndownPluginGfmService;
     var turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
 
