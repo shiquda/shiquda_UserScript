@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Easy Web Page to Markdown
 // @namespace    http://tampermonkey.net/
-// @version      0.3.8
+// @version      0.3.9
 // @description  Convert selected HTML to Markdown
 // @author       shiquda (forked & modified by ExactDoug)
 // @match        *://*/*
@@ -333,7 +333,24 @@
         .h2m-modal .h2m-preview * {
             all: revert;
             color: inherit;
-        }        .h2m-modal .h2m-buttons {
+        }
+        .h2m-modal .h2m-preview pre {
+            background-color: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 12px 16px;
+            overflow-x: auto;
+        }
+        .h2m-modal .h2m-preview code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+        }
+        .h2m-modal .h2m-preview :not(pre) > code {
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .h2m-modal .h2m-buttons {
             position: absolute;
             bottom: 10px;
             right: 10px;
