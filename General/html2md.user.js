@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.3.9
 // @description  Convert selected HTML to Markdown
-// @author       shiquda (forked & modified by ExactDoug)
+// @author       ExactDoug (forked from shiquda)
 // @match        *://*/*
 // @namespace    https://github.com/ExactDoug/webpage_to_markdown_userscript
 // @supportURL   https://github.com/ExactDoug/webpage_to_markdown_userscript/issues
