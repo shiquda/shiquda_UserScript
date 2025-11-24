@@ -307,15 +307,31 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 9998;
         }
-        .h2m-modal textarea,
-        .h2m-modal .h2m-preview {
+        .h2m-modal textarea {
             width: 50%;
             height: 100%;
             padding: 20px;
             box-sizing: border-box;
             overflow-y: auto;
         }
-        .h2m-modal .h2m-buttons {
+        .h2m-modal .h2m-preview {
+            all: initial;
+            display: block;
+            width: 50%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+        .h2m-modal .h2m-preview * {
+            all: revert;
+            color: inherit;
+        }        .h2m-modal .h2m-buttons {
             position: absolute;
             bottom: 10px;
             right: 10px;
