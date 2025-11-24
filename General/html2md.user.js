@@ -100,8 +100,8 @@
         var $modal = $(`
                     <div class="h2m-modal-overlay">
                         <div class="h2m-modal">
-                            <textarea>${markdown}</textarea>
-                            <div class="h2m-preview">${marked.parse(markdown)}</div>
+                            <textarea></textarea>
+                            <div class="h2m-preview"></div>
                             <div class="h2m-buttons">
                                 <button class="h2m-copy">Copy to clipboard</button>
                                 <button class="h2m-download">Download as MD</button>
@@ -112,7 +112,9 @@
                     </div>
                 `);
 
-
+        $modal.find('textarea').val(markdown);
+        $modal.find('.h2m-preview').html(marked.parse(markdown));
+        
         $modal.find('.h2m-obsidian-select').append($('<option>').val('').text('Send to Obsidian'));
         for (const vault in obsidianConfig) {
             for (const path of obsidianConfig[vault]) {
