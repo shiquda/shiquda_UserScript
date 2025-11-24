@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Easy Web Page to Markdown
 // @namespace    http://tampermonkey.net/
-// @version      0.3.7
+// @version      0.3.8
 // @description  Convert selected HTML to Markdown
 // @author       shiquda (forked & modified by ExactDoug)
 // @match        *://*/*
