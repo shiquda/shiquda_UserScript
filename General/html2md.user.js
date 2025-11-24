@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Easy Web Page to Markdown
 // @namespace    http://tampermonkey.net/
-// @version      0.3.9
+// @version      0.3.10
 // @description  Convert selected HTML to Markdown
 // @author       ExactDoug (forked from shiquda)
 // @match        *://*/*
@@ -39,6 +39,7 @@
     }
 
     // Obsidian
+    const obsidianEnabledUserConfig = false; // Set to true to enable Obsidian functionality
     const obsidianUserConfig = {
         /* Example:
             "my note": [
@@ -64,7 +65,7 @@
     // Global variables
     var isSelecting = false;
     var selectedElement = null;
-    let shortCutConfig, obsidianConfig;
+    let shortCutConfig, obsidianEnabled, obsidianConfig;
     // Read configuration
     // Initialize shortcut key configuration
     let storedShortCutConfig = GM_getValue('shortCutConfig');
@@ -75,13 +76,24 @@
         shortCutConfig = JSON.parse(storedShortCutConfig);
     }
 
-    // Initialize Obsidian configuration
-    let storedObsidianConfig = GM_getValue('obsidianConfig');
-    if (Object.keys(obsidianUserConfig).length !== 0) {
-        GM_setValue('obsidianConfig', JSON.stringify(obsidianUserConfig));
-        obsidianConfig = obsidianUserConfig;
-    } else if (storedObsidianConfig) {
-        obsidianConfig = JSON.parse(storedObsidianConfig);
+    // Initialize Obsidian enabled setting
+    let storedObsidianEnabled = GM_getValue('obsidianEnabled');
+    if (storedObsidianEnabled !== undefined) {
+        obsidianEnabled = storedObsidianEnabled;
+    } else {
+        obsidianEnabled = obsidianEnabledUserConfig;
+        GM_setValue('obsidianEnabled', obsidianEnabled);
+    }
+
+    // Initialize Obsidian configuration (only if enabled)
+    if (obsidianEnabled) {
+        let storedObsidianConfig = GM_getValue('obsidianConfig');
+        if (Object.keys(obsidianUserConfig).length !== 0) {
+            GM_setValue('obsidianConfig', JSON.stringify(obsidianUserConfig));
+            obsidianConfig = obsidianUserConfig;
+        } else if (storedObsidianConfig) {
+            obsidianConfig = JSON.parse(storedObsidianConfig);
+        }
     }
 
 
@@ -97,6 +109,10 @@
 
     // Preview
     function showMarkdownModal(markdown) {
+        const obsidianButtonHtml = obsidianEnabled
+            ? '<select class="h2m-obsidian-select">Send to Obsidian</select>'
+            : '';
+
         var $modal = $(`
                     <div class="h2m-modal-overlay">
                         <div class="h2m-modal">
@@ -105,7 +121,7 @@
                             <div class="h2m-buttons">
                                 <button class="h2m-copy">Copy to clipboard</button>
                                 <button class="h2m-download">Download as MD</button>
-                                <select class="h2m-obsidian-select">Send to Obsidian</select>
+                                ${obsidianButtonHtml}
                             </div>
                             <button class="h2m-close">X</button>
                         </div>
@@ -114,15 +130,17 @@
 
         $modal.find('textarea').val(markdown);
         $modal.find('.h2m-preview').html(marked.parse(markdown));
-        
-        $modal.find('.h2m-obsidian-select').append($('<option>').val('').text('Send to Obsidian'));
-        for (const vault in obsidianConfig) {
-            for (const path of obsidianConfig[vault]) {
-                // Insert element
-                const $option = $('<option>')
-                    .val(`obsidian://advanced-uri?vault=${vault}&filepath=${path}`)
-                    .text(`${vault}: ${path}`);
-                $modal.find('.h2m-obsidian-select').append($option);
+
+        if (obsidianEnabled) {
+            $modal.find('.h2m-obsidian-select').append($('<option>').val('').text('Send to Obsidian'));
+            for (const vault in obsidianConfig) {
+                for (const path of obsidianConfig[vault]) {
+                    // Insert element
+                    const $option = $('<option>')
+                        .val(`obsidian://advanced-uri?vault=${vault}&filepath=${path}`)
+                        .text(`${vault}: ${path}`);
+                    $modal.find('.h2m-obsidian-select').append($option);
+                }
             }
         }
 
@@ -161,15 +179,17 @@
             a.click();
         });
 
-        $modal.find('.h2m-obsidian-select').on('change', function () { // Send to Obsidian
-            const val = $(this).val();
-            if (!val) return;
-            const markdown = $modal.find('textarea').val();
-            GM_setClipboard(markdown);
-            const title = document.title.replaceAll(/[\\/:*?"<>|]/g, '_'); // File name cannot contain any of the following characters: * " \ / < > : | ?
-            const url = `${val}${title}.md&clipboard=true`;
-            window.open(url);
-        });
+        if (obsidianEnabled) {
+            $modal.find('.h2m-obsidian-select').on('change', function () { // Send to Obsidian
+                const val = $(this).val();
+                if (!val) return;
+                const markdown = $modal.find('textarea').val();
+                GM_setClipboard(markdown);
+                const title = document.title.replaceAll(/[\\/:*?"<>|]/g, '_'); // File name cannot contain any of the following characters: * " \ / < > : | ?
+                const url = `${val}${title}.md&clipboard=true`;
+                window.open(url);
+            });
+        }
 
         $modal.find('.h2m-close').on('click', function () { // Close button X
             $modal.remove();
