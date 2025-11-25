@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Easy Web Page to Markdown
 // @namespace    http://tampermonkey.net/
-// @version      0.3.10
+// @version      0.3.11
 // @description  Convert selected HTML to Markdown
 // @author       ExactDoug (forked from shiquda)
 // @match        *://*/*
@@ -335,6 +335,11 @@
             padding: 20px;
             box-sizing: border-box;
             overflow-y: auto;
+            color: #333;
+            background-color: #fff;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.6;
         }
         .h2m-modal .h2m-preview {
             all: initial;
