@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Easy Web Page to Markdown
 // @namespace    http://tampermonkey.net/
-// @version      0.3.13
+// @version      0.3.14
 // @description  Convert selected HTML to Markdown
 // @author       ExactDoug (forked from shiquda)
 // @match        *://*/*
@@ -101,17 +101,7 @@
     // HTML2Markdown
     function convertToMarkdown(element) {
         var html = element.outerHTML;
-        let turndownMd = turndownService.turndown(html);
-
-        // Fix malformed markdown links where link text contains excessive whitespace/newlines
-        // Turndown can produce links like "[\n\n  text  \n\n](url)" when <a> wraps block elements
-        // This collapses whitespace in link text to produce clean "[text](url)" format
-        turndownMd = turndownMd.replace(/\[([\s\S]*?)\]\(/g, function(match, linkText) {
-            const cleaned = linkText.replace(/\s+/g, ' ').trim();
-            return '[' + cleaned + '](';
-        });
-
-        return turndownMd;
+        return turndownService.turndown(html);
     }
 
 
@@ -281,6 +271,25 @@
 
     // Remove metadata/non-content elements that should not appear in markdown output
     turndownService.remove(['script', 'style', 'noscript']);
+
+    // Custom rule to normalize whitespace in link text
+    // Turndown can produce links like "[\n\n  text  \n\n](url)" when <a> wraps block elements
+    // This collapses whitespace to produce clean "[text](url)" format
+    turndownService.addRule('normalizeLinkText', {
+        filter: 'a',
+        replacement: function (content, node) {
+            // Collapse whitespace inside link text
+            const text = content.replace(/\s+/g, ' ').trim();
+
+            const href = node.getAttribute('href') || '';
+            const title = node.getAttribute('title');
+
+            if (!href) return text; // no href? just return plain text
+
+            const titlePart = title ? ' "' + title.replace(/"/g, '\\"') + '"' : '';
+            return '[' + text + '](' + href + titlePart + ')';
+        }
+    });
 
     // turndownService.addRule('strikethrough', {
     //     filter: ['del', 's', 'strike'],
