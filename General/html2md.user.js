@@ -271,21 +271,8 @@
 
     turndownPluginGfm.gfm(turndownService); // Import all plugins
 
-    // Remove style elements - these should not appear in markdown output
-    turndownService.addRule('removeStyles', {
-        filter: ['style'],
-        replacement: function () {
-            return '';
-        }
-    });
-
-    // Remove script elements - these should not appear in markdown output
-    turndownService.addRule('removeScripts', {
-        filter: ['script', 'noscript'],
-        replacement: function () {
-            return '';
-        }
-    });
+    // Remove metadata/non-content elements that should not appear in markdown output
+    turndownService.remove(['script', 'style', 'noscript']);
 
     // turndownService.addRule('strikethrough', {
     //     filter: ['del', 's', 'strike'],
