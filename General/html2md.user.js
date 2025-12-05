@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Easy Web Page to Markdown
 // @namespace    http://tampermonkey.net/
-// @version      0.3.11
+// @version      0.3.12
 // @description  Convert selected HTML to Markdown
 // @author       ExactDoug (forked from shiquda)
 // @match        *://*/*
@@ -270,6 +270,23 @@
     var turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
 
     turndownPluginGfm.gfm(turndownService); // Import all plugins
+
+    // Remove style elements - these should not appear in markdown output
+    turndownService.addRule('removeStyles', {
+        filter: ['style'],
+        replacement: function () {
+            return '';
+        }
+    });
+
+    // Remove script elements - these should not appear in markdown output
+    turndownService.addRule('removeScripts', {
+        filter: ['script', 'noscript'],
+        replacement: function () {
+            return '';
+        }
+    });
+
     // turndownService.addRule('strikethrough', {
     //     filter: ['del', 's', 'strike'],
     //     replacement: function (content) {
