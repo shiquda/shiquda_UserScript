@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Easy Web Page to Markdown
 // @namespace    http://tampermonkey.net/
-// @version      0.3.12
+// @version      0.3.13
 // @description  Convert selected HTML to Markdown
 // @author       ExactDoug (forked from shiquda)
 // @match        *://*/*
@@ -102,7 +102,15 @@
     function convertToMarkdown(element) {
         var html = element.outerHTML;
         let turndownMd = turndownService.turndown(html);
-        turndownMd = turndownMd.replaceAll('[\n\n]', '[]'); // Temporary workaround to prevent <a> element nesting, not perfect
+
+        // Fix malformed markdown links where link text contains excessive whitespace/newlines
+        // Turndown can produce links like "[\n\n  text  \n\n](url)" when <a> wraps block elements
+        // This collapses whitespace in link text to produce clean "[text](url)" format
+        turndownMd = turndownMd.replace(/\[([\s\S]*?)\]\(/g, function(match, linkText) {
+            const cleaned = linkText.replace(/\s+/g, ' ').trim();
+            return '[' + cleaned + '](';
+        });
+
         return turndownMd;
     }
 
