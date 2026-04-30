@@ -7,6 +7,7 @@
 // @match        https://linux.do/*
 // @grant        none
 // @run-at       document-start
+// @license      MIT
 // ==/UserScript==
 (function () {
     'use strict';
