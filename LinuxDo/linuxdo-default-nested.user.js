@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         LinuxDo 默认使用 Nested 模式
 // @namespace    https://github.com/shiquda/shiquda_UserScript
-// @version      0.3.0
-// @description  自动把 /t/topic/ 改为 /n/topic/（无刷新，尊重 flat=1 手动切换）
+// @version      0.3.1
+// @description  自动把 /t/topic/ 改为 /n/topic/，并移除 /n/topic/ 下的 /1 单分支路径（无刷新，尊重 flat=1 手动切换）
 // @author       shiquda
 // @match        https://linux.do/*
 // @grant        none
@@ -14,6 +14,7 @@
 
     const FROM = '/t/topic/';
     const TO   = '/n/topic/';
+    const FIRST_BRANCH_PATH = /\/n\/topic\/([^/?#]+)\/1(?=\/?[?#]|\/?$)/;
 
     // 检查 URL 是否带有 flat=1(用户手动切回 flat 模式的标记)
     const hasFlatFlag = (url) => {
@@ -27,14 +28,17 @@
 
     const rewrite = (url) => {
         if (typeof url !== 'string') return url;
-        if (!url.includes(FROM)) return url;
-        if (hasFlatFlag(url)) return url;  // 尊重用户手动选择
-        return url.replace(FROM, TO);
+        let nextUrl = url;
+        if (nextUrl.includes(FROM) && !hasFlatFlag(nextUrl)) {
+            nextUrl = nextUrl.replace(FROM, TO);
+        }
+        return nextUrl.replace(FIRST_BRANCH_PATH, (_, topicId) => `${TO}${topicId}`);
     };
 
     // 1. 首次进入
-    if (location.pathname.startsWith(FROM) && !hasFlatFlag(location.href)) {
-        location.replace(location.href.replace(FROM, TO));
+    const nextHref = rewrite(location.href);
+    if (nextHref !== location.href) {
+        location.replace(nextHref);
         return;
     }
 
@@ -54,8 +58,9 @@
         const a = e.target && e.target.closest && e.target.closest('a[href]');
         if (!a) return;
         const href = a.getAttribute('href');
-        if (href && href.includes(FROM) && !hasFlatFlag(href)) {
-            a.setAttribute('href', href.replace(FROM, TO));
+        const nextHref = rewrite(href);
+        if (nextHref !== href) {
+            a.setAttribute('href', nextHref);
         }
     }, true);
 })();
