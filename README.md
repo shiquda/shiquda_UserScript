@@ -29,6 +29,12 @@
 - **内容提取**：帮助获取和整理网页内容
 - **搜索辅助**：提升搜索效率
 
+
+### 包含脚本列表
+
+- **[App Store 比价助手](App%20Store/README.md)**：在 App Store (iOS / Mac) 网页版优雅查看 AppStorePrice.org 全球价格对比与最低价区，支持套餐切换与货币折算；未收录时支持一键请求收录。
+- **[GitHub 跳转至 DeepWiki](Github/jump-to-deepwiki.user.js)**：在 GitHub 页面添加快速跳转至 DeepWiki 的入口。
+- **[SteamDB 价格图表增强](Steam/Add%20SteamDB%20Sale%20Item%20Into%20Steam%20Chart魔改/readme.md)**：Steam 商店集成 SteamDB 历史特惠走势图。
 ### 反馈与建议
 
 如果遇到问题或有改进建议，欢迎通过以下方式联系：
@@ -65,6 +71,12 @@ All published scripts are available on **[Greasy Fork](https://greasyfork.org/en
 If you encounter issues or have suggestions for improvement, please reach out:
 - Leave comments on Greasy Fork script pages
 - Submit GitHub Issues
+
+### Scripts Index
+
+- **[App Store Price Helper](App%20Store/README.md)**: View global price comparison, currency conversions, and lowest price regions from AppStorePrice.org directly on the App Store (iOS & Mac), with one-click app submission for unrecorded apps.
+- **[Jump to DeepWiki from Github](Github/jump-to-deepwiki.user.js)**: Add a quick jump anchor from GitHub to DeepWiki.
+- **[Add SteamDB Sale Item Into Steam Chart](Steam/Add%20SteamDB%20Sale%20Item%20Into%20Steam%20Chart魔改/readme.md)**: Enhance Steam store pages with SteamDB historical chart.
 
 ---
 
