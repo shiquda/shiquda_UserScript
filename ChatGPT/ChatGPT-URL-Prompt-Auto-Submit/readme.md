@@ -1,32 +1,52 @@
-# ChatGPT URL Prompt Auto Submit
+# AI Chat URL Prompt Auto Submit
 
-Automatically submits the prefilled prompt when ChatGPT URL contains `?q=` or `?prompt=` parameters.
+Automatically submits the prompt passed in the URL through `?q=` or `?prompt=`, on both ChatGPT and Gemini.
 
 ## Feature
 
-When opening ChatGPT via URL with prefilled query parameters (such as `https://chatgpt.com/?q=your_prompt` or `https://chatgpt.com/?prompt=your_prompt`), ChatGPT fills the composer input but requires you to click send manually. This script watches the composer and automatically triggers the submit action once the page is ready.
+Open a chat with a prefilled prompt from a URL and the script submits it once the composer is ready:
 
-## Supported composers
+- `https://chatgpt.com/?q=your_prompt`
+- `https://chatgpt.com/?prompt=your_prompt`
+- `https://gemini.google.com/app?q=your_prompt`
+- `https://gemini.google.com/app?prompt=your_prompt`
 
-ChatGPT ships two composer implementations; both are supported:
+## How each site is handled
 
-| Composer | Input | Send button |
-| --- | --- | --- |
-| Classic | `textarea#prompt-textarea` | old `#composer-submit-button`; current builds drop the id and only keep `aria-label` |
-| New (Codex-style) | `form[data-chatgpt-composer] div.ProseMirror[contenteditable="true"]` | no id/data-testid; the primary slot is `button.size-token-button-composer` (that slot holds the voice button while the input is empty) |
+ChatGPT supports the URL parameters natively and fills its own composer; the script only waits for that prefill and presses send.
 
-Lookup order:
+Gemini ignores `?q=` / `?prompt=` (verified on the live app: the composer stays empty), so the script fills the Quill editor itself and then submits:
 
-1. explicitly marked send buttons (`#composer-submit-button`, `button[data-testid="send-button"]`);
-2. buttons inside the composer `<form>` whose `aria-label` starts with a send verb (`Send` / `发送` / `送信` / `보내기` / `Enviar` / `Envoyer` / `Senden` …);
-3. the composer primary action button (`size-token-button-composer` / `bg-composer-primary`), excluding voice and dictation buttons;
-4. if none of the above exists (another UI revamp), dispatch a single Enter keydown into the input.
+1. wait for `rich-textarea div.ql-editor[contenteditable="true"]`;
+2. insert the prompt with `document.execCommand('insertText')`; if that fails (for example in a background tab without focus), build the paragraph DOM and dispatch an `input` event;
+3. click the composer's send button (`aria-label` starting with `Send` / `发送` / `送信` …);
+4. verify the message was actually sent (editor cleared, stop button appeared, or the user message is rendered) and retry the click up to 3 times if it was lost;
+5. if no usable send button exists after 5 seconds, press Enter once per retry.
 
-Other behavior:
+Only the new-chat page (`/app`) is handled on Gemini. Conversation pages (`/app/<conversationId>?q=…`) are skipped, so refreshing a sent conversation does not submit the prompt again. After submitting, `q` / `prompt` are removed from the URL; Gemini's router re-adds them when it navigates to the conversation, so the script also intercepts `history.pushState` / `replaceState` and strips them again.
 
-- Never submits while the input is empty, so the voice button is not clicked by mistake.
-- ChatGPT strips `?q=` from the address bar during load, so the script reads the parameter at `document-start` and falls back to the original URL from the navigation timing entry.
+## Send button lookup
+
+| Site | Lookup order |
+| --- | --- |
+| ChatGPT (classic) | `#composer-submit-button` / `button[data-testid="send-button"]` → `aria-label` send verb inside the composer form → `size-token-button-composer` / `bg-composer-primary` (voice buttons excluded) |
+| ChatGPT (new ProseMirror composer) | same as above, with `form[data-chatgpt-composer] div.ProseMirror[contenteditable="true"]` as the editor |
+| Gemini | visible `button[aria-label]` inside `.input-area` whose label starts with a send verb, never a stop/voice button |
+
+Primary action buttons that are voice/dictation/stop controls are never clicked.
+
+## Other behavior
+
+- Never submits an empty composer, so the Gemini voice button is not clicked by mistake.
+- On Gemini, if the user typed something before the script filled the composer, it leaves the draft alone and skips submission.
+- ChatGPT may strip `?q=` from the address bar while loading; the script reads the parameter at `document-start` and falls back to the original URL from the navigation timing entry.
 - Stops polling after submitting; gives up after 30 seconds.
+- Multi-line prompts work on both sites (`execCommand` produces one paragraph per line on Gemini).
+
+## Notes
+
+- Language coverage of send-button labels is a best-effort list (`Send`, `发送`, `傳送`, `送信`, `보내기`, `Enviar`, `Envoyer`, `Senden`, `Invia`, `Отправить`, `Verzenden`).
+- `@grant none` keeps the script in the page context, which the Gemini history interception relies on. If a manager forces a sandbox, the URL cleanup may not run, but the `/app/<id>` path guard still prevents resubmission after a refresh.
 
 ## License
 
